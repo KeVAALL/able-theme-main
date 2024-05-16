@@ -1,0 +1,101 @@
+For Header
+
+menu-items -> MainRoutes -> MainLayout
+
+  // "homepage": "/login",
+
+
+// .min(8, "Password must be at least 8 characters")
+    // .matches(
+    //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+    //   "Password must contain at least one letter and one number"
+    // ),
+
+     // .min(6, "More than 6 letters"),
+    // .matches(
+    //   /^[a-zA-Z0-9 ]*$/,
+    //   "Project Name can only contain letters, numbers, and a single space"
+    // )
+
+    {
+  /* <Select
+                        fullWidth
+                        className="common-multi_select"
+                        labelId="demo-multiple-chip-label"
+                        id="demo-multiple-chip"
+                        multiple
+                        value={fdTag}
+                        onChange={handleTagChange}
+                        input={<OutlinedInput id="select-multiple-chip" placeholder="Chip" />}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected?.map((value) => (
+                              <Chip key={value.fd_tag_id} label={value.fd_tag_name} variant="light" color="primary" size="small" />
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {tags.map((name) => (
+                          <MenuItem key={name.fd_tag_id} value={name} style={getStyles(name, fdTag, theme)}>
+                            {name.fd_tag_name}
+                          </MenuItem>
+                        ))}
+                      </Select> */
+}
+
+Investor
+
+  const [selectedRelation, setSelectedRelation] = useState(null);
+  const [selectedOccupation, setSelectedOccupation] = useState(null);
+  const [selectedAnnualIncome, setSelectedAnnualIncome] = useState(null);
+  const [selectedIncomeSource, setSelectedIncomeSource] = useState(null);
+
+  // Investment
+    const resetValuesIfNeeded = (values, formName, formValue, setFormValues) => {
+    console.log(values);
+    setFormValues({
+      ...values,
+      [formName]: formValue,
+      interest_rate: '0',
+      aggrigated_interest: 0,
+      maturity_amount: 0
+    });
+  };
+  const resetCalculation = (e, type, key, values, setFieldValue, setFormValues) => {
+    if (values.aggrigated_interest !== null || values.maturity_amount !== null) {
+      const parsed = parseInt(e.target.value, 10);
+      setFieldValue(key, parsed);
+      setFormValues({
+        ...values,
+        [key]: parsed,
+        interest_rate: '0',
+        aggrigated_interest: 0,
+        maturity_amount: 0
+      });
+    } else {
+      const parsed = parseInt(e.target.value, 10);
+      setFieldValue(key, parsed);
+    }
+  };
+  const customInputChange = (e, values, options, optionName, formName, setFieldValue, idName) => {
+    if (e.target.outerText === undefined) {
+      setFieldValue(formName, 0);
+      if (values.aggrigated_interest !== 0 || values.maturity_amount !== 0) {
+        resetValuesIfNeeded(values, formName, 0, setFormValues);
+      }
+    } else {
+      console.log('Setting');
+      options.forEach(async (el) => {
+        if (el[optionName] === e.target.outerText) {
+          if (idName) {
+            await setFieldValue(formName, el[idName]);
+            resetValuesIfNeeded(values, formName, el[idName], setFormValues);
+          } else {
+            await setFieldValue(formName, el.id);
+            resetValuesIfNeeded(values, formName, el.id, setFormValues);
+          }
+        }
+      });
+    }
+  };

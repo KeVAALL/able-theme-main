@@ -1,0 +1,25 @@
+.panel > div {
+  padding-top: 0px !important;
+}
+.tab_main .MuiTabScrollButton-root {
+  width: 20px !important;
+}
+.tab_main .tab_2 {
+  color: red !important;
+  /* border-bottom: 2px solid red !important; */
+  border-radius: 0 !important;
+  margin-bottom: 0px !important;
+}
+.tab_main .tab_1 {
+  color: red !important;
+  /* border-bottom: 2px solid red !important; */
+  border-radius: 0 !important;
+  margin-bottom: 0px !important;
+}
+.indicator_main .MuiTabs-scroller .MuiTabs-indicator {
+  background-color: red !important;
+  /* height: 0 !important; */
+}
+.calendar_main input {
+  padding: 8.2px 0px 8.2px 14px !important;
+}

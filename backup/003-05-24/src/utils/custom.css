@@ -1,0 +1,34 @@
+.common-textfield .MuiFormControl-root {
+  width: 100% !important;
+}
+.common-textfield .MuiFormLabel-root {
+  line-height: 1.5em !important;
+}
+.common-textfield .Mui-disabled {
+  -webkit-text-fill-color: #768087 !important;
+}
+
+.common-multi_select .MuiSelect-select {
+  padding: 6.6px 9px !important;
+}
+
+.common-autocomplete .MuiFormLabel-root {
+  top: -3px !important;
+}
+.common-autocomplete .MuiAutocomplete-input {
+  padding: 7.5px 4px 3px 5px !important;
+}
+.common-autocomplete .MuiOutlinedInput-root {
+  padding: 3.02px 9px !important;
+}
+#__checkbox span:first-of-type {
+  padding: 0 !important;
+}
+
+.multi_select > div:first-of-type {
+  min-height: 33px !important;
+  border-radius: 8px !important;
+}
+#column-hiding {
+  padding: 8px 32px 8px 12px !important;
+}

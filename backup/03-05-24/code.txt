@@ -1,0 +1,18 @@
+For Header
+
+menu-items -> MainRoutes -> MainLayout
+
+  // "homepage": "/login",
+
+
+// .min(8, "Password must be at least 8 characters")
+    // .matches(
+    //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+    //   "Password must contain at least one letter and one number"
+    // ),
+
+     // .min(6, "More than 6 letters"),
+    // .matches(
+    //   /^[a-zA-Z0-9 ]*$/,
+    //   "Project Name can only contain letters, numbers, and a single space"
+    // )
