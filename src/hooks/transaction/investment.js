@@ -79,9 +79,7 @@ export async function GetScheme(values) {
 }
 export async function GetInvestments(values) {
   try {
-    const response = await axios.post('transaction/get_investments', {
-      ...values
-    });
+    const response = await axios.post('transaction/get_investments', values);
 
     return response.data.data;
   } catch (err) {

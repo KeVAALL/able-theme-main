@@ -18,7 +18,7 @@ import { PopupTransition } from 'helpers/@extended/Transitions';
 import { Trash } from 'iconsax-react';
 import './dialog.css';
 
-const DialogBox = ({ openDialog, handleOpenDialog, dataRefetch, item, deleteOneItem, setSchemeData }) => {
+const DialogBox = ({ openDialog, handleOpenDialog, dataRefetch, item, deleteOneItem, setSchemeData, isNomination }) => {
   console.log('open');
   return (
     <Dialog
@@ -58,9 +58,11 @@ const DialogBox = ({ openDialog, handleOpenDialog, dataRefetch, item, deleteOneI
                   deleteOneItem(item);
                 }
                 handleOpenDialog();
-                setTimeout(() => {
-                  dataRefetch();
-                }, 200);
+                if (!isNomination) {
+                  setTimeout(() => {
+                    dataRefetch();
+                  }, 200);
+                }
               }}
               autoFocus
             >
@@ -97,7 +99,8 @@ const DialogBox = ({ openDialog, handleOpenDialog, dataRefetch, item, deleteOneI
 };
 
 DialogBox.propTypes = {
-  setSchemeData: PropTypes.any
+  setSchemeData: PropTypes.any,
+  isNomination: PropTypes.any
 };
 
 export default memo(DialogBox);

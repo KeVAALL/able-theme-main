@@ -221,7 +221,19 @@ function FixDeposit() {
             changeTableVisibility();
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm, isSubmitting }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldValue,
+            isValid,
+            dirty,
+            resetForm,
+            isSubmitting
+          }) => (
             <Box
               component="form"
               onSubmit={(event) => {
@@ -248,6 +260,8 @@ function FixDeposit() {
                   setActiveClose={setActiveClose}
                   setIsActive={handleIsFDActive}
                   isActive={isFDActive}
+                  isValid={isValid}
+                  dirty={dirty}
                 />
 
                 <Divider />

@@ -186,10 +186,10 @@ export const FormikAutoComplete = memo((props) => {
       componentsProps={{
         popper: {
           modifiers: [
-            {
-              name: 'flip',
-              enabled: false
-            },
+            // {
+            //   name: 'flip',
+            //   enabled: false
+            // },
             {
               name: 'preventOverflow',
               enabled: false
@@ -198,7 +198,7 @@ export const FormikAutoComplete = memo((props) => {
         }
       }}
       id="basic-autocomplete-label"
-      options={props.options}
+      options={props.options || []}
       disableClearable={props.disableClearable ? true : false}
       defaultValue={
         (typeof props.defaultValue === 'string' &&

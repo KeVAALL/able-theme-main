@@ -161,9 +161,20 @@ export async function GetIfa() {
       method_name: 'getall'
     });
     console.log(data);
+    if (data.data.status === 500) {
+      return [];
+    }
     return data.data;
   } catch (err) {
-    console.log(err);
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    return [];
   }
 }
 export async function GetIFASearch(values, selectedIFA) {

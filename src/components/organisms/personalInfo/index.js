@@ -51,7 +51,7 @@ const PersonalInfo = (props) => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
               className="calendar_main"
-              label="Date Desktop"
+              label="Date of Birth"
               inputFormat="dd/MM/yyyy"
               value={props.values?.investor.birth_date && new Date(props.values.investor.birth_date)}
               onChange={(newValue) => {

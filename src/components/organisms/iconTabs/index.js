@@ -55,7 +55,7 @@ export default function IconTabs(props) {
 
   useEffect(() => {
     console.log(props.errors);
-    props.handleTabError(props.errors);
+    // props.handleTabError(props.errors);
   }, [props.errors]);
 
   const tabStyle = { borderTopLeftRadius: 0, borderTopRightRadius: 0, borderRadius: 1.5, overflow: 'visible' };
@@ -103,10 +103,6 @@ export default function IconTabs(props) {
             setFieldValue={props.setFieldValue}
             touched={props.touched}
             errors={props.errors}
-            selectedResidenceID={props.selectedResidenceID}
-            setSelectedResidenceID={props.setSelectedResidenceID}
-            selectedMarital={props.selectedMarital}
-            setSelectedMarital={props.setSelectedMarital}
           />
         </MainCard>
       </TabPanel>
@@ -136,8 +132,7 @@ export default function IconTabs(props) {
             handleBlur={props.handleBlur}
             touched={props.touched}
             errors={props.errors}
-            // selectedRelation={props.selectedRelation}
-            // setSelectedRelation={props.setSelectedRelation}
+            setFieldValue={props.setFieldValue}
             nomineeData={props.nomineeData}
             handleNewNominee={props.handleNewNominee}
           />

@@ -2,6 +2,9 @@
 import { TableCell, Chip } from '@mui/material';
 import * as yup from 'yup';
 
+// chip css
+import '../utils/custom.css';
+
 // Add form values
 const amountSchema = yup.number().min(1, 'Amount must be greater than or equal to 1').required('Amount is required');
 const formAllValues = {
@@ -92,9 +95,9 @@ const StatusCell = ({ value }) => {
   // return value === 0 ? 'Not Active' : 'Active';
   switch (value) {
     case 0:
-      return <Chip color="error" label="Inactive" size="medium" variant="outlined" />;
+      return <Chip color="error" label="In-active" size="medium" variant="outlined" />;
     case 1:
-      return <Chip color="success" label="Active" size="medium" variant="outlined" />;
+      return <Chip color="success" label="Active" size="medium" variant="outlined" className="active-chip" />;
     default:
       return <Chip color="info" label="None" size="medium" variant="light" />;
   }

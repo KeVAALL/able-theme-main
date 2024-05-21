@@ -115,22 +115,24 @@ const DialogForm = ({
           initialValues={schemeFormValues || formAllSchemeValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
-            console.log(isEditingScheme);
-            console.log(values);
-            if (isEditingScheme) {
-              EditInterestRate(values, activeButton, liveButton, clearFormValues, handleOpenDialog, setSchemeData, setActiveClose);
-            } else {
-              SaveInterestRate(
-                values,
-                fdId,
-                selectedPayoutMethod,
-                liveButton,
-                activeButton,
-                clearFormValues,
-                handleOpenDialog,
-                setSchemeData
-              );
-            }
+            // console.log(isEditingScheme);
+            // console.log(values);
+            // console.log(fdId);
+            // console.log(selectedPayoutMethod);
+            // if (isEditingScheme) {
+            //   EditInterestRate(values, activeButton, liveButton, clearFormValues, handleOpenDialog, setSchemeData, setActiveClose);
+            // } else {
+            //   SaveInterestRate(
+            //     values,
+            //     fdId,
+            //     selectedPayoutMethod,
+            //     liveButton,
+            //     activeButton,
+            //     clearFormValues,
+            //     handleOpenDialog,
+            //     setSchemeData
+            //   );
+            // }
           }}
         >
           {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
@@ -271,6 +273,7 @@ const DialogForm = ({
                   onClick={() => {
                     handleOpenDialog();
                     setActiveClose();
+                    setLiveButton(false);
                     clearFormValues();
                   }}
                 >
@@ -279,8 +282,24 @@ const DialogForm = ({
                 <Button
                   variant="contained"
                   color="success"
-                  type="submit"
+                  // type="submit"
                   onClick={() => {
+                    if (isEditingScheme) {
+                      EditInterestRate(values, activeButton, liveButton, clearFormValues, handleOpenDialog, setSchemeData, setActiveClose);
+                      setLiveButton(false);
+                    } else {
+                      SaveInterestRate(
+                        values,
+                        fdId,
+                        selectedPayoutMethod,
+                        liveButton,
+                        activeButton,
+                        clearFormValues,
+                        handleOpenDialog,
+                        setSchemeData
+                      );
+                      setLiveButton(false);
+                    }
                     // handleOpenDialog();
                   }}
                 >

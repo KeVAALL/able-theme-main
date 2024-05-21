@@ -24,6 +24,7 @@ import { dispatch } from '../../../redux';
 import { openSnackbar } from 'redux/reducers/snackbar';
 import { setMenuItems } from 'redux/reducers/menu';
 import CustomTextField from 'utils/textfield';
+import { enqueueSnackbar } from 'notistack';
 
 // ============================|| JWT - LOGIN ||============================ //
 
@@ -49,8 +50,6 @@ const AuthLogin = ({ forgot }) => {
   };
 
   const transformData = (menu) => {
-    console.log(menu);
-
     let organizedMenu = [];
 
     menu?.forEach((item, index) => {
@@ -93,15 +92,17 @@ const AuthLogin = ({ forgot }) => {
         }}
         validationSchema={Yup.object().shape({
           email_id: Yup.string().trim().email('Invalid email').required('Email is required'),
-          password: Yup.string().required('Password is required')
+          password: Yup.string()
+            .min(8, 'Password must be at least 8 characters long')
+            .matches(/[0-9]/, 'Password must contain at least 1 numeric character')
+            .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least 1 special character')
+            .required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             const response = await login(values.email_id, values.password);
-            console.log(response);
 
             const transformedData = transformData(response.data.data.menus);
-            console.log(transformedData);
 
             dispatch(
               setMenuItems([
@@ -121,17 +122,14 @@ const AuthLogin = ({ forgot }) => {
             }
           } catch (err) {
             console.error(err);
-            dispatch(
-              openSnackbar({
-                open: true,
-                anchorOrigin: { vertical: 'top', horizontal: 'right' },
-                message: 'Invalid Login Credentials',
-                variant: 'alert',
-                alert: {
-                  color: 'error'
-                }
-              })
-            );
+            enqueueSnackbar('Invalid Login Credentials', {
+              variant: 'error',
+              autoHideDuration: 2000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right'
+              }
+            });
             if (scriptedRef.current) {
               setStatus({ success: false });
               setErrors({ submit: err.message });
@@ -147,6 +145,7 @@ const AuthLogin = ({ forgot }) => {
                 <CustomTextField
                   label="Email ID"
                   name="email_id"
+                  placeholder="Enter Email ID"
                   values={values}
                   type="email"
                   onChange={handleChange}
@@ -165,6 +164,7 @@ const AuthLogin = ({ forgot }) => {
                 <CustomTextField
                   label="Password"
                   name="password"
+                  placeholder="Enter Password"
                   values={values}
                   type={showPassword ? 'text' : 'password'}
                   onChange={handleChange}
@@ -178,6 +178,7 @@ const AuthLogin = ({ forgot }) => {
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
+                          onMouseUp={handleMouseDownPassword}
                           edge="end"
                           color="secondary"
                         >
@@ -220,7 +221,7 @@ const AuthLogin = ({ forgot }) => {
                 </AnimateButton>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{ paddingTop: '14px !important' }}>
                 <Link variant="h6" component={RouterLink} to={isLoggedIn && forgot ? forgot : '/forgot-password'} color="text.primary">
                   Forgot Password?
                 </Link>

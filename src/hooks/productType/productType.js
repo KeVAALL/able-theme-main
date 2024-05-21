@@ -106,7 +106,7 @@ export async function DeleteOneProductType(values) {
       method_name: 'delete'
     });
     enqueueSnackbar('Product Type Deleted', {
-      variant: 'success',
+      variant: 'error',
       autoHideDuration: 2000,
       anchorOrigin: {
         vertical: 'top',

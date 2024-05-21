@@ -3,6 +3,9 @@ import { Chip } from '@mui/material';
 import { minWidth } from '@mui/system';
 import * as yup from 'yup';
 
+// chip css
+import '../utils/custom.css';
+
 // Autocomplete data
 
 // Add form values
@@ -26,7 +29,7 @@ const validationSchema = yup.object().shape({
   ifa_id: yup.number(),
   maturity_action_id: yup.number(),
   payout_method_id: yup.string(),
-  investment_amount: yup.number(),
+  investment_amount: yup.number().min(1, 'Maximum tenure must be greater than or equal to 1').required('Investment Amount is required'),
   years: yup.number(),
   months: yup.number(),
   days: yup.number(),
@@ -146,23 +149,29 @@ const VisibleColumn = [];
 const StatusCell = ({ value }) => {
   switch (value) {
     case 0:
-      return <Chip color="error" label="Inactive" size="medium" variant="outlined" />;
+      return <Chip color="error" label="In-active" size="medium" variant="outlined" />;
     case 1:
       return <Chip color="info" label="Pending" size="medium" variant="outlined" />;
     default:
       return <Chip color="info" label="None" size="medium" variant="light" />;
   }
 };
+// Function to parse and modify the value
+const parseAndModifyValue = (value) => {
+  let parsedValue = value;
+
+  // Split the value by semicolon
+  const parts = value.split('.').map((part) => part.trim());
+
+  // Join the parts back with line breaks
+  parsedValue = parts.join('.\n');
+
+  return parsedValue;
+};
 const tableColumns = [
   {
-    Header: 'Application No.',
-    accessor: '',
-    minWidth: 150
-  },
-  {
-    Header: 'Date',
-    accessor: 'created_on',
-    minWidth: 150
+    Header: 'Folio ID',
+    accessor: 'folio_id'
   },
   {
     Header: 'Investor Name',
@@ -170,7 +179,8 @@ const tableColumns = [
   },
   {
     Header: 'FD Name',
-    accessor: 'fd_name'
+    accessor: 'fd_name',
+    minWidth: 150
   },
   {
     Header: 'Amount',
@@ -178,7 +188,19 @@ const tableColumns = [
   },
   {
     Header: 'Description',
-    accessor: 'description'
+    accessor: 'description',
+    minWidth: 250,
+    customCell: ({ value }) => {
+      // Parse the value and modify it as needed
+      const parsedValue = parseAndModifyValue(value);
+
+      return <span>{parsedValue}</span>;
+    }
+  },
+  {
+    Header: 'Reg. date',
+    accessor: 'created_on',
+    minWidth: 150
   },
   {
     Header: 'Status',

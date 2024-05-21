@@ -85,7 +85,9 @@ export async function SaveIssuer(values, issuerTableDataRefetch, clearFormValues
       }
     });
     issuerTableDataRefetch();
+    return response;
   } catch (err) {
+    console.log(err);
     enqueueSnackbar(err.message, {
       variant: 'error',
       autoHideDuration: 2000,
@@ -94,6 +96,7 @@ export async function SaveIssuer(values, issuerTableDataRefetch, clearFormValues
         horizontal: 'right'
       }
     });
+    throw err;
   }
 }
 export async function EditIssuer(values, isIssuerActive, issuerTableDataRefetch, clearFormValues, setActiveClose) {
@@ -105,9 +108,6 @@ export async function EditIssuer(values, isIssuerActive, issuerTableDataRefetch,
       method_name: 'update',
       user_id: 2
     });
-    if (response.status === 409) {
-      throw response;
-    }
     clearFormValues();
     setActiveClose();
     enqueueSnackbar('Issuer Updated', {
@@ -119,6 +119,7 @@ export async function EditIssuer(values, isIssuerActive, issuerTableDataRefetch,
       }
     });
     issuerTableDataRefetch();
+    return response;
   } catch (err) {
     enqueueSnackbar(err.message, {
       variant: 'error',
@@ -128,6 +129,7 @@ export async function EditIssuer(values, isIssuerActive, issuerTableDataRefetch,
         horizontal: 'right'
       }
     });
+    throw err;
   }
 }
 export async function DeleteOneIssuer(values) {

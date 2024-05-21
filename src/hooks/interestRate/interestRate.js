@@ -18,7 +18,15 @@ export async function GetPayoutMethod(fdId) {
     });
     return response.data.data;
   } catch (err) {
-    return err;
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    return [];
   }
 }
 export async function GetSchemeSearch(fdId, selectedPayoutMethod) {
@@ -30,7 +38,15 @@ export async function GetSchemeSearch(fdId, selectedPayoutMethod) {
     });
     return response.data.data;
   } catch (err) {
-    return err;
+    enqueueSnackbar('Please provide Payout Method', {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    return [];
   }
 }
 
@@ -53,7 +69,6 @@ export async function SaveInterestRate(
       fd_payout_method_id: selectedPayoutMethod,
       method_name: 'add'
     });
-    clearFormValues();
     handleOpenDialog();
     enqueueSnackbar('Product added', {
       variant: 'success',
@@ -63,11 +78,13 @@ export async function SaveInterestRate(
         horizontal: 'right'
       }
     });
+    console.log(selectedPayoutMethod);
     const schemeData = await GetSchemeSearch(fdId, selectedPayoutMethod);
     setSchemeData(schemeData);
+    clearFormValues();
   } catch (err) {
     enqueueSnackbar(err.message, {
-      variant: 'success',
+      variant: 'error',
       autoHideDuration: 2000,
       anchorOrigin: {
         vertical: 'top',

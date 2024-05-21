@@ -13,6 +13,7 @@ import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import { dispatch } from '../../../redux';
 import { openSnackbar } from 'redux/reducers/snackbar';
+import CustomTextField from 'utils/textfield';
 
 // ============================|| FIREBASE - FORGOT PASSWORD ||============================ //
 
@@ -78,7 +79,24 @@ const AuthForgotPassword = () => {
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Stack spacing={1}>
+                <CustomTextField
+                  label="Email ID"
+                  name="email"
+                  placeholder="Enter Email ID"
+                  values={values}
+                  type="email"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  touched={touched}
+                  errors={errors}
+                  autoComplete
+                  FormHelperTextProps={{
+                    style: {
+                      marginLeft: 0
+                    }
+                  }}
+                />
+                {/* <Stack spacing={1}>
                   <InputLabel htmlFor="email-forgot">Email ID</InputLabel>
                   <OutlinedInput
                     fullWidth
@@ -97,7 +115,7 @@ const AuthForgotPassword = () => {
                       {errors.email}
                     </FormHelperText>
                   )}
-                </Stack>
+                </Stack> */}
               </Grid>
               {errors.submit && (
                 <Grid item xs={12}>

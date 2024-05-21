@@ -23,6 +23,7 @@ const AddressDetails = (props) => {
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
+              inputProps={{ maxLength: 200 }}
             />
           </Grid>
           <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
@@ -36,6 +37,7 @@ const AddressDetails = (props) => {
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
+              inputProps={{ maxLength: 200 }}
             />
           </Grid>
 
@@ -46,7 +48,8 @@ const AddressDetails = (props) => {
               placeholder="Please enter your Pin Code"
               values={props.values.investor_address.pincode}
               type="string"
-              handleChange={props.handleChange}
+              regType="number"
+              setFieldValue={props.setFieldValue}
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
@@ -60,7 +63,8 @@ const AddressDetails = (props) => {
               placeholder="Please enter your City"
               values={props.values.investor_address.city}
               type="string"
-              handleChange={props.handleChange}
+              regType="string"
+              setFieldValue={props.setFieldValue}
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
@@ -102,6 +106,7 @@ const AddressDetails = (props) => {
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}
+                inputProps={{ maxLength: 200 }}
               />
             </Grid>
             <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
@@ -115,6 +120,7 @@ const AddressDetails = (props) => {
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}
+                inputProps={{ maxLength: 200 }}
               />
             </Grid>
 
@@ -125,8 +131,8 @@ const AddressDetails = (props) => {
                 placeholder="Please enter your Pin Code"
                 values={props.values.correspondent_address.pincode}
                 type="string"
-                // required={!sameAddress}
-                handleChange={props.handleChange}
+                regType="number"
+                setFieldValue={props.setFieldValue}
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}
@@ -140,8 +146,8 @@ const AddressDetails = (props) => {
                 placeholder="Please enter your City"
                 values={props.values.correspondent_address.city}
                 type="string"
-                // required={!sameAddress}
-                handleChange={props.handleChange}
+                regType="string"
+                setFieldValue={props.setFieldValue}
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}

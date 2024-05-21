@@ -1,6 +1,9 @@
 import * as yup from 'yup';
 import { Chip } from '@mui/material';
 
+// chip css
+import '../utils/custom.css';
+
 // Add form values
 const formAllValues = {
   fd_name: '',
@@ -17,9 +20,9 @@ const StatusCell = ({ value }) => {
   // return value === 0 ? 'Not Active' : 'Active';
   switch (value) {
     case 0:
-      return <Chip color="error" label="Not Active" size="medium" variant="outlined" />;
+      return <Chip color="error" label="In-active" size="medium" variant="outlined" />;
     case 1:
-      return <Chip color="success" label="Active" size="medium" variant="outlined" />;
+      return <Chip color="success" label="Active" size="medium" variant="outlined" className="active-chip" />;
     default:
       return <Chip color="info" label="None" size="medium" variant="light" />;
   }

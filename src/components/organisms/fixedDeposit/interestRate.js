@@ -123,24 +123,11 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
 
   return (
     <Stack spacing={2}>
-      <DialogForm
-        openDialog={openDialog}
-        handleOpenDialog={handleOpenDialog}
-        schemeEditFormValues={schemeFormValues}
-        fdId={formValues.fd_id}
-        selectedPayoutMethod={formValues.fd_payout_method_id}
-        clearFormValues={clearFormValues}
-        setIsActive={handleIsSchemeActive}
-        isActive={isSchemeActive}
-        isEditingScheme={isEditingScheme}
-        setActiveClose={setActiveClose}
-        setSchemeData={setSchemeData}
-      />
       <Formik
         initialValues={IRformValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
-          console.log(formValues.fd_payout_method_id);
+          console.log(formValues.fd_id, formValues.fd_payout_method_id);
           const searchResult = await GetSchemeSearch(formValues.fd_id, values.fd_payout_method_id);
           if (searchResult) {
             setSchemeData(searchResult);
@@ -156,6 +143,19 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
             }}
             sx={{ width: '100%' }}
           >
+            <DialogForm
+              openDialog={openDialog}
+              handleOpenDialog={handleOpenDialog}
+              schemeEditFormValues={schemeFormValues}
+              fdId={formValues.fd_id}
+              selectedPayoutMethod={values.fd_payout_method_id}
+              clearFormValues={clearFormValues}
+              setIsActive={handleIsSchemeActive}
+              isActive={isSchemeActive}
+              isEditingScheme={isEditingScheme}
+              setActiveClose={setActiveClose}
+              setSchemeData={setSchemeData}
+            />
             <Card
               sx={{
                 position: 'relative',

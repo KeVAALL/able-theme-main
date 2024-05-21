@@ -37,9 +37,20 @@
   padding: 8px 32px 8px 12px !important;
 }
 
+.calendar_main {
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
 .calendar_main input {
   padding: 8.2px 0px 8.2px 14px !important;
 }
 .calendar_main .MuiInputLabel-root {
   margin-top: -3px !important;
+}
+
+/* Chip */
+.active-chip {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }

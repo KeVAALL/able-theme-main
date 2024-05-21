@@ -42,9 +42,11 @@ const setSession = (serviceToken, userID) => {
     localStorage.setItem('userID', userID);
     // console.log('Token set');
     axios.defaults.headers.common.Authorization = `Bearer ${serviceToken}`;
+    // axios.defaults.headers.common.userID = userID;
   } else {
     localStorage.removeItem('serviceToken');
     delete axios.defaults.headers.common.Authorization;
+    // delete axios.defaults.headers.common.userID;
   }
 };
 
@@ -60,9 +62,10 @@ export const JWTProvider = ({ children }) => {
     const init = async () => {
       try {
         const serviceToken = localStorage.getItem('serviceToken');
+        const userID = localStorage.getItem('userID');
         if (serviceToken && verifyToken(serviceToken)) {
-          // console.log('Token found');
-          setSession(serviceToken);
+          console.log('Token found');
+          setSession(serviceToken, userID);
           // const response = await axios.get('/api/account/me');
           // const user = response.data;
 

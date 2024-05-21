@@ -8,6 +8,8 @@ import Issuer from '../issuer/issuer';
 import FixDeposit from '../fixedDeposit/fixedDeposit';
 import Investor from '../investor/investor';
 import Investment from '../transaction/investment';
+import UserList from '../userList/userList';
+import Role from '../userList/role';
 
 // Product
 const Product = Loadable(lazy(() => import('components/pages/productType/productType')));
@@ -28,7 +30,7 @@ const MainRoutes = {
       ),
       children: [
         {
-          path: 'dash_board',
+          path: 'dashboard',
           element: <></>
         },
         {
@@ -74,6 +76,19 @@ const MainRoutes = {
           path: 'issuer',
           element: <Issuer />
           // element: <></>
+        },
+        {
+          path: 'user_master',
+          children: [
+            {
+              path: 'role',
+              element: <Role />
+            },
+            {
+              path: 'users',
+              element: <UserList />
+            }
+          ]
         },
         {
           path: 'form',

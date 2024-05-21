@@ -97,15 +97,37 @@ function Issuer() {
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             if (isEditing === false) {
-              SaveIssuer(values, issuerTableDataRefetch, clearFormValues);
+              try {
+                const response = await SaveIssuer(values, issuerTableDataRefetch, clearFormValues);
+                changeTableVisibility();
+              } catch (err) {
+                console.log(err);
+              }
             }
             if (isEditing === true) {
-              EditIssuer(values, isIssuerActive, issuerTableDataRefetch, clearFormValues, setActiveClose);
+              try {
+                const response = await EditIssuer(values, isIssuerActive, issuerTableDataRefetch, clearFormValues, setActiveClose);
+                changeTableVisibility();
+              } catch (err) {
+                console.log(err);
+              }
             }
-            changeTableVisibility();
+            // changeTableVisibility();
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm, isSubmitting }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldValue,
+            isValid,
+            dirty,
+            resetForm,
+            isSubmitting
+          }) => (
             <Box
               component="form"
               onSubmit={(event) => {
@@ -132,6 +154,8 @@ function Issuer() {
                   setActiveClose={setActiveClose}
                   setIsActive={handleIsIssuerActive}
                   isActive={isIssuerActive}
+                  isValid={isValid}
+                  dirty={dirty}
                 />
 
                 <Divider />
@@ -182,6 +206,7 @@ function Issuer() {
 
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
+                        disabled={isEditing}
                         label="Issuer PAN"
                         name="issuer_pan"
                         placeholder={'Please enter Issuer PAN'}

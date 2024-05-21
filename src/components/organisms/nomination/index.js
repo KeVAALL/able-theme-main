@@ -18,6 +18,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Additem } from 'iconsax-react';
+import { v4 as uuidv4 } from 'uuid';
 
 const Nomination = (props) => {
   // theme
@@ -52,7 +53,10 @@ const Nomination = (props) => {
   };
   const validationSchema = yup.object().shape({
     full_name: yup.string().required('Name is Required'),
-    pan: yup.string().matches(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/, 'Invalid PAN format'),
+    pan: yup
+      .string()
+      .matches(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/, 'Invalid PAN format')
+      .required('PAN is required'),
     // /^([A-Z]){3}([P]){1}([A-Z]){1}([0-9]){4}([A-Z]){1}$/
     relationship_id: yup.number(),
     birth_date: yup.date().required('Date of birth is required'),
@@ -60,12 +64,23 @@ const Nomination = (props) => {
     address_line_2: yup.string().required('Address is Required'),
     pincode: yup.string().required('Pin Code is Required'),
     city: yup.string().required('City is Required'),
-    state: yup.string()
+    state: yup.string().required('State is Required')
   });
   const [formValues, setFormValues] = useState(formAllValues);
   // Empty Form Fields
   const clearFormValues = () => {
     setFormValues(formAllValues);
+  };
+  // Delete
+  const DeleteOneNominee = (value) => {
+    const deleteNominee = props.values.nominee.filter((nominee) => {
+      if (nominee.nominee_id) {
+        return nominee.nominee_id !== value.nominee_id;
+      } else {
+        return nominee.id !== value.id;
+      }
+    });
+    props.setFieldValue('nominee', deleteNominee);
   };
 
   // Table
@@ -106,19 +121,38 @@ const Nomination = (props) => {
             initialValues={formValues}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
-              if (isEditing === false) {
-                console.log({ ...values, relation_name: selectedRelation });
-              }
-              if (isEditing === true) {
-                console.log({ ...values, method_name: 'update' });
-              }
+              // if (isEditing === false) {
+              //   console.log({ ...values, relation_name: selectedRelation });
+              // }
+              // if (isEditing === true) {
+              //   console.log({ ...values, method_name: 'update' });
+              // }
+              // props.handleNewNominee({
+              //   ...values
+              // });
+              // props.setFieldValue('nominee', [...props.values.nominee, values]);
+              // changeTableVisibility();
             }}
           >
-            {({ values, errors, touched, handleChange, handleBlur, setFieldValue, handleSubmit, resetForm, isSubmitting }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              setFieldValue,
+              isValid,
+              dirty,
+              handleSubmit,
+              resetForm,
+              isSubmitting
+            }) => (
               <Box
                 component="form"
                 onSubmit={(event) => {
                   event.preventDefault();
+
+                  // handleSubmit();
                 }}
                 sx={{ width: '100%' }}
               >
@@ -137,16 +171,49 @@ const Nomination = (props) => {
                       <Box>
                         <AnimateButton>
                           <Button
+                            disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
                             variant="contained"
                             color="success"
+                            type="submit"
                             startIcon={<Additem />}
-                            onClick={() => {
+                            onClick={(e) => {
+                              console.log(e);
+                              // e.preventDefault();
                               console.log({
                                 ...values
                               });
-                              props.handleNewNominee({
-                                ...values
-                              });
+                              // props.handleNewNominee({
+                              //   ...values
+                              // });
+                              // setNomineeData((prev) => {
+                              //   return [...prev, value.values];
+                              // });
+                              if (values.id) {
+                                const nomineeId = values.id;
+                                const editNominee = props.values.nominee.map((nominee) => {
+                                  if (nominee.id === nomineeId) {
+                                    return values;
+                                  } else {
+                                    return nominee;
+                                  }
+                                });
+                                console.log(editNominee);
+                                props.setFieldValue('nominee', editNominee);
+                              }
+                              if (values.nominee_id) {
+                                const nomineeId = values.nominee_id;
+                                const editNominee = props.values.nominee.map((nominee) => {
+                                  if (nominee.nominee_id === nomineeId) {
+                                    return values;
+                                  } else {
+                                    return nominee;
+                                  }
+                                });
+                                console.log(editNominee);
+                                props.setFieldValue('nominee', editNominee);
+                              } else {
+                                props.setFieldValue('nominee', [...props.values.nominee, { id: uuidv4(), ...values }]);
+                              }
                               changeTableVisibility();
                             }}
                           >
@@ -220,12 +287,10 @@ const Nomination = (props) => {
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                           <DesktopDatePicker
                             className="calendar_main"
-                            label="DOB"
+                            label="Date of Birth"
                             inputFormat="dd/MM/yyyy"
                             value={values?.birth_date && new Date(values?.birth_date)}
                             onChange={(newValue) => {
-                              console.log(newValue);
-                              // setFieldValue('birth_date', dateFormatter(newValue));
                               setFieldValue('birth_date', newValue);
                             }}
                             renderInput={(params) => <CustomTextField {...params} />}
@@ -316,16 +381,18 @@ const Nomination = (props) => {
           >
             <MultiTable
               columns={columns}
-              data={props.nomineeData}
+              // data={props.nomineeData}
+              data={props.values.nominee}
               changeTableVisibility={changeTableVisibility}
               setEditing={setEditing}
               // getOneItem={GetOneProduct}
-              // deleteOneItem={DeleteOneProduct}
+              deleteOneItem={DeleteOneNominee}
               // setSearchData={setSearchData}
               // tableDataRefetch={ProductTableDataRefetch}
               setActiveEditing={setActiveEditing}
               VisibleColumn={VisibleColumn}
               doNotShowHeader={true}
+              isNomination={true}
             />
           </MainCard>
         )}

@@ -66,9 +66,6 @@ function Investor() {
     isResidentOutsideIndia: false
   });
 
-  // Address Details Checkbox
-  const [sameAddress, setSameAddress] = useState(false);
-
   // Nominee
   const [nomineeData, setNomineeData] = useState([]);
 
@@ -97,7 +94,7 @@ function Investor() {
       isRelativeToPoliticallyExposed: Boolean(value.declaration.is_rpep),
       isResidentOutsideIndia: Boolean(value.declaration.is_foreign_tax_resident)
     });
-    setNomineeData(value.nominee);
+    // setNomineeData(value.nominee);
   };
   const setActiveEditing = () => {
     setIsEditing(true);
@@ -129,7 +126,7 @@ function Investor() {
       isResidentOutsideIndia: false
     });
     setErrorObject(errorObject);
-    setNomineeData([]);
+    // setNomineeData([]);
   };
 
   // Gender Validation
@@ -163,10 +160,7 @@ function Investor() {
       setSelectedDeclaration({ ...selectedDeclaration, isResidentOutsideIndia: !selectedDeclaration.isResidentOutsideIndia });
     }
   };
-  // Address Details Checkbox
-  const handleCheckboxChange = (event) => {
-    setSameAddress(event.target.checked);
-  };
+
   // Tabs Error
   const handleTabError = (value) => {
     console.log(value);
@@ -237,8 +231,8 @@ function Investor() {
                   is_foreign_tax_resident: selectedDeclaration.isResidentOutsideIndia ? 1 : 0,
                   is_rpep: selectedDeclaration.isRelativeToPoliticallyExposed ? 1 : 0,
                   is_pep: selectedDeclaration.isPoliticallyExposed ? 1 : 0
-                },
-                nominee: nomineeData
+                }
+                // nominee: nomineeData
               };
               SaveInvestor(formValues, InvestorTableDataRefetch, clearFormValues);
             }
@@ -252,8 +246,8 @@ function Investor() {
                   is_foreign_tax_resident: selectedDeclaration.isResidentOutsideIndia ? 1 : 0,
                   is_rpep: selectedDeclaration.isRelativeToPoliticallyExposed ? 1 : 0,
                   is_pep: selectedDeclaration.isPoliticallyExposed ? 1 : 0
-                },
-                nominee: nomineeData
+                }
+                // nominee: nomineeData
               };
               EditInvestor(
                 formValues,
@@ -268,10 +262,23 @@ function Investor() {
             changeTableVisibility();
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm, isSubmitting }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldValue,
+            isValid,
+            dirty,
+            resetForm,
+            isSubmitting
+          }) => (
             <Box
               component="form"
               onSubmit={(event) => {
+                console.log(errors);
                 event.preventDefault();
                 handleSubmit();
               }}
@@ -297,6 +304,8 @@ function Investor() {
                   isActive={isInvestorActive}
                   errors={errors}
                   handleTabError={handleTabError}
+                  isValid={isValid}
+                  dirty={dirty}
                 />
 
                 <Divider />
@@ -392,16 +401,12 @@ function Investor() {
                     touched={touched}
                     errors={errors}
                     setFieldValue={setFieldValue}
-                    // selectedRelation={selectedRelation}
-                    // setSelectedRelation={setSelectedRelation}
                     selectedDeclaration={selectedDeclaration}
                     handleDeclarationClick={handleDeclarationClick}
                     nomineeData={nomineeData}
                     handleNewNominee={handleNewNominee}
                     errorObject={errorObject}
                     handleTabError={handleTabError}
-                    sameAddress={sameAddress}
-                    handleCheckboxChange={handleCheckboxChange}
                   />
                 </Grid>
               </Card>
@@ -419,16 +424,13 @@ function Investor() {
           contentSX={{ p: 2 }}
           sx={{ height: '100%', boxShadow: 1 }}
         >
-          {/* here i will add the filter */}
           <Formik
             initialValues={{
               // fd_name: '',
               search: '',
-              ifa_id: 1
+              ifa_id: 0
             }}
-            // validationSchema={formValueFields}
             onSubmit={async (values, { resetForm }) => {
-              // const searchResult = await GetIFASearch(values, selectedIFA);
               const searchResult = await GetIFASearch(values);
               if (searchResult) {
                 setSearchData(searchResult);
@@ -464,7 +466,7 @@ function Investor() {
                       />
                     </Grid> */}
 
-                    <Grid item xs={2.5} style={{ paddingTop: 0 }}>
+                    <Grid item xs={2.5} style={{ paddingLeft: 0, paddingTop: 0 }}>
                       <FormikAutoComplete
                         options={ifaData}
                         defaultValue={values.ifa_id}
@@ -526,6 +528,7 @@ function Investor() {
             getOneItem={GetOneInvestor}
             deleteOneItem={DeleteOneInvestor}
             getEditData={GetEditOneInvestor}
+            getEditReqField={'investor_id'}
             setSearchData={setSearchData}
             tableDataRefetch={InvestorTableDataRefetch}
             setActiveEditing={setActiveEditing}

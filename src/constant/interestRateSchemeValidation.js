@@ -4,10 +4,10 @@ import * as yup from 'yup';
 const formAllSchemeValues = {
   min_days: '',
   max_days: '',
-  rate_of_interest_regular: 1,
-  rate_of_interest_senior_citezen: 1,
-  rate_of_interest_female: 1,
-  rate_of_interest_female_senior_citezen: 1
+  rate_of_interest_regular: null,
+  rate_of_interest_senior_citezen: null,
+  rate_of_interest_female: null,
+  rate_of_interest_female_senior_citezen: null
 };
 const validationSchema = yup.object().shape(
   {

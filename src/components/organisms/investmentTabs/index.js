@@ -47,12 +47,10 @@ function a11yProps(index) {
 // ==============================|| TABS - ICON ||============================== //
 
 export default function InvestmentTabs(props) {
-  console.log(props.values);
   const [tabValue, setTabValue] = useState(0);
 
   // const handleTabChange = (event, newValue) => {
   const handleTabChange = (event, newValue) => {
-    console.log(newValue);
     setTabValue(newValue);
   };
 
@@ -60,9 +58,6 @@ export default function InvestmentTabs(props) {
   //   console.log(props.errors);
   //   props.handleTabError(props.errors);
   // }, [props.errors]);
-  useEffect(() => {
-    console.log(props.dynamicDeclaration);
-  }, []);
 
   const tabStyle = { borderTopLeftRadius: 0, borderTopRightRadius: 0, borderRadius: 1.5, overflow: 'visible' };
   const contentSX = { paddingTop: 4 };

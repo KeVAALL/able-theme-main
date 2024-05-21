@@ -99,3 +99,81 @@ Investor
       });
     }
   };
+
+  DECLARATION
+
+// const [selectedDeclaration, setSelectedDeclaration] = useState({
+//   isPoliticallyExposed: true,
+//   isRelativeToPoliticallyExposed: true,
+//   isResidentOutsideIndia: false
+// });
+// const handleDeclarationClick = (value) => {
+//   if (value === 'PoliticallyExposed') {
+//     setSelectedDeclaration({ ...selected, isPoliticallyExposed: !selected.isPoliticallyExposed });
+//   } else if (value === 'RelativeToPoliticallyExposed') {
+//     setSelectedDeclaration({ ...selected, isRelativeToPoliticallyExposed: !selected.isRelativeToPoliticallyExposed });
+//   } else if (value === 'ResidentOutsideIndia') {
+//     setSelectedDeclaration({ ...selected, isResidentOutsideIndia: !selected.isResidentOutsideIndia });
+//   }
+// };
+{
+  /* <Typography sx={{ fontWeight: '600' }} variant="p">
+            Politically Exposed Person (PEP)?
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item lg={4} md={4} sm={4} xs={5}>
+              <Chip
+                label="Yes"
+                color="success"
+                variant={selectedDeclaration.isPoliticallyExposed ? '' : 'outlined'}
+                style={{ cursor: 'pointer', borderRadius: '6px', width: '100%', paddingBlock: '18px', fontSize: '12px' }}
+                onClick={(e) => handleDeclarationClick('PoliticallyExposed')}
+              />
+            </Grid>
+            <Grid item lg={4} md={4} sm={4} xs={5}>
+              <Chip
+                label="No"
+                color="success"
+                variant={!selectedDeclaration.isPoliticallyExposed ? '' : 'outlined'}
+                style={{ cursor: 'pointer', borderRadius: '6px', width: '100%', paddingBlock: '18px', fontSize: '12px' }}
+                onClick={(e) => handleDeclarationClick('PoliticallyExposed')}
+              />
+            </Grid> */
+}
+
+Role page
+
+{/* <Stack
+  sx={{ width: '100%' }}
+  flexDirection="row"
+  alignItems="center"
+  onClick={() => {
+    handleCheckbox(dec.menu_id);
+  }}
+>
+  <ListItemText primary={dec.menu_id} sx={{ width: '5%', display: 'flex', justifyContent: 'center' }} />
+  <Divider orientation="vertical" flexItem />
+  {/* <Stack sx={{ width: '95%' }} flexDirection="row" alignItems="center"> */}
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         checked={dec.isSelected}
+//         // onChange={() => {
+//         //   handleCheckbox(dec.menu_id);
+//         // }}
+//         name="isSelected"
+//         sx={{ width: '15%' }}
+//       />
+//     }
+//     label={
+//       <ListItemButton sx={{ width: '100%' }}>
+//         <ListItemText primary={dec.menu_name} />
+//       </ListItemButton>
+//     }
+//     // label={dec.menu_name}
+//     labelPlacement="start"
+//     // sx={{ mr: 1, ml: 0, width: '15%', display: 'flex', justifyContent: 'center' }}
+//     sx={{ mr: 1, ml: 0, width: '95%', display: 'flex', justifyContent: 'space-between' }}
+//   />
+//    </Stack> 
+// </Stack>
