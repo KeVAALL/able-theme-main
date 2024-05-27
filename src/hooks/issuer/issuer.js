@@ -45,7 +45,7 @@ export async function GetOneIssuer(values, setSearchData) {
       method_name: 'getone',
       ...values
     });
-    setSearchData(response.data.data);
+    return response.data.data;
   } catch (error) {
     enqueueSnackbar(err.message, {
       variant: 'error',

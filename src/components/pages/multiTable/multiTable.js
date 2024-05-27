@@ -122,7 +122,7 @@ const ReactTable = ({
                 validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                   const search = await getOneItem(values);
-
+                  console.log(search);
                   setSearchData(search);
                 }}
               >

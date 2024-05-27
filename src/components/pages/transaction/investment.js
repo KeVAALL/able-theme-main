@@ -442,6 +442,18 @@ function Investment() {
                         label="Select Maturity Action"
                       />
                     </Grid>
+
+                    <Grid item md={4} sm={6} xs={6}>
+                      <FormikAutoComplete
+                        options={payoutData}
+                        defaultValue={values.payout_method_id}
+                        setFieldValue={setFieldValue}
+                        formName="payout_method_id"
+                        keyName="id"
+                        optionName="item_value"
+                        label="Select Payout Method"
+                      />
+                    </Grid>
                     <Grid item md={4} sm={6} xs={6}>
                       <CustomTextField
                         label="Investment Amount (₹)"
@@ -460,17 +472,7 @@ function Investment() {
                         }}
                       />
                     </Grid>
-                    <Grid item md={4} sm={6} xs={6}>
-                      <FormikAutoComplete
-                        options={payoutData}
-                        defaultValue={values.payout_method_id}
-                        setFieldValue={setFieldValue}
-                        formName="payout_method_id"
-                        keyName="id"
-                        optionName="item_value"
-                        label="Select Payout Method"
-                      />
-                    </Grid>
+
                     <Grid item md={2} sm={2} xs={4}>
                       <FormikAutoComplete
                         disableClearable
@@ -525,18 +527,23 @@ function Investment() {
                               compounding_type: 'yearly'
                             };
 
-                            const result = await CalculateFD(payload);
+                            try {
+                              const result = await CalculateFD(payload);
 
-                            setSubmitting(false);
+                              setSubmitting(false);
 
-                            const calculated = result.data;
+                              const calculated = result.data;
 
-                            handleCalculate({
-                              ...values,
-                              interest_rate: calculated.interestRate,
-                              aggrigated_interest: calculated.aggrigated_interest,
-                              maturity_amount: calculated.maturity_amount
-                            });
+                              handleCalculate({
+                                ...values,
+                                interest_rate: calculated.interestRate,
+                                aggrigated_interest: calculated.aggrigated_interest,
+                                maturity_amount: calculated.maturity_amount
+                              });
+                            } catch (error) {
+                              setSubmitting(false);
+                              console.log(error);
+                            }
                           }}
                           sx={{ borderRadius: 0.6 }}
                         >

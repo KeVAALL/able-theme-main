@@ -63,6 +63,7 @@ function Issuer() {
   };
   // Search Data
   const setSearchData = (issuer) => {
+    console.log(issuer);
     setIssuerData(issuer);
   };
   // Empty Form Fields

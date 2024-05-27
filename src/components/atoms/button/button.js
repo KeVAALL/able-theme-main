@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 
 import React, { useEffect, memo } from 'react';
-import { Box, Button, Stack, CardHeader, FormControlLabel, Switch, useMediaQuery } from '@mui/material';
+import { Box, Button, Stack, CardHeader, FormControlLabel, Switch, useMediaQuery, Grid } from '@mui/material';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import { Add, Additem, CloseCircle, TickCircle } from 'iconsax-react';
 import { useTheme } from '@mui/material/styles';
@@ -54,67 +54,72 @@ export const SubmitButton = memo(
     };
 
     return (
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <CardHeader sx={headerSX} titleTypographyProps={{ variant: 'subtitle1' }} title={title} />
-        <Stack direction="row" alignItems="center" spacing={1.5} padding={2}>
-          {isEditing ? (
-            <Box>
-              <FormControlLabel
-                value="start"
-                control={
-                  <Switch
-                    color="primary"
-                    checked={isActive}
-                    onChange={() => {
-                      setIsActive(!isActive);
-                    }}
-                  />
-                }
-                label="Active"
-                labelPlacement="start"
-                sx={{ mr: 1 }}
-              />
-            </Box>
-          ) : (
-            <></>
-          )}
+      <Grid container spacing={2} sx={{ alignItems: 'center !important' }}>
+        <Grid item md={3} sm={3} xs={4}>
+          <CardHeader sx={headerSX} titleTypographyProps={{ variant: 'subtitle1' }} title={title} />
+        </Grid>
+        <Grid item md={5} sm={5} xs={2}></Grid>
+        <Grid item md={4} sm={4} xs={6}>
+          <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={1} padding={2}>
+            {isEditing ? (
+              <Box>
+                <FormControlLabel
+                  value="start"
+                  control={
+                    <Switch
+                      color="primary"
+                      checked={isActive}
+                      onChange={() => {
+                        setIsActive(!isActive);
+                      }}
+                    />
+                  }
+                  label="Active"
+                  labelPlacement="start"
+                  sx={{ mr: 1 }}
+                />
+              </Box>
+            ) : (
+              <></>
+            )}
 
-          {location.pathname === '/transaction/investment' ? (
-            <></>
-          ) : (
+            {location.pathname === '/transaction/investment' ? (
+              <></>
+            ) : (
+              <Box>
+                <AnimateButton>
+                  <Button
+                    disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
+                    className={matchDownSM ? 'icon_button' : ''}
+                    variant="contained"
+                    color="success"
+                    sx={{ borderRadius: 0.6 }}
+                    startIcon={matchDownSM ? <TickCircle variant="Bold" /> : <Additem />}
+                    type="submit"
+                  >
+                    {!matchDownSM && 'Submit'}
+                  </Button>
+                </AnimateButton>
+              </Box>
+            )}
             <Box>
               <AnimateButton>
                 <Button
-                  disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
                   className={matchDownSM ? 'icon_button' : ''}
-                  variant="contained"
-                  color="success"
+                  variant={matchDownSM ? 'contained' : 'outlined'}
+                  color={matchDownSM ? 'error' : 'secondary'}
                   sx={{ borderRadius: 0.6 }}
-                  startIcon={matchDownSM ? <TickCircle variant="Bold" /> : <Additem />}
-                  type="submit"
+                  startIcon={matchDownSM && <CloseCircle variant="Bold" />}
+                  type="button"
+                  onClick={CancelForm}
                 >
-                  {!matchDownSM && 'Submit'}
+                  {!matchDownSM && 'Cancel'}
                 </Button>
               </AnimateButton>
             </Box>
-          )}
-          <Box>
-            <AnimateButton>
-              <Button
-                className={matchDownSM ? 'icon_button' : ''}
-                variant={matchDownSM ? 'contained' : 'outlined'}
-                color={matchDownSM ? 'error' : 'secondary'}
-                sx={{ borderRadius: 0.6 }}
-                startIcon={matchDownSM && <CloseCircle variant="Bold" />}
-                type="button"
-                onClick={CancelForm}
-              >
-                {!matchDownSM && 'Cancel'}
-              </Button>
-            </AnimateButton>
-          </Box>
-        </Stack>
-      </Stack>
+          </Stack>
+        </Grid>
+      </Grid>
     );
   }
 );

@@ -106,7 +106,7 @@ export async function CalculateFD(payload) {
         horizontal: 'right'
       }
     });
-    return [];
+    throw err;
   }
 }
 export async function StartFD(payload) {

@@ -49,7 +49,6 @@ function a11yProps(index) {
 export default function InvestmentTabs(props) {
   const [tabValue, setTabValue] = useState(0);
 
-  // const handleTabChange = (event, newValue) => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -80,9 +79,9 @@ export default function InvestmentTabs(props) {
           <Tab label="Personal Info" icon={<Personalcard />} iconPosition="start" {...a11yProps(0)} />
           {/* <CustomTooltip title="Add" arrow color="#fff" bg="pink"> */}
           <Tab label="Address Details" icon={<LocationTick />} iconPosition="start" {...a11yProps(1)} />
-          <Tab className="tab_3" label="Professional Details" icon={<Briefcase />} iconPosition="start" {...a11yProps(2)} />
-          <Tab className="tab_4" label="Add Nomination" icon={<UserOctagon />} iconPosition="start" {...a11yProps(3)} />
-          <Tab className="tab_5" label="Declaration" icon={<ProfileTick />} iconPosition="start" {...a11yProps(3)} />
+          <Tab label="Professional Details" icon={<Briefcase />} iconPosition="start" {...a11yProps(2)} />
+          <Tab label="Add Nomination" icon={<UserOctagon />} iconPosition="start" {...a11yProps(3)} />
+          <Tab label="Declaration" icon={<ProfileTick />} iconPosition="start" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <TabPanel className="panel" value={tabValue} index={0}>

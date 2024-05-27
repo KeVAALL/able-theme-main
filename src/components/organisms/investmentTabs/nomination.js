@@ -64,8 +64,8 @@ const Nomination = (props) => {
     address_line_2: yup.string().required('Address is Required'),
     pincode: yup.string().required('Pin Code is Required'),
     city: yup.string().required('City is Required'),
-    state: yup.string(),
-    percentage: yup.string()
+    state: yup.string().required('State is required'),
+    percentage: yup.string().required('Percentage is required')
   });
   const [formValues, setFormValues] = useState(formAllValues);
   // Empty Form Fields
@@ -119,7 +119,19 @@ const Nomination = (props) => {
               }
             }}
           >
-            {({ values, errors, touched, handleChange, handleBlur, setFieldValue, handleSubmit, resetForm, isSubmitting }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              setFieldValue,
+              isValid,
+              dirty,
+              handleSubmit,
+              resetForm,
+              isSubmitting
+            }) => (
               <Box
                 component="form"
                 onSubmit={(event) => {
@@ -142,6 +154,7 @@ const Nomination = (props) => {
                       <Box>
                         <AnimateButton>
                           <Button
+                            disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
                             variant="contained"
                             color="success"
                             startIcon={<Additem />}

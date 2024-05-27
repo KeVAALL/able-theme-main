@@ -40,6 +40,13 @@ html::-webkit-scrollbar-thumb {
   padding: 3.02px 9px !important;
   border-radius: 5px;
 }
+.icon_button .MuiButton-startIcon {
+  margin: 0 !important;
+}
+.icon_button .MuiButton-startIcon svg {
+  width: 19px;
+  height: 19px;
+}
 #__checkbox span:first-of-type {
   padding: 0 !important;
 }
