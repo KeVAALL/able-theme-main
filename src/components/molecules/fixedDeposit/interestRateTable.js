@@ -123,7 +123,7 @@ function ReactTable({
                     <Grid container direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
                       {formValueFields?.map((field, id) => {
                         return (
-                          <Grid item xs={4} key={id}>
+                          <Grid item md={5} sm={4} xs={7} key={id}>
                             <CustomTextField
                               label={field.label}
                               name={field.fieldName}
@@ -138,7 +138,7 @@ function ReactTable({
                         );
                       })}
 
-                      <Grid item xs={4}>
+                      <Grid item md={3} sm={4} xs={5} sx={{ height: '60px' }}>
                         <Button
                           variant="contained"
                           color="success"
@@ -155,7 +155,69 @@ function ReactTable({
               </Formik>
             )}
           </Grid>
-          <Grid item md={5} sm={5} xs={12} sx={{ display: 'flex', justifyContent: { sm: 'flex-end' } }}>
+          <Grid
+            item
+            md={5.5}
+            sm={5.5}
+            xs={12}
+            sx={{
+              display: 'flex',
+              justifyContent: { sm: 'flex-end' },
+              alignItems: 'center',
+              height: '65px',
+              paddingTop: { lg: '16px !important', sm: '0px !important' }
+            }}
+          >
+            <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Grid
+                item
+                md={11}
+                xs={10}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  paddingTop: {
+                    lg: '20px !important',
+                    sm: '32px !important',
+                    xs: '8px !important'
+                  }
+                }}
+              >
+                <HidingSelect hiddenColumns={hiddenColumns} setHiddenColumns={setHiddenColumns} allColumns={allColumns} />
+              </Grid>
+
+              <Grid
+                item
+                md={1}
+                xs={2}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  paddingTop: {
+                    lg: '20px !important',
+                    sm: '32px !important',
+                    xs: '8px !important'
+                  }
+                }}
+              >
+                <CSVExport
+                  data={rows?.map((d) => {
+                    if (d.original.is_active === 1) {
+                      return { ...d.original, is_active: 'Active' };
+                    }
+                    if (d.original.is_active === 0) {
+                      return { ...d.original, is_active: 'In-active' };
+                    } else {
+                      return d.original;
+                    }
+                  })}
+                  filename={'filtering-table.csv'}
+                  headers={headers}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* <Grid item md={5} sm={5} xs={12} sx={{ display: 'flex', justifyContent: { sm: 'flex-end' } }}>
             <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'flex-end' }}>
               <Grid item md={11} xs={11} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <HidingSelect hiddenColumns={hiddenColumns} setHiddenColumns={setHiddenColumns} allColumns={allColumns} />
@@ -165,7 +227,7 @@ function ReactTable({
                 <CSVExport data={rows.map((d) => d.original)} filename={'filtering-table.csv'} headers={headers} />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       )}
 

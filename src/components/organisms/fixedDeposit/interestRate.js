@@ -185,7 +185,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
 
               <CardContent sx={{ p: 2 }}>
                 <Grid container spacing={3}>
-                  <Grid item xs={3}>
+                  <Grid item md={3} xs={6}>
                     <CustomTextField
                       label="FD Name"
                       name="fd_name"
@@ -203,7 +203,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                       }}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item md={3} xs={6}>
                     <CustomTextField
                       label="Issuer Name"
                       name="issuer_name"
@@ -221,7 +221,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                       }}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item md={3} xs={6}>
                     <FormikAutoComplete
                       options={payoutData}
                       defaultValue={values.fd_payout_method_id}
@@ -232,7 +232,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                       label="Select Payout Method"
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item md={2} xs={6}>
                     <Box>
                       <AnimateButton>
                         <Button fullWidth variant="contained" color="success" startIcon={<SearchNormal1 />} type="submit">
