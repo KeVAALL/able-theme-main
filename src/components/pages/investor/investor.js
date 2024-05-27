@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 // material-ui
-import { Divider, Box, Card, Grid, CardContent, Button } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, Button, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { FilterSearch } from 'iconsax-react';
 import { useQuery } from 'react-query';
@@ -86,6 +86,7 @@ function Investor() {
   // Theme
   const theme = useTheme();
   const mdUp = theme.breakpoints.up('md');
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   // Sets form values for editing
   const setEditing = (value) => {
@@ -474,7 +475,6 @@ function Investor() {
         >
           <Formik
             initialValues={{
-              // fd_name: '',
               search: '',
               ifa_id: 0
             }}
@@ -498,7 +498,7 @@ function Investor() {
                 }}
                 sx={{ width: '100%' }}
               >
-                <CardContent sx={{ paddingLeft: '16px !important' }}>
+                <CardContent sx={{ paddingLeft: '16px !important', paddingRight: matchDownSM ? '0px !important' : '24px !important' }}>
                   <Grid container spacing={2}>
                     {/* <Grid item xs={2.5} style={{ paddingLeft: 0, paddingTop: 0 }}>
                       <CustomTextField
