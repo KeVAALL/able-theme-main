@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 // material-ui
-import { Divider, Box, Card, Grid, CardContent, Button, InputAdornment } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, Button, InputAdornment, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useQuery } from 'react-query';
 
@@ -47,6 +47,7 @@ function UserList() {
   // Theme
   const theme = useTheme();
   const mdUp = theme.breakpoints.up('md');
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   // Functions
   // Editing States
@@ -367,7 +368,7 @@ function UserList() {
                 }}
                 sx={{ width: '100%' }}
               >
-                <CardContent sx={{ paddingLeft: '16px !important' }}>
+                <CardContent sx={{ paddingLeft: '16px !important', paddingRight: matchDownSM ? '0px !important' : '24px !important' }}>
                   <Grid container spacing={2}>
                     <Grid item md={2.5} sm={3} xs={4} style={{ paddingLeft: 0, paddingTop: 0 }}>
                       <CustomTextField
