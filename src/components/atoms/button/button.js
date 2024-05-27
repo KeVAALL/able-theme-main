@@ -75,7 +75,7 @@ export const SubmitButton = memo(
                     />
                   }
                   label="Active"
-                  labelPlacement="start"
+                  labelPlacement={matchDownSM ? 'top' : 'start'}
                   sx={{ mr: 1 }}
                 />
               </Box>
