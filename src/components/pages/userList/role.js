@@ -281,22 +281,22 @@ function Role() {
                       />
                     </Grid>
 
-                    <Grid item xs={12} lg={4}></Grid>
-                    <Grid item xs={12} lg={4}></Grid>
+                    <Grid item xs={0} lg={4}></Grid>
+                    <Grid item xs={0} lg={4}></Grid>
 
                     <Grid item xs={12}>
                       <MainCard sx={{ borderRadius: 0.6 }} content={false}>
                         <List sx={{ p: 0, '& .MuiListItemButton-root': { borderRadius: 0, my: 0 } }}>
                           <Grid container>
                             <Grid item xs={12}>
-                              <ListItem disablePadding divider>
-                                <Stack sx={{ width: '100%' }} flexDirection="row" alignItems="center">
-                                  <ListItemButton sx={{ width: '5%', backgroundColor: '#F5F5F5' }}>
+                              <ListItem disablePadding divider sx={{ height: '100%' }}>
+                                <Stack sx={{ width: '100%', height: '100%' }} flexDirection="row" alignItems="center">
+                                  <ListItemButton sx={{ width: '5%', backgroundColor: '#F5F5F5', height: '100%' }}>
                                     <ListItemText primary="#" sx={{ display: 'flex', justifyContent: 'center' }} />
                                   </ListItemButton>
                                   <Divider orientation="vertical" flexItem />
-                                  <Stack sx={{ width: '95%' }} flexDirection="row" alignItems="center">
-                                    <ListItemButton sx={{ width: '80%', backgroundColor: '#F5F5F5' }}>
+                                  <Stack sx={{ width: '95%', height: '100%' }} flexDirection="row" alignItems="center">
+                                    <ListItemButton sx={{ width: '80%', height: '100%', backgroundColor: '#F5F5F5' }}>
                                       <ListItemText primary="Menu Name" />
                                     </ListItemButton>
                                     <Divider orientation="vertical" flexItem />
