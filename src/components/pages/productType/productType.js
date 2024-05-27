@@ -179,7 +179,7 @@ function ProductType() {
 
                 <CardContent>
                   <Grid container spacing={3}>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         label="Product Type"
                         name="product_type"
