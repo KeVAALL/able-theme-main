@@ -3,10 +3,10 @@
 import PropTypes from 'prop-types';
 
 import React, { useEffect, memo } from 'react';
-import { Box, Button, Stack, CardHeader, FormControlLabel, Switch } from '@mui/material';
+import { Box, Button, Stack, CardHeader, FormControlLabel, Switch, useMediaQuery } from '@mui/material';
 import AnimateButton from 'helpers/@extended/AnimateButton';
-import { Additem } from 'iconsax-react';
-import { isValid } from 'date-fns';
+import { Add, Additem, CloseCircle, TickCircle } from 'iconsax-react';
+import { useTheme } from '@mui/material/styles';
 
 const headerSX = {
   p: 2,
@@ -32,6 +32,10 @@ export const SubmitButton = memo(
     dirty
   }) => {
     console.log(isValid, dirty);
+    // Theme
+    const theme = useTheme();
+    const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
     useEffect(() => {
       if (setIsActive) {
         setIsActive(formValues?.is_active);
@@ -76,34 +80,36 @@ export const SubmitButton = memo(
           )}
 
           {location.pathname === '/transaction/investment' ? (
-            // <Box>
-            //   <AnimateButton>
-            //     <Button variant="contained" color="success" startIcon={<Eye />} type="submit">
-            //       {buttonTitle}
-            //     </Button>
-            //   </AnimateButton>
-            // </Box>
             <></>
           ) : (
             <Box>
               <AnimateButton>
                 <Button
                   disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
+                  className={matchDownSM ? 'icon_button' : ''}
                   variant="contained"
                   color="success"
                   sx={{ borderRadius: 0.6 }}
-                  startIcon={<Additem />}
+                  startIcon={matchDownSM ? <TickCircle variant="Bold" /> : <Additem />}
                   type="submit"
                 >
-                  Submit
+                  {!matchDownSM && 'Submit'}
                 </Button>
               </AnimateButton>
             </Box>
           )}
           <Box>
             <AnimateButton>
-              <Button variant="outlined" color="secondary" sx={{ borderRadius: 0.6 }} type="button" onClick={CancelForm}>
-                Cancel
+              <Button
+                className={matchDownSM ? 'icon_button' : ''}
+                variant={matchDownSM ? 'contained' : 'outlined'}
+                color={matchDownSM ? 'error' : 'secondary'}
+                sx={{ borderRadius: 0.6 }}
+                startIcon={matchDownSM && <CloseCircle variant="Bold" />}
+                type="button"
+                onClick={CancelForm}
+              >
+                {!matchDownSM && 'Cancel'}
               </Button>
             </AnimateButton>
           </Box>
