@@ -13,7 +13,7 @@ import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import { dispatch } from '../../../redux';
 import { openSnackbar } from 'redux/reducers/snackbar';
-import CustomTextField from 'utils/textfield';
+import { CustomTextField } from 'utils/textfield';
 
 // ============================|| FIREBASE - FORGOT PASSWORD ||============================ //
 

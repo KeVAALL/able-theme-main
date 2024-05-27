@@ -7,33 +7,26 @@ import '../utils/custom.css';
 
 // Add form Values
 const formAllValues = {
-  username: '',
+  user_name: '',
   mobile_no: '',
   email_id: '',
+  password: '',
   role_id: 1
 };
 const validationSchema = yup.object({
-  username: yup.string().required('User Name is required'),
+  user_name: yup.string().required('User Name is required'),
   mobile_no: yup.string().min(10, 'Must be at least 10 digits').required('Mobile Number is required'),
   email_id: yup.string().trim().email('Invalid email').required('Email is required'),
-  role: yup.number()
+  password: yup
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .matches(/[0-9]/, 'Password must contain at least 1 numeric character')
+    .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least 1 special character')
+    .required('Password is required'),
+  role_id: yup.number()
 });
 // Search Item form fields
-const filterFormValues = {
-  issuer_name: ''
-};
-const formValueFields = [
-  {
-    fieldName: 'issuer_name',
-    label: 'Issuer Name',
-    placeholder: 'Please enter Issuer name',
-    type: 'text',
-    regType: 'string'
-  }
-];
-const filterValidationSchema = yup.object({
-  issuer_name: yup.string().trim().matches(/\S+/, 'Remove Spaces')
-});
+
 // Table Columns
 const VisibleColumn = [];
 
@@ -49,8 +42,8 @@ const StatusCell = ({ value }) => {
 };
 const tableColumns = [
   {
-    Header: 'Username',
-    accessor: 'username'
+    Header: 'User name',
+    accessor: 'user_name'
   },
   {
     Header: 'Email ID',
@@ -61,8 +54,8 @@ const tableColumns = [
     accessor: 'mobile_no'
   },
   {
-    Header: 'Role',
-    accessor: 'role'
+    Header: 'Role Name',
+    accessor: 'role_name'
   },
   {
     Header: 'Status',
@@ -71,13 +64,4 @@ const tableColumns = [
   }
 ];
 
-export {
-  formAllValues,
-  validationSchema,
-  filterFormValues,
-  formValueFields,
-  filterValidationSchema,
-  StatusCell,
-  tableColumns,
-  VisibleColumn
-};
+export { formAllValues, validationSchema, StatusCell, tableColumns, VisibleColumn };

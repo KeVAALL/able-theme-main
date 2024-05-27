@@ -6,8 +6,8 @@ import { useState, useEffect, useMemo, memo } from 'react';
 // material-ui
 import { Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Button, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import CustomTextField from 'utils/textfield';
-import { Trash, Edit2, FilterSearch, DiscountShape, Additem } from 'iconsax-react';
+import { CustomTextField } from 'utils/textfield';
+import { Trash, Edit2, FilterSearch, DiscountShape, Additem, Eye } from 'iconsax-react';
 
 // third-party
 import { useTable, useFilters, usePagination } from 'react-table';
@@ -45,7 +45,8 @@ const ReactTable = ({
   isEditingInterestRate,
   VisibleColumn,
   doNotShowHeader,
-  isNomination
+  isNomination,
+  isInvestment
 }) => {
   // const filterTypes = useMemo(() => renderFilterTypes, []);
   // const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);
@@ -120,8 +121,9 @@ const ReactTable = ({
                 initialValues={formValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
-                  getOneItem(values, setSearchData);
-                  // resetForm();
+                  const search = await getOneItem(values);
+
+                  setSearchData(search);
                 }}
               >
                 {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
@@ -135,7 +137,7 @@ const ReactTable = ({
                     <Grid container direction="row" spacing={1} alignItems="center">
                       {formValueFields?.map((field, id) => {
                         return (
-                          <Grid item md={5} sm={3} xs={6} key={id} sx={{ paddingTop: '0px !important', height: '45px' }}>
+                          <Grid item md={5} sm={4} xs={7} key={id} sx={{ paddingTop: '0px !important', height: '45px' }}>
                             <CustomTextField
                               label={field.label}
                               name={field.fieldName}
@@ -164,7 +166,7 @@ const ReactTable = ({
                       })}
 
                       {formValueFields && (
-                        <Grid item md={3} sm={3} xs={6} sx={{ height: '60px' }}>
+                        <Grid item md={3} sm={4} xs={5} sx={{ height: '60px' }}>
                           <Button
                             variant="contained"
                             color="success"
@@ -290,7 +292,7 @@ const ReactTable = ({
               </TableRow>
             ))}
           </TableHead>
-          <TableBody {...getTableBodyProps()}>
+          <TableBody className="table_body_main" {...getTableBodyProps()}>
             {page?.length > 0 ? (
               page?.map((row) => {
                 prepareRow(row);
@@ -308,7 +310,7 @@ const ReactTable = ({
                         </TableCell>
                       );
                     })}
-                    {headers?.length !== 0 && (
+                    {headers?.length !== 0 && !isInvestment && (
                       <TableCell sx={{ textAlign: { md: 'right', xs: 'center' }, width: 130 }}>
                         <Grid container sx={{ display: 'flex', justifyContent: { md: 'flex-end', xs: 'center' } }}>
                           <Grid item md={isEditingInterestRateButton ? 4 : 6}>
@@ -321,7 +323,6 @@ const ReactTable = ({
                                     changeTableVisibility();
                                   }, 500);
                                 } else {
-                                  console.log(row.original);
                                   setEditing(row.original);
                                   changeTableVisibility();
                                 }
@@ -361,6 +362,38 @@ const ReactTable = ({
                               <Trash size={26} style={{ cursor: 'pointer' }} />
                             </IconButton>
                           </Grid>
+                        </Grid>
+                      </TableCell>
+                    )}
+                    {isInvestment && (
+                      <TableCell sx={{ textAlign: { md: 'right', xs: 'center' }, width: 130 }}>
+                        <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center' } }}>
+                          {row.original.status === 1 && (
+                            <Grid item md={6}>
+                              <IconButton
+                                color="black"
+                                onClick={async () => {
+                                  setEditing(row.original);
+                                  // changeTableVisibility();
+                                  setActiveEditing();
+                                }}
+                              >
+                                <Edit2 size={26} style={{ cursor: 'pointer' }} />
+                              </IconButton>
+                            </Grid>
+                          )}
+                          {row.original.status === 2 && (
+                            <Grid item md={6}>
+                              <IconButton
+                                color="black"
+                                onClick={async () => {
+                                  setEditing(row.original);
+                                }}
+                              >
+                                <Eye size={26} style={{ cursor: 'pointer' }} />
+                              </IconButton>
+                            </Grid>
+                          )}
                         </Grid>
                       </TableCell>
                     )}
@@ -407,7 +440,8 @@ const MultiTable = ({
   isEditingInterestRate,
   VisibleColumn,
   doNotShowHeader,
-  isNomination
+  isNomination,
+  isInvestment
 }) => {
   return (
     <MainCard sx={{ borderRadius: 0 }} content={false} secondary={<CSVExport data={data} filename={'pagination-bottom-table.csv'} />}>
@@ -433,6 +467,7 @@ const MultiTable = ({
           VisibleColumn={VisibleColumn}
           doNotShowHeader={doNotShowHeader}
           isNomination={isNomination}
+          isInvestment={isInvestment}
         />
       </ScrollX>
     </MainCard>
@@ -460,7 +495,8 @@ MultiTable.propTypes = {
   isEditingInterestRate: PropTypes.any,
   VisibleColumn: PropTypes.any,
   doNotShowHeader: PropTypes.any,
-  isNomination: PropTypes.any
+  isNomination: PropTypes.any,
+  isInvestment: PropTypes.any
 };
 
 export default memo(MultiTable);

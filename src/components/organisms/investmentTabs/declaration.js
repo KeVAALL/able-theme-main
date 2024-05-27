@@ -75,18 +75,14 @@ const Declaration = ({
             color="success"
             sx={{ borderRadius: 0.6 }}
             onClick={async () => {
-              console.log(dynamicDeclaration);
-
               const object = setDeclarations(dynamicDeclaration);
 
-              console.log(object);
-
-              const formValues = {
+              const payload = {
                 fd_investment_id: fdInvestmentID,
                 declarations: object
               };
 
-              UpdateDeclaration(formValues);
+              await UpdateDeclaration(payload);
             }}
           >
             Proceed

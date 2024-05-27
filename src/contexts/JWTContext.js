@@ -13,6 +13,7 @@ import authReducer from 'redux/reducers/auth';
 // project-imports
 import Loader from 'components/atoms/loader/Loader';
 import axios from 'utils/axios';
+import { toInteger } from 'lodash';
 
 const chance = new Chance();
 
@@ -35,12 +36,13 @@ const verifyToken = (serviceToken) => {
   return decoded.exp > Date.now() / 1000;
 };
 
-const setSession = (serviceToken, userID) => {
+const setSession = (serviceToken, userID, applicationID) => {
   // console.log(serviceToken);
+  console.log(typeof userID);
   if (serviceToken) {
     localStorage.setItem('serviceToken', serviceToken);
     localStorage.setItem('userID', userID);
-    // console.log('Token set');
+    localStorage.setItem('applicationID', applicationID);
     axios.defaults.headers.common.Authorization = `Bearer ${serviceToken}`;
     // axios.defaults.headers.common.userID = userID;
   } else {
@@ -63,11 +65,12 @@ export const JWTProvider = ({ children }) => {
       try {
         const serviceToken = localStorage.getItem('serviceToken');
         const userID = localStorage.getItem('userID');
+        const applicationID = localStorage.getItem('applicationID');
+        console.log(verifyToken(serviceToken));
         if (serviceToken && verifyToken(serviceToken)) {
+          console.log(typeof userID);
           console.log('Token found');
-          setSession(serviceToken, userID);
-          // const response = await axios.get('/api/account/me');
-          // const user = response.data;
+          setSession(serviceToken, toInteger(userID), toInteger(applicationID));
 
           dispatch({
             type: LOGIN,
@@ -97,7 +100,7 @@ export const JWTProvider = ({ children }) => {
     const response = await axios.post('/user/login', { email_id, password });
     // return response;
 
-    // console.log(response);
+    console.log(response);
     if (response.status === 200) {
       // const { serviceToken, user } = response.data;
 
@@ -105,7 +108,7 @@ export const JWTProvider = ({ children }) => {
       console.log(response.data);
 
       // setSession(serviceToken);
-      setSession(user.data.token, user.data.user_id);
+      setSession(user.data.token, user.data.user_id, user.data.application_id);
       dispatch({
         type: LOGIN,
         payload: {

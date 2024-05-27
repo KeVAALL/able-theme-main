@@ -149,9 +149,11 @@ const VisibleColumn = [];
 const StatusCell = ({ value }) => {
   switch (value) {
     case 0:
-      return <Chip color="error" label="In-active" size="medium" variant="outlined" />;
+      return <Chip color="warning" label="Pending" size="medium" variant="outlined" />;
     case 1:
-      return <Chip color="info" label="Pending" size="medium" variant="outlined" />;
+      return <Chip color="info" label="In-progress" size="medium" variant="outlined" />;
+    case 2:
+      return <Chip color="success" label="Active" size="medium" variant="outlined" className="active-chip" />;
     default:
       return <Chip color="info" label="None" size="medium" variant="light" />;
   }
@@ -175,7 +177,26 @@ const tableColumns = [
   },
   {
     Header: 'Investor Name',
-    accessor: 'investor_name'
+    accessor: 'investor_name',
+    minWidth: 150
+  },
+  {
+    Header: 'Master ID',
+    accessor: 'master_id'
+  },
+  {
+    Header: 'Transaction ID',
+    accessor: 'application_id'
+  },
+  {
+    Header: 'Status',
+    accessor: 'status',
+    customCell: StatusCell
+  },
+  {
+    Header: 'Duration',
+    accessor: 'tenure_selected',
+    minWidth: 150
   },
   {
     Header: 'FD Name',
@@ -183,29 +204,44 @@ const tableColumns = [
     minWidth: 150
   },
   {
-    Header: 'Amount',
-    accessor: 'investment_amount'
+    Header: 'IFA Name',
+    accessor: 'ifa_name',
+    minWidth: 150
   },
-  {
-    Header: 'Description',
-    accessor: 'description',
-    minWidth: 250,
-    customCell: ({ value }) => {
-      // Parse the value and modify it as needed
-      const parsedValue = parseAndModifyValue(value);
 
-      return <span>{parsedValue}</span>;
-    }
-  },
   {
     Header: 'Reg. date',
     accessor: 'created_on',
     minWidth: 150
   },
   {
-    Header: 'Status',
-    accessor: 'status',
-    customCell: StatusCell
+    Header: 'Principal amount',
+    accessor: 'investment_amount',
+    customCell: ({ value }) => {
+      return <span>₹ {value}</span>;
+    }
+  },
+  {
+    Header: 'Interest Earned',
+    accessor: 'interest_earned',
+    customCell: ({ value }) => {
+      return <span>₹ {value}</span>;
+    }
+  },
+  {
+    Header: 'Maturity',
+    accessor: 'fd_payout_method'
+    // customCell: ({ value }) => {
+    //   return <span>₹ {value}</span>;
+    // }
+  },
+  {
+    Header: 'Rate of Interest (%)',
+    accessor: 'rate_of_interest'
+  },
+  {
+    Header: 'Issuer Reference Number',
+    accessor: 'issuer_ref_number'
   }
 ];
 
@@ -223,3 +259,14 @@ export {
   tableColumns,
   VisibleColumn
 };
+
+// {
+//   Header: 'Description',
+//   accessor: 'description',
+//   minWidth: 250,
+//   customCell: ({ value }) => {
+//     const parsedValue = parseAndModifyValue(value);
+
+//     return <span>{parsedValue}</span>;
+//   }
+// },

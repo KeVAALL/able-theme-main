@@ -6,11 +6,9 @@ import { enqueueSnackbar } from 'notistack';
 import { dispatch } from '../../redux';
 import { openSnackbar } from 'redux/reducers/snackbar';
 
-export async function GetProductTypeData() {
+export async function GetProductTypeData(payload) {
   try {
-    const response = await axios.post('/product/producttype', {
-      method_name: 'getall'
-    });
+    const response = await axios.post('/product/producttype', payload);
     return response.data.data;
   } catch (error) {
     dispatch(
@@ -27,13 +25,13 @@ export async function GetProductTypeData() {
     return [];
   }
 }
-export async function GetOneProductType(values, setSearchData) {
+export async function SearchProductType(values) {
   try {
     const response = await axios.post('/product/producttype', {
       method_name: 'getone',
       ...values
     });
-    setSearchData(response.data.data);
+    return response.data.data;
   } catch (error) {
     dispatch(
       openSnackbar({
@@ -48,9 +46,9 @@ export async function GetOneProductType(values, setSearchData) {
     );
   }
 }
-export async function SaveProductType(values, productTypeTableDataRefetch, clearFormValues) {
+export async function SaveProductType(payload, productTypeTableDataRefetch, clearFormValues) {
   try {
-    const response = await axios.post('/product/producttype', { ...values, method_name: 'add' });
+    const response = await axios.post('/product/producttype', payload);
     console.log(response);
     clearFormValues();
     enqueueSnackbar('Product type added', {
@@ -71,12 +69,12 @@ export async function SaveProductType(values, productTypeTableDataRefetch, clear
         horizontal: 'right'
       }
     });
+    throw err;
   }
 }
-export async function EditProductType(values, productTypeTableDataRefetch, clearFormValues, setIsEditing) {
+export async function EditProductType(payload, productTypeTableDataRefetch, clearFormValues, setIsEditing) {
   try {
-    const response = await axios.post('/product/producttype', { ...values, method_name: 'update' });
-    console.log(response);
+    const response = await axios.post('/product/producttype', payload);
     clearFormValues();
     setIsEditing(false);
     enqueueSnackbar('Product type Updated', {
@@ -97,6 +95,7 @@ export async function EditProductType(values, productTypeTableDataRefetch, clear
         horizontal: 'right'
       }
     });
+    throw err;
   }
 }
 export async function DeleteOneProductType(values) {

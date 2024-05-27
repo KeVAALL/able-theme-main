@@ -15,7 +15,7 @@ import Loader from 'components/atoms/loader/Loader';
 
 // assets
 import { SubmitButton } from 'components/atoms/button/button';
-import CustomTextField from 'utils/textfield';
+import { CustomTextField } from 'utils/textfield';
 import {
   formAllValues,
   validationSchema,
@@ -26,6 +26,7 @@ import {
   VisibleColumn
 } from 'constant/issuerValidation';
 import { GetIssuerData, GetOneIssuer, SaveIssuer, EditIssuer, DeleteOneIssuer } from 'hooks/issuer/issuer';
+import { toInteger } from 'lodash';
 
 function Issuer() {
   // Main data state to hold the list of issuers
@@ -80,7 +81,12 @@ function Issuer() {
     queryKey: ['issuerTableData'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetIssuerData, // Function to fetch issuer data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall'
+      };
+      return GetIssuerData(payload);
+    }, // Function to fetch issuer data
     onSuccess: (data) => {
       console.log(data);
       setIssuerData(data); // Update issuer data on successful query
@@ -96,9 +102,21 @@ function Issuer() {
           initialValues={formValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
+            const userID = localStorage.getItem('userID');
             if (isEditing === false) {
+              const formValues = {
+                ...values,
+                method_name: 'add',
+                max_dp_fd_limit: 0,
+                max_fd_nominee_limit: 0,
+                max_pms_nominee_limit: 0,
+                renewable_lower_bound: 0,
+                renewable_upper_bound: 0,
+                is_renewable: 0,
+                user_id: toInteger(userID)
+              };
               try {
-                const response = await SaveIssuer(values, issuerTableDataRefetch, clearFormValues);
+                await SaveIssuer(formValues, issuerTableDataRefetch, clearFormValues);
                 changeTableVisibility();
               } catch (err) {
                 console.log(err);
@@ -106,7 +124,13 @@ function Issuer() {
             }
             if (isEditing === true) {
               try {
-                const response = await EditIssuer(values, isIssuerActive, issuerTableDataRefetch, clearFormValues, setActiveClose);
+                const formValues = {
+                  ...values,
+                  is_active: toInteger(isIssuerActive),
+                  method_name: 'update',
+                  user_id: toInteger(userID)
+                };
+                await EditIssuer(formValues, issuerTableDataRefetch, clearFormValues, setActiveClose);
                 changeTableVisibility();
               } catch (err) {
                 console.log(err);

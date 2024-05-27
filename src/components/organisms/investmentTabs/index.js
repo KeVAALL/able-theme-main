@@ -77,21 +77,9 @@ export default function InvestmentTabs(props) {
           onChange={handleTabChange}
           aria-label="scrollable force tabs example"
         >
-          <Tab
-            // className={props.errorObject.personalInfoError ? 'tab_1' : ''}
-            label="Personal Info"
-            icon={<Personalcard />}
-            iconPosition="start"
-            {...a11yProps(0)}
-          />
+          <Tab label="Personal Info" icon={<Personalcard />} iconPosition="start" {...a11yProps(0)} />
           {/* <CustomTooltip title="Add" arrow color="#fff" bg="pink"> */}
-          <Tab
-            // className={props.errorObject.addressDetailsError ? 'tab_2' : ''}
-            label="Address Details"
-            icon={<LocationTick />}
-            iconPosition="start"
-            {...a11yProps(1)}
-          />
+          <Tab label="Address Details" icon={<LocationTick />} iconPosition="start" {...a11yProps(1)} />
           <Tab className="tab_3" label="Professional Details" icon={<Briefcase />} iconPosition="start" {...a11yProps(2)} />
           <Tab className="tab_4" label="Add Nomination" icon={<UserOctagon />} iconPosition="start" {...a11yProps(3)} />
           <Tab className="tab_5" label="Declaration" icon={<ProfileTick />} iconPosition="start" {...a11yProps(3)} />
@@ -162,8 +150,6 @@ export default function InvestmentTabs(props) {
       <TabPanel className="panel" value={tabValue} index={4}>
         <MainCard sx={tabStyle} contentSX={contentSX}>
           <Declaration
-            selectedDeclaration={props.selectedDeclaration}
-            handleDeclarationClick={props.handleDeclarationClick}
             dynamicDeclaration={props.dynamicDeclaration}
             handleDynamicDeclaration={props.handleDynamicDeclaration}
             fdInvestmentID={props.fdInvestmentID}

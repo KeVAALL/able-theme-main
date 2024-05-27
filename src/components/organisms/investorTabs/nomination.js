@@ -18,8 +18,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Additem } from 'iconsax-react';
-import { UpdateNominee } from 'hooks/transaction/investment';
-import { GetEditOneInvestor } from 'hooks/investor/investor';
+import { v4 as uuidv4 } from 'uuid';
 import enGB from 'date-fns/locale/en-GB';
 
 const Nomination = (props) => {
@@ -51,12 +50,14 @@ const Nomination = (props) => {
     address_line_2: '',
     pincode: '',
     city: '',
-    state: '',
-    percentage: ''
+    state: ''
   };
   const validationSchema = yup.object().shape({
     full_name: yup.string().required('Name is Required'),
-    pan: yup.string().matches(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/, 'Invalid PAN format'),
+    pan: yup
+      .string()
+      .matches(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/, 'Invalid PAN format')
+      .required('PAN is required'),
     // /^([A-Z]){3}([P]){1}([A-Z]){1}([0-9]){4}([A-Z]){1}$/
     relationship_id: yup.number(),
     birth_date: yup.date().required('Date of birth is required'),
@@ -64,13 +65,23 @@ const Nomination = (props) => {
     address_line_2: yup.string().required('Address is Required'),
     pincode: yup.string().required('Pin Code is Required'),
     city: yup.string().required('City is Required'),
-    state: yup.string(),
-    percentage: yup.string()
+    state: yup.string().required('State is Required')
   });
   const [formValues, setFormValues] = useState(formAllValues);
   // Empty Form Fields
   const clearFormValues = () => {
     setFormValues(formAllValues);
+  };
+  // Delete
+  const DeleteOneNominee = (value) => {
+    const deleteNominee = props.values.nominee.filter((nominee) => {
+      if (nominee.nominee_id) {
+        return nominee.nominee_id !== value.nominee_id;
+      } else {
+        return nominee.id !== value.id;
+      }
+    });
+    props.setFieldValue('nominee', deleteNominee);
   };
 
   // Table
@@ -88,10 +99,8 @@ const Nomination = (props) => {
       Header: 'Relation',
       accessor: 'relationship_id',
       customCell: ({ value }) => {
-        console.log(value);
         return relationship.map((el) => {
           if (el.id === value) {
-            console.log(el.relation_name);
             return el.relation_name;
           }
         });
@@ -111,19 +120,38 @@ const Nomination = (props) => {
             initialValues={formValues}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
-              if (isEditing === false) {
-                console.log({ ...values, relation_name: selectedRelation });
-              }
-              if (isEditing === true) {
-                console.log({ ...values, method_name: 'update' });
-              }
+              // if (isEditing === false) {
+              //   console.log({ ...values, relation_name: selectedRelation });
+              // }
+              // if (isEditing === true) {
+              //   console.log({ ...values, method_name: 'update' });
+              // }
+              // props.handleNewNominee({
+              //   ...values
+              // });
+              // props.setFieldValue('nominee', [...props.values.nominee, values]);
+              // changeTableVisibility();
             }}
           >
-            {({ values, errors, touched, handleChange, handleBlur, setFieldValue, handleSubmit, resetForm, isSubmitting }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              setFieldValue,
+              isValid,
+              dirty,
+              handleSubmit,
+              resetForm,
+              isSubmitting
+            }) => (
               <Box
                 component="form"
                 onSubmit={(event) => {
                   event.preventDefault();
+
+                  // handleSubmit();
                 }}
                 sx={{ width: '100%' }}
               >
@@ -142,21 +170,52 @@ const Nomination = (props) => {
                       <Box>
                         <AnimateButton>
                           <Button
+                            disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
                             variant="contained"
                             color="success"
+                            // type="submit"
                             startIcon={<Additem />}
-                            onClick={async () => {
-                              const payload = {
-                                fd_investment_id: props.fdInvestmentID,
-                                investor_id: props.investorID,
-                                nominee: [{ ...values }]
-                              };
+                            onClick={(e) => {
+                              // console.log(e);
+                              // e.preventDefault();
+                              console.log({
+                                ...values
+                              });
+                              // props.handleNewNominee({
+                              //   ...values
+                              // });
 
-                              await UpdateNominee(payload);
-
-                              await GetEditOneInvestor(props.setInvestorEditing, props.investorID);
-
-                              changeTableVisibility();
+                              console.log(values.id);
+                              if (!(values.nominee_id || values.id)) {
+                                console.log('Bug');
+                                changeTableVisibility();
+                                props.setFieldValue('nominee', [...props.values.nominee, { id: uuidv4(), ...values }]);
+                              }
+                              if (values.id) {
+                                const nomineeId = values.id;
+                                const editNominee = props.values.nominee.map((nominee) => {
+                                  if (nominee.id === nomineeId) {
+                                    console.log('Editing..');
+                                    return values;
+                                  } else {
+                                    return nominee;
+                                  }
+                                });
+                                changeTableVisibility();
+                                props.setFieldValue('nominee', editNominee);
+                              }
+                              if (values.nominee_id) {
+                                const nomineeId = values.nominee_id;
+                                const editNominee = props.values.nominee.map((nominee) => {
+                                  if (nominee.nominee_id === nomineeId) {
+                                    return values;
+                                  } else {
+                                    return nominee;
+                                  }
+                                });
+                                changeTableVisibility();
+                                props.setFieldValue('nominee', editNominee);
+                              }
                               clearFormValues();
                             }}
                           >
@@ -230,12 +289,10 @@ const Nomination = (props) => {
                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
                           <DesktopDatePicker
                             className="calendar_main"
-                            label="DOB"
+                            label="Date of Birth"
                             inputFormat="dd/MM/yyyy"
                             value={values?.birth_date && new Date(values?.birth_date)}
                             onChange={(newValue) => {
-                              console.log(newValue);
-                              // setFieldValue('birth_date', dateFormatter(newValue));
                               setFieldValue('birth_date', newValue);
                             }}
                             renderInput={(params) => <CustomTextField {...params} />}
@@ -268,7 +325,7 @@ const Nomination = (props) => {
                           errors={errors}
                         />
                       </Grid>
-                      <Grid item xs={12} sm={3} md={3} style={{ display: 'grid', gap: '10px' }}>
+                      <Grid item xs={12} sm={4} md={4} style={{ display: 'grid', gap: '10px' }}>
                         <CustomTextField
                           label="Pin Code"
                           name="pincode"
@@ -281,7 +338,7 @@ const Nomination = (props) => {
                           errors={errors}
                         />
                       </Grid>
-                      <Grid item xs={12} sm={3} md={3} style={{ display: 'grid', gap: '10px' }}>
+                      <Grid item xs={12} sm={4} md={4} style={{ display: 'grid', gap: '10px' }}>
                         <CustomTextField
                           label="City"
                           name="city"
@@ -294,7 +351,7 @@ const Nomination = (props) => {
                           errors={errors}
                         />
                       </Grid>
-                      <Grid item xs={12} sm={3} md={3} style={{ display: 'grid', gap: '10px' }}>
+                      <Grid item xs={12} sm={4} md={4} style={{ display: 'grid', gap: '10px' }}>
                         <CustomTextField
                           label="State"
                           name="state"
@@ -302,21 +359,6 @@ const Nomination = (props) => {
                           values={values}
                           type="string"
                           onChange={handleChange}
-                          onBlur={handleBlur}
-                          touched={touched}
-                          errors={errors}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={3} md={3} style={{ display: 'grid', gap: '10px' }}>
-                        <CustomTextField
-                          label="Percentage (%)"
-                          name="percentage"
-                          placeholder="Please enter your Percentage"
-                          values={values}
-                          type="string"
-                          reg="number"
-                          setFieldValue={setFieldValue}
-                          // onChange={handleChange}
                           onBlur={handleBlur}
                           touched={touched}
                           errors={errors}
@@ -330,64 +372,31 @@ const Nomination = (props) => {
           </Formik>
         )}
         {!showTable && (
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <MainCard
-                title="Nominee"
-                changeTableVisibility={changeTableVisibility}
-                showButton
-                setActiveAdding={setActiveClose}
-                border
-                contentSX={{ p: 0 }}
-                sx={{ height: '100%' }}
-              >
-                <MultiTable
-                  columns={columns}
-                  data={props.nomineeData}
-                  changeTableVisibility={changeTableVisibility}
-                  setEditing={setEditing}
-                  // getOneItem={GetOneProduct}
-                  // deleteOneItem={DeleteOneProduct}
-                  // setSearchData={setSearchData}
-                  // tableDataRefetch={ProductTableDataRefetch}
-                  setActiveEditing={setActiveEditing}
-                  VisibleColumn={VisibleColumn}
-                  doNotShowHeader={true}
-                />
-              </MainCard>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-            <Grid item xs={4}></Grid>
-            <Grid item xs={4}></Grid>
-            <Grid item xs={2}>
-              <Button
-                fullWidth
-                variant="outlined"
-                color="secondary"
-                sx={{ borderRadius: 0.6 }}
-                onClick={async () => {
-                  props.handleTabChange(event, props.tabValue - 1);
-                }}
-              >
-                Back
-              </Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                fullWidth
-                variant="contained"
-                color="success"
-                sx={{ borderRadius: 0.6 }}
-                onClick={async () => {
-                  props.handleTabChange(event, props.tabValue + 1);
-                }}
-              >
-                Proceed
-              </Button>
-            </Grid>
-          </Grid>
+          <MainCard
+            title="Nominee"
+            changeTableVisibility={changeTableVisibility}
+            showButton
+            setActiveAdding={setActiveClose}
+            border
+            contentSX={{ p: 0 }}
+            sx={{ height: '100%' }}
+          >
+            <MultiTable
+              columns={columns}
+              // data={props.nomineeData}
+              data={props.values.nominee}
+              changeTableVisibility={changeTableVisibility}
+              setEditing={setEditing}
+              // getOneItem={GetOneProduct}
+              deleteOneItem={DeleteOneNominee}
+              // setSearchData={setSearchData}
+              // tableDataRefetch={ProductTableDataRefetch}
+              setActiveEditing={setActiveEditing}
+              VisibleColumn={VisibleColumn}
+              doNotShowHeader={true}
+              isNomination={true}
+            />
+          </MainCard>
         )}
       </>
     </>
@@ -395,3 +404,10 @@ const Nomination = (props) => {
 };
 
 export default memo(Nomination);
+
+// const relation = relationship.find((el) => el.id === value.relationship_id);
+// if (relation.relation_name) {
+//   setSelectedRelation(relation.relation_name);
+// } else {
+//   selectedRelation(relation.relationship_id);
+// }

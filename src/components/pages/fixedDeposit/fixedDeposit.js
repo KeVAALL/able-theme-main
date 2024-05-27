@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // material-ui
 
@@ -8,16 +8,17 @@ import { useTheme } from '@mui/material/styles';
 // project-imports
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
+import Loader from 'components/atoms/loader/Loader';
 
 // third-party
 import { Formik } from 'formik';
 import { useQuery } from 'react-query';
 import Select from 'react-select';
-import Loader from 'components/atoms/loader/Loader';
+import { toInteger } from 'lodash';
 
 // assets
 import { SubmitButton } from 'components/atoms/button/button';
-import CustomTextField, { CustomCheckbox, FormikAutoComplete } from 'utils/textfield';
+import { CustomTextField, CustomCheckbox, FormikAutoComplete } from 'utils/textfield';
 import {
   formAllValues,
   validationSchema,
@@ -132,7 +133,12 @@ function FixDeposit() {
     queryKey: ['activeIssuerData'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetActiveIssuerData, // Function to fetch active issuer data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall_isactive'
+      };
+      return GetActiveIssuerData(payload);
+    }, // Function to fetch active issuer data
     onSuccess: (data) => {
       // Callback function on successful query
       setActiveIssuers(data); // Update active issuers with fetched data
@@ -148,7 +154,12 @@ function FixDeposit() {
     queryKey: ['productTableData'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetProductData, // Function to fetch product data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall'
+      };
+      return GetProductData(payload);
+    }, // Function to fetch product data
     onSuccess: (data) => {
       setProductData(data); // Update product data with fetched data
     }
@@ -158,15 +169,16 @@ function FixDeposit() {
     queryKey: ['tagData'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetFDTags, // Function to fetch product data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getalltags'
+      };
+      return GetFDTags(payload);
+    }, // Function to fetch product data
     onSuccess: (data) => {
       setFdTag(data); // Update product data with fetched data
     }
   });
-
-  // useEffect(() => {
-  //   console.log(selected);
-  // }, [selected]);
 
   if (isPending) return <Loader />;
 
@@ -187,38 +199,45 @@ function FixDeposit() {
           initialValues={formValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
+            const userID = localStorage.getItem('userID');
+            const tagIds = selected.map((id) => {
+              return id.value;
+            });
             if (isEditing === false) {
-              const tagIds = selected.map((id) => {
-                return id.value;
-              });
-              SaveProduct(
-                values,
-                ProductTableDataRefetch,
-                clearFormValues,
-                checkedCumulative,
-                checkedNonCumulative,
-                tagIds
-                // selectedIssuerID
-              );
+              const payload = {
+                ...values,
+                is_cumulative: toInteger(!checkedCumulative ? false : checkedCumulative),
+                is_non_cumulative: toInteger(!checkedNonCumulative ? false : checkedNonCumulative),
+                tag_id: tagIds,
+                user_id: toInteger(userID),
+                method_name: 'add'
+              };
+              try {
+                await SaveProduct(payload, ProductTableDataRefetch, clearFormValues);
+                changeTableVisibility();
+              } catch (err) {
+                console.log(err);
+              }
             }
             if (isEditing === true) {
-              console.log('i am editing');
-              const tagIds = selected.map((id) => {
-                return id.value;
-              });
-              EditProduct(
-                values,
-                isFDActive,
-                ProductTableDataRefetch,
-                clearFormValues,
-                checkedCumulative,
-                checkedNonCumulative,
-                tagIds,
-                selectedIssuerID,
-                setActiveClose
-              );
+              try {
+                const payload = {
+                  ...values,
+                  issuer_id: typeof selectedIssuerID === 'string' ? values.issuer_id : selectedIssuerID,
+                  is_active: toInteger(isFDActive),
+                  is_cumulative: toInteger(!checkedCumulative ? false : checkedCumulative),
+                  is_non_cumulative: toInteger(!checkedNonCumulative ? false : checkedNonCumulative),
+                  tag_id: tagIds,
+                  user_id: toInteger(userID),
+                  method_name: 'update'
+                };
+                await EditProduct(payload, ProductTableDataRefetch, clearFormValues);
+                setActiveClose();
+                changeTableVisibility();
+              } catch (err) {
+                console.log(err);
+              }
             }
-            changeTableVisibility();
           }}
         >
           {({
@@ -268,7 +287,7 @@ function FixDeposit() {
 
                 <CardContent>
                   <Grid container spacing={3}>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         label="FD Name"
                         name="fd_name"
@@ -282,7 +301,7 @@ function FixDeposit() {
                         errors={errors}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         label="Min Amount (₹)"
                         name="fd_min_amount"
@@ -295,7 +314,7 @@ function FixDeposit() {
                         errors={errors}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         label="Max Amount (₹)"
                         name="fd_max_amount"
@@ -308,7 +327,7 @@ function FixDeposit() {
                         errors={errors}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         label="Minimum Tenure (Days)"
                         name="min_tenure"
@@ -321,7 +340,7 @@ function FixDeposit() {
                         errors={errors}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         label="Max Tenure (Days)"
                         name="max_tenure"
@@ -334,7 +353,7 @@ function FixDeposit() {
                         errors={errors}
                       />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item md={2} sm={3} xs={6}>
                       <CustomCheckbox
                         checked={checkedCumulative}
                         handleChange={handleCumulativeChange}
@@ -342,7 +361,7 @@ function FixDeposit() {
                         label="Cumulative"
                       />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item md={2} sm={3} xs={6}>
                       <CustomCheckbox
                         checked={checkedNonCumulative}
                         handleChange={handleNonCumulativeChange}
@@ -350,7 +369,7 @@ function FixDeposit() {
                         label="Non Cumulative"
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         label="Logo URL"
                         name="logo_url"
@@ -365,7 +384,7 @@ function FixDeposit() {
                         inputProps={{ maxLength: 150 }}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       {/* <CustomAutoComplete
                         options={activeIssuers}
                         defaultValue={selectedIssuerID}
@@ -383,7 +402,7 @@ function FixDeposit() {
                         label="Issuers"
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <Select
                         className="multi_select"
                         isMulti

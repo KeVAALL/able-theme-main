@@ -40,11 +40,9 @@ export async function GetInvestmentData(values) {
     return [];
   }
 }
-export async function GetMaturityAction() {
+export async function GetMaturityAction(payload) {
   try {
-    const response = await axios.post('transaction/get_fdschemes', {
-      method_name: 'getmaturityactions'
-    });
+    const response = await axios.post('transaction/get_fdschemes', payload);
     return response.data.data;
   } catch (err) {
     enqueueSnackbar(err.message, {
@@ -77,9 +75,9 @@ export async function GetScheme(values) {
     return [];
   }
 }
-export async function GetInvestments(values) {
+export async function GetInvestments(payload) {
   try {
-    const response = await axios.post('transaction/get_investments', values);
+    const response = await axios.post('transaction/get_investments', payload);
 
     return response.data.data;
   } catch (err) {
@@ -94,11 +92,9 @@ export async function GetInvestments(values) {
     return [];
   }
 }
-export async function CalculateFD(values) {
+export async function CalculateFD(payload) {
   try {
-    const response = await axios.post('product/calculatefd', {
-      ...values
-    });
+    const response = await axios.post('product/calculatefd', payload);
 
     return response.data.data;
   } catch (err) {
@@ -113,11 +109,9 @@ export async function CalculateFD(values) {
     return [];
   }
 }
-export async function StartFD(values) {
+export async function StartFD(payload) {
   try {
-    const response = await axios.post('invest/startfd', {
-      ...values
-    });
+    const response = await axios.post('invest/startfd', payload);
     return response.data.data;
   } catch (err) {
     enqueueSnackbar(err.message, {
@@ -131,9 +125,9 @@ export async function StartFD(values) {
     return [];
   }
 }
-export async function UpdatePersonalInfo(values) {
+export async function UpdatePersonalInfo(payload) {
   try {
-    const response = await axios.post('invest/updatepersonalinfo', values);
+    const response = await axios.post('invest/updatepersonalinfo', payload);
     enqueueSnackbar('Personal Info Updated', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -155,9 +149,9 @@ export async function UpdatePersonalInfo(values) {
     return [];
   }
 }
-export async function UpdateAddressDetails(values) {
+export async function UpdateAddressDetails(payload) {
   try {
-    const response = await axios.post('invest/updateaddress', values);
+    const response = await axios.post('invest/updateaddress', payload);
     enqueueSnackbar('Address Details Updated', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -179,9 +173,9 @@ export async function UpdateAddressDetails(values) {
     return [];
   }
 }
-export async function UpdateProfessionalDetails(values) {
+export async function UpdateProfessionalDetails(payload) {
   try {
-    const response = await axios.post('invest/updateprofessionaldetails', values);
+    const response = await axios.post('invest/updateprofessionaldetails', payload);
     enqueueSnackbar('Professional Details Updated', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -203,9 +197,9 @@ export async function UpdateProfessionalDetails(values) {
     return [];
   }
 }
-export async function UpdateNominee(values) {
+export async function UpdateNominee(payload) {
   try {
-    const response = await axios.post('invest/updatenominees', values);
+    const response = await axios.post('invest/updatenominees', payload);
     enqueueSnackbar('Nominee Updated', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -227,12 +221,9 @@ export async function UpdateNominee(values) {
     return [];
   }
 }
-export async function GetDeclaration(value) {
+export async function GetDeclaration(payload) {
   try {
-    const response = await axios.post('invest/getdeclarations', {
-      method_name: 'getall',
-      fd_investment_id: value
-    });
+    const response = await axios.post('invest/getdeclarations', payload);
 
     return response.data.data;
   } catch (err) {
@@ -247,9 +238,9 @@ export async function GetDeclaration(value) {
     return [];
   }
 }
-export async function UpdateDeclaration(value) {
+export async function UpdateDeclaration(payload) {
   try {
-    const response = await axios.post('invest/updatedeclarations', value);
+    const response = await axios.post('invest/updatedeclarations', payload);
 
     enqueueSnackbar('Declarations Updated', {
       variant: 'success',

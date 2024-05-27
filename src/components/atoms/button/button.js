@@ -9,7 +9,7 @@ import { Additem } from 'iconsax-react';
 import { isValid } from 'date-fns';
 
 const headerSX = {
-  p: 2.5,
+  p: 2,
   '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
@@ -31,11 +31,10 @@ export const SubmitButton = memo(
     isValid,
     dirty
   }) => {
+    console.log(isValid, dirty);
     useEffect(() => {
-      console.log(isEditing);
-      console.log(formValues.is_active);
       if (setIsActive) {
-        setIsActive(formValues.is_active);
+        setIsActive(formValues?.is_active);
       }
     }, [formValues?.is_active]);
 
@@ -53,7 +52,7 @@ export const SubmitButton = memo(
     return (
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <CardHeader sx={headerSX} titleTypographyProps={{ variant: 'subtitle1' }} title={title} />
-        <Stack direction="row" alignItems="center" spacing={1.5} paddingRight={2.5}>
+        <Stack direction="row" alignItems="center" spacing={1.5} padding={2}>
           {isEditing ? (
             <Box>
               <FormControlLabel

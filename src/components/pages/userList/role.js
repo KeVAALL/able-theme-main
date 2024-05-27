@@ -22,14 +22,15 @@ import { useQuery } from 'react-query';
 // project-imports
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
+import Loader from 'components/atoms/loader/Loader';
 
 // third-party
 import { Formik } from 'formik';
-import Loader from 'components/atoms/loader/Loader';
+import { toInteger } from 'lodash';
 
 // assets
 import { SubmitButton } from 'components/atoms/button/button';
-import CustomTextField, { CustomCheckbox, FormikAutoComplete } from 'utils/textfield';
+import { CustomTextField, CustomCheckbox, FormikAutoComplete } from 'utils/textfield';
 import {
   formAllValues,
   validationSchema,
@@ -39,11 +40,8 @@ import {
   tableColumns,
   VisibleColumn
 } from 'constant/userRoleValidation';
-import { GetIssuerData, GetOneIssuer, SaveIssuer, EditIssuer, DeleteOneIssuer } from 'hooks/issuer/issuer';
 import { FilterSearch } from 'iconsax-react';
-import { EditRole, GetMenu, GetRoles, GetSelectedMenu, SaveRole } from 'hooks/user/user';
-import { borderRadius } from '@mui/system';
-import { toInteger } from 'lodash';
+import { DeleteRole, EditRole, GetMenu, GetRoles, GetSelectedMenu, SaveRole, SearchRoles } from 'hooks/user/user';
 
 function Role() {
   // Main data state to hold the list of issuers
@@ -129,9 +127,13 @@ function Role() {
     queryKey: ['getAllRoles'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetSelectedMenu, // Function to fetch issuer data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall'
+      };
+      return GetRoles(payload);
+    }, // Function to fetch issuer data
     onSuccess: (data) => {
-      console.log(data);
       setRoleDropdown(data);
       setUserRoleData(data);
     }
@@ -146,7 +148,12 @@ function Role() {
     queryKey: ['getAllMenu'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetMenu, // Function to fetch issuer data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getmenu'
+      };
+      return GetMenu(payload);
+    }, // Function to fetch issuer data
     onSuccess: (data) => {
       const mappedMenus = data.map((menu) => {
         return { ...menu, isSelected: false };
@@ -284,14 +291,16 @@ function Role() {
                             <Grid item xs={12}>
                               <ListItem disablePadding divider>
                                 <Stack sx={{ width: '100%' }} flexDirection="row" alignItems="center">
-                                  <ListItemText primary="#" sx={{ width: '5%', display: 'flex', justifyContent: 'center' }} />
+                                  <ListItemButton sx={{ width: '5%', backgroundColor: '#F5F5F5' }}>
+                                    <ListItemText primary="#" sx={{ display: 'flex', justifyContent: 'center' }} />
+                                  </ListItemButton>
                                   <Divider orientation="vertical" flexItem />
                                   <Stack sx={{ width: '95%' }} flexDirection="row" alignItems="center">
-                                    <ListItemButton sx={{ width: '80%' }}>
+                                    <ListItemButton sx={{ width: '80%', backgroundColor: '#F5F5F5' }}>
                                       <ListItemText primary="Menu Name" />
                                     </ListItemButton>
                                     <Divider orientation="vertical" flexItem />
-                                    <ListItemButton sx={{ width: '11.5%' }}>
+                                    <ListItemButton sx={{ width: '11.5%', backgroundColor: '#F5F5F5' }}>
                                       <ListItemText sx={{ display: 'flex', justifyContent: 'center' }} primary="Display Flag" />
                                     </ListItemButton>
                                   </Stack>
@@ -358,14 +367,16 @@ function Role() {
         >
           <Formik
             initialValues={{
-              username: '',
-              role_id: 1
+              search: ''
             }}
             onSubmit={async (values, { resetForm }) => {
-              //   const searchResult = await GetIFASearch(values);
-              //   if (searchResult) {
-              //     setSearchData(searchResult);
-              //   }
+              const payload = {
+                method_name: 'getone',
+                ...values
+              };
+              const search = await SearchRoles(payload);
+
+              setUserRoleData(search);
             }}
           >
             {({ values, errors, touched, setFieldValue, handleChange, handleBlur, handleSubmit, resetForm }) => (
@@ -379,10 +390,10 @@ function Role() {
               >
                 <CardContent sx={{ paddingLeft: '16px !important' }}>
                   <Grid container spacing={2}>
-                    {/* <Grid item xs={2.5} style={{ paddingLeft: 0, paddingTop: 0 }}>
+                    <Grid item md={2.5} sm={3} xs={4} style={{ paddingLeft: 0, paddingTop: 0 }}>
                       <CustomTextField
-                        label="User Name"
-                        name="username"
+                        label="Role Name"
+                        name="search"
                         values={values}
                         type="text"
                         onChange={handleChange}
@@ -395,21 +406,9 @@ function Role() {
                           }
                         }}
                       />
-                    </Grid> */}
-
-                    <Grid item xs={2.5} style={{ paddingLeft: 0, paddingTop: 0 }}>
-                      <FormikAutoComplete
-                        options={roleDropdown}
-                        defaultValue={values.role_id}
-                        setFieldValue={setFieldValue}
-                        formName="role_id"
-                        idName="role_id"
-                        optionName="role_name"
-                        label="Role"
-                      />
                     </Grid>
 
-                    <Grid item xs={1.5} style={{ paddingTop: 0 }}>
+                    <Grid item md={2.5} sm={3} xs={4} style={{ paddingTop: 0 }}>
                       <Button
                         variant="contained"
                         color="success"
@@ -438,12 +437,12 @@ function Role() {
             // validationSchema={filterValidationSchema}
             changeTableVisibility={changeTableVisibility}
             setEditing={setEditing}
-            getOneItem={GetOneIssuer}
-            deleteOneItem={DeleteOneIssuer}
-            // getEditData={GetSelectedMenu}
-            // getEditReqField={'role_id'}
+            getOneItem={() => {}}
+            deleteOneItem={DeleteRole}
+            getEditData={GetSelectedMenu}
+            getEditReqField={'role_id'}
             setSearchData={setSearchData}
-            tableDataRefetch={() => {}}
+            tableDataRefetch={refetchRole}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
           />

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from 'react';
-import { Grid, Button, Divider } from '@mui/material';
+import { Grid } from '@mui/material';
 
 // project-imports
 import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
@@ -8,13 +8,14 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { residency, marital_status } from 'constant/investorValidation';
-import { UpdatePersonalInfo } from 'hooks/transaction/investment';
+
+// third-party
 import enGB from 'date-fns/locale/en-GB';
 
 const PersonalInfo = (props) => {
   return (
     <>
-      <Grid container spacing={3} id="grid_box">
+      <Grid container spacing={2} id="grid_box" sx={{ marginBottom: '20px' }}>
         <Grid item xs={12} md={4}>
           <FormikAutoComplete
             options={residency}
@@ -53,9 +54,9 @@ const PersonalInfo = (props) => {
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
             <DesktopDatePicker
               className="calendar_main"
-              label="Date Desktop"
+              label="Date of Birth"
               inputFormat="dd/MM/yyyy"
-              value={props.values?.investor.birth_date && new Date(props.values.investor.birth_date)}
+              value={props.values?.investor.birth_date && new Date(props.values?.investor.birth_date)}
               onChange={(newValue) => {
                 console.log(newValue);
                 props.setFieldValue('investor.birth_date', newValue);
@@ -63,50 +64,6 @@ const PersonalInfo = (props) => {
               renderInput={(params) => <CustomTextField {...params} />}
             />
           </LocalizationProvider>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Divider sx={{ borderColor: '#9a9b9da6' }} />
-        </Grid>
-
-        <Grid item xs={4}></Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={2}>
-          <Button
-            fullWidth
-            variant="outlined"
-            color="secondary"
-            sx={{ borderRadius: 0.6 }}
-            onClick={async () => {
-              props.handleTabChange(event, props.tabValue - 1);
-            }}
-          >
-            Back
-          </Button>
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            fullWidth
-            variant="contained"
-            color="success"
-            sx={{ borderRadius: 0.6 }}
-            onClick={async () => {
-              console.log(props.values.investor);
-              const payload = {
-                fd_investment_id: props.fdInvestmentID,
-                investor_id: props.investorID,
-                ...props.values.investor
-              };
-
-              const response = await UpdatePersonalInfo(payload);
-
-              if (!response) {
-                props.handleTabChange(event, props.tabValue + 1);
-              }
-            }}
-          >
-            Proceed
-          </Button>
         </Grid>
       </Grid>
     </>

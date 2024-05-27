@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from 'react';
-import { Checkbox, Grid, Typography, Box, Button, Divider } from '@mui/material';
+import { Checkbox, Grid, Typography, Box } from '@mui/material';
 import { NestedCustomTextField } from 'utils/textfield';
-import { UpdateAddressDetails } from 'hooks/transaction/investment';
 
 const AddressDetails = (props) => {
   return (
@@ -24,6 +23,7 @@ const AddressDetails = (props) => {
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
+              inputProps={{ maxLength: 200 }}
             />
           </Grid>
           <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
@@ -37,6 +37,7 @@ const AddressDetails = (props) => {
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
+              inputProps={{ maxLength: 200 }}
             />
           </Grid>
 
@@ -47,7 +48,8 @@ const AddressDetails = (props) => {
               placeholder="Please enter your Pin Code"
               values={props.values.investor_address.pincode}
               type="string"
-              handleChange={props.handleChange}
+              regType="number"
+              setFieldValue={props.setFieldValue}
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
@@ -61,7 +63,8 @@ const AddressDetails = (props) => {
               placeholder="Please enter your City"
               values={props.values.investor_address.city}
               type="string"
-              handleChange={props.handleChange}
+              regType="string"
+              setFieldValue={props.setFieldValue}
               handleBlur={props.handleBlur}
               touched={props.touched}
               errors={props.errors}
@@ -84,6 +87,7 @@ const AddressDetails = (props) => {
         </Typography>
       </Box>
 
+      {/* {!props.values.investor.is_permanent_address_correspond && ( */}
       {!props.values.is_permanent_address_correspondent && (
         <Box id="__permanent _address" style={{ marginTop: '12px', marginBottom: '12px' }}>
           <Typography sx={{ color: '#21B546', marginBottom: '12px', display: 'block' }} variant="p">
@@ -102,6 +106,7 @@ const AddressDetails = (props) => {
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}
+                inputProps={{ maxLength: 200 }}
               />
             </Grid>
             <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
@@ -115,6 +120,7 @@ const AddressDetails = (props) => {
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}
+                inputProps={{ maxLength: 200 }}
               />
             </Grid>
 
@@ -125,7 +131,8 @@ const AddressDetails = (props) => {
                 placeholder="Please enter your Pin Code"
                 values={props.values.correspondent_address.pincode}
                 type="string"
-                handleChange={props.handleChange}
+                regType="number"
+                setFieldValue={props.setFieldValue}
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}
@@ -139,7 +146,8 @@ const AddressDetails = (props) => {
                 placeholder="Please enter your City"
                 values={props.values.correspondent_address.city}
                 type="string"
-                handleChange={props.handleChange}
+                regType="string"
+                setFieldValue={props.setFieldValue}
                 handleBlur={props.handleBlur}
                 touched={props.touched}
                 errors={props.errors}
@@ -148,52 +156,6 @@ const AddressDetails = (props) => {
           </Grid>
         </Box>
       )}
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={2}>
-          <Button
-            fullWidth
-            variant="outlined"
-            color="secondary"
-            sx={{ borderRadius: 0.6 }}
-            // startIcon={<TimerStart />}
-            onClick={async () => {
-              props.handleTabChange(event, props.tabValue - 1);
-            }}
-          >
-            Back
-          </Button>
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            fullWidth
-            variant="contained"
-            color="success"
-            sx={{ borderRadius: 0.6 }}
-            onClick={async () => {
-              console.log(props.values.investor_address);
-              const payload = {
-                fd_investment_id: props.fdInvestmentID,
-                investor_id: props.investorID,
-                permanent_address: props.values.investor_address,
-                correspondent_address: props.values.correspondent_address,
-                is_permanent_address_correspondent: props.values.is_permanent_address_correspondent
-              };
-              const response = await UpdateAddressDetails(payload);
-
-              if (!response) {
-                props.handleTabChange(event, props.tabValue + 1);
-              }
-            }}
-          >
-            Proceed
-          </Button>
-        </Grid>
-      </Grid>
     </>
   );
 };

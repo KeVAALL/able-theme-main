@@ -7,11 +7,9 @@ import { dispatch } from '../../redux';
 import { openSnackbar } from 'redux/reducers/snackbar';
 import { toInteger } from 'lodash';
 
-export async function GetIssuerData() {
+export async function GetIssuerData(payload) {
   try {
-    const response = await axios.post('/issuer/getissuer', {
-      method_name: 'getall'
-    });
+    const response = await axios.post('/issuer/getissuer', payload);
     return response.data.data;
   } catch (error) {
     enqueueSnackbar(err.message, {
@@ -25,11 +23,9 @@ export async function GetIssuerData() {
     return [];
   }
 }
-export async function GetActiveIssuerData() {
+export async function GetActiveIssuerData(payload) {
   try {
-    const response = await axios.post('/issuer/getissuer', {
-      method_name: 'getall_isactive'
-    });
+    const response = await axios.post('/issuer/getissuer', payload);
     return response.data.data;
   } catch (err) {
     enqueueSnackbar(err.message, {
@@ -64,17 +60,7 @@ export async function GetOneIssuer(values, setSearchData) {
 }
 export async function SaveIssuer(values, issuerTableDataRefetch, clearFormValues) {
   try {
-    const response = await axios.post('/issuer/saveissuer', {
-      ...values,
-      method_name: 'add',
-      max_dp_fd_limit: 0,
-      max_fd_nominee_limit: 0,
-      max_pms_nominee_limit: 0,
-      renewable_lower_bound: 0,
-      renewable_upper_bound: 0,
-      is_renewable: 0,
-      user_id: 2
-    });
+    const response = await axios.post('/issuer/saveissuer', values);
     clearFormValues();
     enqueueSnackbar('Issuer added', {
       variant: 'success',
@@ -87,7 +73,6 @@ export async function SaveIssuer(values, issuerTableDataRefetch, clearFormValues
     issuerTableDataRefetch();
     return response;
   } catch (err) {
-    console.log(err);
     enqueueSnackbar(err.message, {
       variant: 'error',
       autoHideDuration: 2000,
@@ -99,15 +84,9 @@ export async function SaveIssuer(values, issuerTableDataRefetch, clearFormValues
     throw err;
   }
 }
-export async function EditIssuer(values, isIssuerActive, issuerTableDataRefetch, clearFormValues, setActiveClose) {
-  //   console.log({ ...values, is_active: toInteger(isIssuerActive), method_name: 'update', user_id: 2 });
+export async function EditIssuer(values, issuerTableDataRefetch, clearFormValues, setActiveClose) {
   try {
-    const response = await axios.post('/issuer/saveissuer', {
-      ...values,
-      is_active: toInteger(isIssuerActive),
-      method_name: 'update',
-      user_id: 2
-    });
+    const response = await axios.post('/issuer/saveissuer', values);
     clearFormValues();
     setActiveClose();
     enqueueSnackbar('Issuer Updated', {
@@ -133,10 +112,11 @@ export async function EditIssuer(values, isIssuerActive, issuerTableDataRefetch,
   }
 }
 export async function DeleteOneIssuer(values) {
+  const userID = localStorage.getItem('userID');
   try {
     await axios.post('/issuer/saveissuer', {
-      issuer_id: values.issuer_id,
-      user_id: 2,
+      issuer_id: values?.issuer_id,
+      user_id: toInteger(userID),
       method_name: 'delete'
     });
     enqueueSnackbar('Issuer Deleted', {

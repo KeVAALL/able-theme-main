@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 // material-ui
-import { Divider, Box, Card, Grid, CardContent, Button, TextField } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, Button, TextField, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useQuery } from 'react-query';
 
@@ -20,7 +20,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
 
 // assets
 import { SubmitButton } from 'components/atoms/button/button';
-import CustomTextField, { FormikAutoComplete } from 'utils/textfield';
+import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
 import { investorValues as investorFormValues, investorValidationSchema as investorFormValidation } from 'constant/investmentValidation';
 import {
   formAllValues,
@@ -58,6 +58,7 @@ import { GetPayoutMethod, GetSchemeSearch } from 'hooks/interestRate/interestRat
 import InvestmentDialog from 'components/atoms/dialog/InvestmentDialog';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import InvestmentTabs from 'components/organisms/investmentTabs';
+import enGB from 'date-fns/locale/en-GB';
 
 function Investment() {
   // Main data states
@@ -88,45 +89,32 @@ function Investment() {
   const [showTable, setShowTable] = useState(false); // State to toggle visibility of the table form
 
   // Radio states
-  const [selectedDeclaration, setSelectedDeclaration] = useState({
-    isPoliticallyExposed: true,
-    isRelativeToPoliticallyExposed: true,
-    isResidentOutsideIndia: true
-  });
+
   const [dynamicDeclaration, setDynamicDeclaration] = useState([]);
   // Selection states
   const [fdDropdown, setFdDropdown] = useState([]);
   const [statusDropdown, setStatusDropdown] = useState([]);
   const [dateValue, setDateValue] = useState([null, null]);
 
-  // Address Details Checkbox
-  const [sameAddress, setSameAddress] = useState(false);
-  // form pending
-  const [formPending, setFormPending] = useState(false);
-
   // Form State
   const [formValues, setFormValues] = useState(formAllValues);
   const [investorEditFormValues, setInvestorEditFormValues] = useState(investorFormValues);
   // Theme
   const theme = useTheme();
-  const mdUp = theme.breakpoints.up('md');
+  const matchDownLG = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+  const matchUpMD = useMediaQuery((theme) => theme.breakpoints.up('md'));
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const matchUpSM = useMediaQuery((theme) => theme.breakpoints.up('sm'));
 
   // Sets form values for editing
   const setEditing = (value) => {
-    console.log(value);
     setFormValues(value);
     // handleIsInvestmentActive(value.investor.is_active);
   };
   const setInvestorEditing = (value) => {
-    console.log(value);
     setInvestorEditFormValues(value);
     // handleIsInvestorActive(value.investor.is_active);
     // setSelectedGender(value.investor.gender);
-    setSelectedDeclaration({
-      isPoliticallyExposed: Boolean(value.declaration.is_pep),
-      isRelativeToPoliticallyExposed: Boolean(value.declaration.is_rpep),
-      isResidentOutsideIndia: Boolean(value.declaration.is_foreign_tax_resident)
-    });
     setNomineeData(value.nominee);
   };
   const setActiveEditing = () => {
@@ -146,7 +134,6 @@ function Investment() {
   };
   // Nominee
   const handleNewNominee = (value) => {
-    console.log(value.values);
     if (value.values.nominee_id) {
       const editNom = nomineeData.map((nominee, index) => {
         if (nominee.nominee_id === value.values.nominee_id) {
@@ -155,7 +142,6 @@ function Investment() {
           return nominee;
         }
       });
-      console.log(editNom);
       setNomineeData(editNom);
     } else {
       setNomineeData((prev) => {
@@ -181,18 +167,7 @@ function Investment() {
       });
     });
   };
-  const handleDeclarationClick = (value) => {
-    if (value === 'PoliticallyExposed') {
-      setSelectedDeclaration({ ...selectedDeclaration, isPoliticallyExposed: !selectedDeclaration.isPoliticallyExposed });
-    } else if (value === 'RelativeToPoliticallyExposed') {
-      setSelectedDeclaration({
-        ...selectedDeclaration,
-        isRelativeToPoliticallyExposed: !selectedDeclaration.isRelativeToPoliticallyExposed
-      });
-    } else if (value === 'ResidentOutsideIndia') {
-      setSelectedDeclaration({ ...selectedDeclaration, isResidentOutsideIndia: !selectedDeclaration.isResidentOutsideIndia });
-    }
-  };
+
   // Toggle Table and Form Visibility
   const changeTableVisibility = () => {
     setShowTable(!showTable);
@@ -247,16 +222,22 @@ function Investment() {
   // Query for fetching investor data
   const {
     isPending: investorPending,
-    // error,
+    error: investorError,
     refetch: InvestorTableDataRefetch
   } = useQuery({
     queryKey: ['investorTableData'],
     refetchOnWindowFocus: false,
     keepPreviousData: true,
-    queryFn: GetInvestorData,
+    queryFn: () => {
+      const payload = {
+        method_name: 'getinvestor',
+        search: '',
+        ifa_id: 0
+      };
+      return GetInvestorData(payload);
+    },
     onSuccess: (data) => {
       setInvestorData(data);
-      // setLoading(false);
     }
   });
   // Query for fetching payout data
@@ -265,10 +246,16 @@ function Investment() {
     error,
     refetch: refetchPayoutData
   } = useQuery({
-    queryKey: ['payoutData', 0],
+    queryKey: ['payoutData'],
     refetchOnWindowFocus: false,
     keepPreviousData: true,
-    queryFn: () => GetPayoutMethod(0),
+    queryFn: () => {
+      const payload = {
+        method_name: 'getpayouts',
+        fd_id: 0
+      };
+      return GetPayoutMethod(payload);
+    },
     onSuccess: (data) => {
       setPayoutData(data);
     }
@@ -282,7 +269,12 @@ function Investment() {
     queryKey: ['productTableData'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetProductData, // Function to fetch product data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall'
+      };
+      return GetProductData(payload);
+    }, // Function to fetch product data
     onSuccess: (data) => {
       setFdDropdown(data); // Update product data with fetched data
     }
@@ -296,7 +288,12 @@ function Investment() {
     queryKey: ['ifaTableData'],
     refetchOnWindowFocus: false,
     keepPreviousData: true,
-    queryFn: GetIfa,
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall'
+      };
+      return GetIfa(payload);
+    },
     onSuccess: (data) => {
       setIfaData(data);
     }
@@ -316,7 +313,12 @@ function Investment() {
     queryKey: ['maturityDropdownData'], // Unique key for the query
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
-    queryFn: GetMaturityAction, // Function to fetch product data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getmaturityactions'
+      };
+      return GetMaturityAction(payload);
+    }, // Function to fetch product data
     onSuccess: (data) => {
       setMaturityAction(data); // Update product data with fetched data
     }
@@ -341,35 +343,11 @@ function Investment() {
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             if (isEditing === false) {
-              // const reqValues = { ...values, compounding_type: 'yearly' };
-              // const result = await CalculateFD(reqValues);
-              // const calculated = result.data;
-              // console.log({
-              //   ...values,
-              //   interest_rate: calculated.interestRate,
-              //   aggrigated_interest: calculated.aggrigated_interest,
-              //   maturity_amount: calculated.maturity_amount
-              // });
-              // handleCalculate({
-              //   ...values,
-              //   interest_rate: calculated.interestRate,
-              //   aggrigated_interest: calculated.aggrigated_interest,
-              //   maturity_amount: calculated.maturity_amount
-              // });
-              //   SaveInvestor(formValues, InvestmentTableDataRefetch, clearFormValues);
+              console.log(values);
             }
             if (isEditing === true) {
-              console.log('edit');
-              //   EditInvestor(
-              //     formValues,
-              //     isFDActive,
-              //     isInvestorActive,
-              //     InvestmentTableDataRefetch,
-              //     clearFormValues,
-              //     setActiveClose
-              //   );
+              console.log(values);
             }
-            // changeTableVisibility();
           }}
         >
           {({
@@ -421,7 +399,7 @@ function Investment() {
 
                 <CardContent>
                   <Grid container spacing={3}>
-                    <Grid item xs={3}>
+                    <Grid item md={4} sm={6} xs={6}>
                       <FormikAutoComplete
                         options={investorData}
                         defaultValue={values.investor_id}
@@ -432,7 +410,7 @@ function Investment() {
                         label="Select Investor"
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={4} sm={6} xs={6}>
                       <FormikAutoComplete
                         options={fdDropdown}
                         defaultValue={values.fd_id}
@@ -444,7 +422,7 @@ function Investment() {
                         label="Select FD"
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={4} sm={6} xs={6}>
                       <FormikAutoComplete
                         options={ifaData}
                         defaultValue={values.ifa_id}
@@ -454,7 +432,7 @@ function Investment() {
                         label="Select IFA"
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={4} sm={6} xs={6}>
                       <FormikAutoComplete
                         options={maturityAction}
                         defaultValue={values.maturity_action_id}
@@ -464,7 +442,7 @@ function Investment() {
                         label="Select Maturity Action"
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={4} sm={6} xs={6}>
                       <CustomTextField
                         label="Investment Amount (₹)"
                         name="investment_amount"
@@ -482,7 +460,18 @@ function Investment() {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item md={4} sm={6} xs={6}>
+                      <FormikAutoComplete
+                        options={payoutData}
+                        defaultValue={values.payout_method_id}
+                        setFieldValue={setFieldValue}
+                        formName="payout_method_id"
+                        keyName="id"
+                        optionName="item_value"
+                        label="Select Payout Method"
+                      />
+                    </Grid>
+                    <Grid item md={2} sm={2} xs={4}>
                       <FormikAutoComplete
                         disableClearable
                         options={days}
@@ -494,7 +483,7 @@ function Investment() {
                       />
                     </Grid>
 
-                    <Grid item xs={1}>
+                    <Grid item md={2} sm={2} xs={4}>
                       <FormikAutoComplete
                         disableClearable
                         options={month}
@@ -505,7 +494,7 @@ function Investment() {
                         label="Months"
                       />
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item md={2} sm={2} xs={4}>
                       <FormikAutoComplete
                         disableClearable
                         options={year}
@@ -516,22 +505,10 @@ function Investment() {
                         label="Years"
                       />
                     </Grid>
-                    <Grid item xs={3}>
-                      <FormikAutoComplete
-                        options={payoutData}
-                        defaultValue={values.payout_method_id}
-                        setFieldValue={setFieldValue}
-                        formName="payout_method_id"
-                        keyName="id"
-                        optionName="item_value"
-                        label="Select Payout Method"
-                      />
-                    </Grid>
-                    <Grid item xs={1.5}>
+
+                    <Grid item md={3} sm={3} xs={6}>
                       <AnimateButton>
                         <Button
-                          // disabled={formPending}
-                          // formPending is custom state
                           fullWidth
                           disabled={isSubmitting || !isValid}
                           variant="contained"
@@ -540,7 +517,7 @@ function Investment() {
                           startIcon={<Calculator />}
                           onClick={async () => {
                             setSubmitting(true);
-                            const reqValues = {
+                            const payload = {
                               ...values,
                               interest_rate: '0',
                               aggrigated_interest: 0,
@@ -548,7 +525,7 @@ function Investment() {
                               compounding_type: 'yearly'
                             };
 
-                            const result = await CalculateFD(reqValues);
+                            const result = await CalculateFD(payload);
 
                             setSubmitting(false);
 
@@ -567,7 +544,7 @@ function Investment() {
                         </Button>
                       </AnimateButton>
                     </Grid>
-                    <Grid item xs={1.5}>
+                    <Grid item md={3} sm={3} xs={6}>
                       <Button
                         fullWidth
                         variant="contained"
@@ -575,7 +552,13 @@ function Investment() {
                         sx={{ borderRadius: 0.6 }}
                         startIcon={<Eye />}
                         onClick={async () => {
-                          const searchResult = await GetSchemeSearch(values.fd_id, values.payout_method_id);
+                          const payload = {
+                            method_name: 'getscheme',
+                            fd_id: values.fd_id,
+                            fd_payout_method_id: values.payout_method_id
+                          };
+                          const searchResult = await GetSchemeSearch(payload);
+
                           setSchemeData(searchResult);
 
                           setTimeout(() => {
@@ -586,7 +569,7 @@ function Investment() {
                         Scheme
                       </Button>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={3} sm={4} xs={12}>
                       <TextField
                         fullWidth
                         disabled
@@ -609,7 +592,7 @@ function Investment() {
                         inputProps={{ maxLength: 50 }}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={3} sm={4} xs={12}>
                       <TextField
                         fullWidth
                         disabled
@@ -632,7 +615,7 @@ function Investment() {
                         inputProps={{ maxLength: 50 }}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={3} sm={4} xs={12}>
                       <TextField
                         fullWidth
                         disabled
@@ -655,7 +638,8 @@ function Investment() {
                         inputProps={{ maxLength: 50 }}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    {matchDownLG && matchUpSM && <Grid item sm={8} />}
+                    <Grid item md={3} sm={4} xs={12}>
                       <Button
                         // disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
                         disabled={
@@ -683,7 +667,12 @@ function Investment() {
 
                           setFdInvestmentID(result.fd_investment_id);
 
-                          const declarations = await GetDeclaration(result.fd_investment_id);
+                          const declarationPayload = {
+                            method_name: 'getall',
+                            fd_investment_id: result.fd_investment_id
+                          };
+
+                          const declarations = await GetDeclaration(declarationPayload);
                           const mappedDeclarations = declarations.map((dec) => {
                             return { ...dec, isSelected: false };
                           });
@@ -727,8 +716,6 @@ function Investment() {
                               touched={touched}
                               errors={errors}
                               setFieldValue={setFieldValue}
-                              selectedDeclaration={selectedDeclaration}
-                              handleDeclarationClick={handleDeclarationClick}
                               nomineeData={nomineeData}
                               handleNewNominee={handleNewNominee}
                               dynamicDeclaration={dynamicDeclaration}
@@ -736,10 +723,6 @@ function Investment() {
                               fdInvestmentID={fdInvestmentID}
                               investorID={formValues.investor_id}
                               setInvestorEditing={setInvestorEditing}
-                              // errorObject={errorObject}
-                              // handleTabError={handleTabError}
-                              // sameAddress={sameAddress}
-                              // handleCheckboxChange={handleCheckboxChange}
                             />
                           </Box>
                         )}
@@ -772,9 +755,9 @@ function Investment() {
               ifa_id: yup.number()
             })}
             onSubmit={async (values, { resetForm }) => {
-              const formValues = { ...values, method_name: 'getinvestmentsonifa', from_date: dateValue[0], end_date: dateValue[1] };
+              const payload = { ...values, method_name: 'getinvestmentsonifa', from_date: dateValue[0], end_date: dateValue[1] };
 
-              const investmentData = await GetInvestments(formValues);
+              const investmentData = await GetInvestments(payload);
 
               setInvestmentData(investmentData);
             }}
@@ -788,10 +771,14 @@ function Investment() {
                 }}
                 sx={{ width: '100%' }}
               >
-                <CardContent sx={{ paddingLeft: '16px !important' }}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={3} style={{ paddingLeft: 0, paddingTop: 0 }}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns} localeText={{ start: 'Date From', end: 'Date To' }}>
+                <CardContent sx={{ paddingLeft: '16px !important', paddingRight: matchDownSM ? 0 : '24px' }}>
+                  <Grid container spacing={matchDownSM ? 3 : 2}>
+                    <Grid item md={3} sm={4} xs={12} style={{ paddingLeft: matchDownSM ? 8 : 0, paddingTop: matchDownSM ? 8 : 0 }}>
+                      <LocalizationProvider
+                        dateAdapter={AdapterDateFns}
+                        localeText={{ start: 'Date From', end: 'Date To' }}
+                        adapterLocale={enGB}
+                      >
                         <DesktopDateRangePicker
                           className="calendar_main"
                           value={dateValue}
@@ -803,7 +790,7 @@ function Investment() {
                       </LocalizationProvider>
                     </Grid>
 
-                    <Grid item xs={2.5} style={{ paddingTop: 0 }}>
+                    <Grid item md={2.5} sm={3} xs={6} style={{ paddingLeft: matchDownSM ? 8 : 24, paddingTop: matchDownSM ? 8 : 0 }}>
                       <FormikAutoComplete
                         options={investorData}
                         defaultValue={values.investor_id}
@@ -816,7 +803,7 @@ function Investment() {
                       {/* {errors && <>`${JSON.stringify(errors)}`</>} */}
                     </Grid>
 
-                    <Grid item xs={2.5} style={{ paddingTop: 0 }}>
+                    <Grid item md={2.5} sm={3} xs={6} style={{ paddingLeft: matchDownSM ? 8 : 24, paddingTop: matchDownSM ? 8 : 0 }}>
                       <FormikAutoComplete
                         options={ifaData}
                         defaultValue={values.ifa_id}
@@ -827,15 +814,25 @@ function Investment() {
                       />
                     </Grid>
 
-                    <Grid item xs={1.5} style={{ paddingTop: 0 }}>
+                    <Grid
+                      item
+                      md={1.5}
+                      sm={2}
+                      xs={12}
+                      style={{
+                        paddingLeft: matchDownSM ? 8 : 24,
+                        paddingTop: matchDownSM ? 8 : 0,
+                        display: matchDownSM ? 'flex' : 'inline',
+                        justifyContent: 'flex-end'
+                      }}
+                    >
                       <Button
                         variant="contained"
                         color="success"
                         type="submit"
                         startIcon={<FilterSearch />}
                         sx={{
-                          justifySelf: 'center',
-                          width: !mdUp ? 'auto' : '100%',
+                          width: matchUpMD ? '100%' : matchDownSM ? '100%' : 'auto',
                           borderRadius: 0.6 // Set width to 'auto' when screen size is medium or larger, otherwise '100%'
                         }}
                       >
@@ -861,10 +858,10 @@ function Investment() {
             deleteOneItem={() => {}}
             // getEditData={() => {}}
             setSearchData={setSearchData}
-            // tableDataRefetch={InvestmentTableDataRefetch}
             tableDataRefetch={() => {}}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
+            isInvestment={true}
           />
         </MainCard>
       )}

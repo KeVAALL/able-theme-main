@@ -1,3 +1,18 @@
+html::-webkit-scrollbar {
+  width: 8px;
+}
+html::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  /* border-radius: 100px; */
+}
+html::-webkit-scrollbar-thumb {
+  background-color: #00a854a5;
+  /* border-radius: 100px; */
+}
+/* html::-webkit-scrollbar-button {
+  background-color: #00a854a5;
+  height: 13px; 
+} */
 .common-textfield .MuiFormControl-root {
   width: 100% !important;
 }
@@ -33,6 +48,7 @@
   min-height: 33px !important;
   border-radius: 4px !important;
 }
+
 #column-hiding {
   padding: 8px 32px 8px 12px !important;
 }

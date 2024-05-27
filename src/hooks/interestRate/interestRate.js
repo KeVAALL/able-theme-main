@@ -10,12 +10,10 @@ const toInteger = (boolValue) => {
   return boolValue ? 1 : 0;
 };
 
-export async function GetPayoutMethod(fdId) {
+export async function GetPayoutMethod(payload) {
   try {
-    const response = await axios.post('product/getpayouts', {
-      method_name: 'getpayouts',
-      fd_id: fdId
-    });
+    const response = await axios.post('product/getpayouts', payload);
+
     return response.data.data;
   } catch (err) {
     enqueueSnackbar(err.message, {
@@ -29,16 +27,12 @@ export async function GetPayoutMethod(fdId) {
     return [];
   }
 }
-export async function GetSchemeSearch(fdId, selectedPayoutMethod) {
+export async function GetSchemeSearch(payload) {
   try {
-    const response = await axios.post('product/getscheme', {
-      method_name: 'getscheme',
-      fd_id: fdId,
-      fd_payout_method_id: selectedPayoutMethod
-    });
+    const response = await axios.post('product/getscheme', payload);
     return response.data.data;
   } catch (err) {
-    enqueueSnackbar('Please provide Payout Method', {
+    enqueueSnackbar('Please provide payout method', {
       variant: 'error',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -50,26 +44,10 @@ export async function GetSchemeSearch(fdId, selectedPayoutMethod) {
   }
 }
 
-export async function SaveInterestRate(
-  values,
-  fdId,
-  selectedPayoutMethod,
-  liveButton,
-  activeButton,
-  clearFormValues,
-  handleOpenDialog,
-  setSchemeData
-) {
+export async function SaveInterestRate(payload) {
   try {
-    await axios.post('/product/savescheme', {
-      ...values,
-      fd_id: fdId,
-      is_live: toInteger(liveButton),
-      is_active: toInteger(activeButton),
-      fd_payout_method_id: selectedPayoutMethod,
-      method_name: 'add'
-    });
-    handleOpenDialog();
+    await axios.post('/product/savescheme', payload);
+
     enqueueSnackbar('Product added', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -78,10 +56,6 @@ export async function SaveInterestRate(
         horizontal: 'right'
       }
     });
-    console.log(selectedPayoutMethod);
-    const schemeData = await GetSchemeSearch(fdId, selectedPayoutMethod);
-    setSchemeData(schemeData);
-    clearFormValues();
   } catch (err) {
     enqueueSnackbar(err.message, {
       variant: 'error',
@@ -94,18 +68,9 @@ export async function SaveInterestRate(
   }
 }
 
-export async function EditInterestRate(values, activeButton, liveButton, clearFormValues, handleOpenDialog, setSchemeData, setActiveClose) {
+export async function EditInterestRate(payload) {
   try {
-    await axios.post('/product/savescheme', {
-      ...values,
-      is_active: toInteger(activeButton),
-      is_live: toInteger(liveButton),
-      scheme_master_id: values.scheme_master_id,
-      method_name: 'update'
-    });
-    clearFormValues();
-    handleOpenDialog();
-    setActiveClose();
+    await axios.post('/product/savescheme', payload);
     enqueueSnackbar('Product Updated', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -114,9 +79,6 @@ export async function EditInterestRate(values, activeButton, liveButton, clearFo
         horizontal: 'right'
       }
     });
-
-    const schemeData = await GetSchemeSearch(values.fd_id, values.fd_payout_method_id);
-    setSchemeData(schemeData);
   } catch (err) {
     enqueueSnackbar(err.message, {
       variant: 'error',

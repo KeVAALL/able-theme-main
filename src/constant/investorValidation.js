@@ -147,10 +147,10 @@ const formAllValues = {
     investor_name: '',
     pan_no: '',
     mobile_no: '',
-    is_senior_citizen: 1,
     // gender_id: 1,
     birth_date: new Date(),
     place_of_birth: '',
+    is_senior_citizen: 1,
     is_married: 1,
     is_indian_resident: 1
   },
@@ -175,6 +175,7 @@ const formAllValues = {
 };
 const validationSchema = yup.object().shape({
   is_permanent_address_correspondent: yup.number(),
+  nominee: yup.array().min(1, 'At least one nominee is required'),
   investor: yup.object().shape({
     investor_name: yup.string().required('Investor Name is required'),
     pan_no: yup
@@ -217,9 +218,9 @@ const validationSchema = yup.object().shape({
     })
   }),
   professional_details: yup.object().shape({
-    occupation_id: yup.number(),
-    annual_income_id: yup.number(),
-    income_source_id: yup.number()
+    occupation_id: yup.number().notOneOf([0], 'Please select Occupation'),
+    annual_income_id: yup.number().notOneOf([0], 'Please select Annual Income'),
+    income_source_id: yup.number().notOneOf([0], 'Please select Income Source')
   })
 });
 // Search Item form fields
@@ -261,31 +262,57 @@ const StatusCell = ({ value }) => {
 };
 const tableColumns = [
   {
+    Header: 'Master ID',
+    accessor: 'investor_code'
+  },
+  {
+    Header: 'Folio ID',
+    accessor: 'folio_code'
+  },
+  {
     Header: 'Investor Name',
     accessor: 'investor_name'
   },
   {
+    Header: 'IFA',
+    accessor: 'ifa_name',
+    minWidth: 150
+  },
+  // {
+  //   Header: 'Source',
+  //   accessor: 'source',
+  //   minWidth: 150
+  // },
+  {
     Header: 'Pan Number',
     accessor: 'pan_no'
+  },
+  {
+    Header: 'Email',
+    accessor: 'email_id'
   },
   {
     Header: 'Mobile Number',
     accessor: 'mobile_no'
   },
   {
-    Header: 'Type',
-    accessor: 'is_senior_citizen',
-    customCell: ({ value }) => {
-      switch (value) {
-        case 1:
-          return 'Senior Citizen';
-        case 2:
-          return 'Normal Citizen';
-        default:
-          return '';
-      }
-    }
+    Header: 'Reg. date',
+    accessor: 'created_on'
   },
+  // {
+  //   Header: 'Type',
+  //   accessor: 'is_senior_citizen',
+  //   customCell: ({ value }) => {
+  //     switch (value) {
+  //       case 1:
+  //         return 'Senior Citizen';
+  //       case 2:
+  //         return 'Normal Citizen';
+  //       default:
+  //         return '';
+  //     }
+  //   }
+  // },
   {
     Header: 'Status',
     accessor: 'is_active',

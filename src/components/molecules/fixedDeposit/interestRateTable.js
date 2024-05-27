@@ -5,7 +5,7 @@ import { useState, memo } from 'react';
 
 // material-ui
 import { Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Button, Grid } from '@mui/material';
-import CustomTextField from 'utils/textfield';
+import { CustomTextField } from 'utils/textfield';
 import { Trash, Edit2, FilterSearch, DiscountShape, Additem } from 'iconsax-react';
 
 // third-party

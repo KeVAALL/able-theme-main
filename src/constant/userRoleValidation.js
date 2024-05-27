@@ -13,21 +13,7 @@ const validationSchema = yup.object({
   role_name: yup.string().required('Role Name is required')
 });
 // Search Item form fields
-// const filterFormValues = {
-//   issuer_name: ''
-// };
-// const formValueFields = [
-//   {
-//     fieldName: 'issuer_name',
-//     label: 'Issuer Name',
-//     placeholder: 'Please enter Issuer name',
-//     type: 'text',
-//     regType: 'string'
-//   }
-// ];
-// const filterValidationSchema = yup.object({
-//   issuer_name: yup.string().trim().matches(/\S+/, 'Remove Spaces')
-// });
+
 // Table Columns
 const VisibleColumn = [];
 
@@ -54,13 +40,4 @@ const tableColumns = [
   }
 ];
 
-export {
-  formAllValues,
-  validationSchema,
-  // filterFormValues,
-  // formValueFields,
-  // filterValidationSchema,
-  StatusCell,
-  tableColumns,
-  VisibleColumn
-};
+export { formAllValues, validationSchema, StatusCell, tableColumns, VisibleColumn };

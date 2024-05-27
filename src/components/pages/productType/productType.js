@@ -15,7 +15,7 @@ import Loader from 'components/atoms/loader/Loader';
 
 // assets
 import { SubmitButton } from 'components/atoms/button/button';
-import CustomTextField from 'utils/textfield';
+import { CustomTextField } from 'utils/textfield';
 import {
   formAllValues,
   validationSchema,
@@ -27,12 +27,13 @@ import {
 } from 'constant/productTypeValidation';
 import {
   GetProductTypeData,
-  GetOneProductType,
+  SearchProductType,
   SaveProductType,
   EditProductType,
   DeleteOneProductType
 } from 'hooks/productType/productType';
 import { dispatch } from '../../../redux';
+import { toInteger } from 'lodash';
 
 function ProductType() {
   // Main data state to hold the list of products
@@ -41,6 +42,7 @@ function ProductType() {
   const [showTable, setShowTable] = useState(false); // State to toggle visibility of the table form
   // Editing States
   const [isEditing, setIsEditing] = useState(false); // State to track if editing mode is active
+  const [isProductTypeActive, setProductTypeActive] = useState(); // State to track if the issuer is active or not active
   // Form State
   const [formValues, setFormValues] = useState(formAllValues); // State to hold form input values
 
@@ -52,7 +54,9 @@ function ProductType() {
   const setEditing = (value) => {
     setFormValues({ product_type_id: value.product_type_id, product_type: value.product_type });
   };
-
+  const handleIsProductTypeActive = (initialValue) => {
+    setProductTypeActive(initialValue);
+  };
   // Activates editing mode
   const setActiveEditing = () => {
     setIsEditing(true);
@@ -86,7 +90,12 @@ function ProductType() {
     refetch: productTypeTableDataRefetch // Function to refetch product type data
   } = useQuery({
     queryKey: ['productTypeTableData'], // Unique key for the query
-    queryFn: GetProductTypeData, // Function to fetch product type data
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall'
+      };
+      return GetProductTypeData(payload);
+    }, // Function to fetch product type data
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
     onSuccess: (data) => {
@@ -103,15 +112,25 @@ function ProductType() {
           initialValues={formValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
+            const userID = localStorage.getItem('userID');
             if (isEditing === false) {
-              console.log(isEditing);
-              SaveProductType(values, productTypeTableDataRefetch, clearFormValues);
+              const payload = { ...values, user_id: toInteger(userID), method_name: 'add' };
+              try {
+                await SaveProductType(payload, productTypeTableDataRefetch, clearFormValues);
+                changeTableVisibility();
+              } catch (err) {
+                console.log(err);
+              }
             }
             if (isEditing === true) {
-              console.log(isEditing);
-              EditProductType(values, productTypeTableDataRefetch, clearFormValues, setIsEditing);
+              try {
+                const payload = { ...values, user_id: toInteger(userID), method_name: 'update' };
+                await EditProductType(payload, productTypeTableDataRefetch, clearFormValues, setIsEditing);
+                changeTableVisibility();
+              } catch (err) {
+                console.log(err);
+              }
             }
-            changeTableVisibility();
           }}
         >
           {({
@@ -148,6 +167,10 @@ function ProductType() {
                   title="Product Type Entry"
                   changeTableVisibility={changeTableVisibility}
                   clearFormValues={clearFormValues}
+                  isEditing={isEditing}
+                  setActiveClose={setActiveClose}
+                  setIsActive={handleIsProductTypeActive}
+                  isActive={isProductTypeActive}
                   isValid={isValid}
                   dirty={dirty}
                 />
@@ -200,7 +223,7 @@ function ProductType() {
             validationSchema={filterValidationSchema}
             changeTableVisibility={changeTableVisibility}
             setEditing={setEditing}
-            getOneItem={GetOneProductType}
+            getOneItem={SearchProductType}
             deleteOneItem={DeleteOneProductType}
             setSearchData={setSearchData}
             tableDataRefetch={productTypeTableDataRefetch}

@@ -5,16 +5,11 @@ import { enqueueSnackbar } from 'notistack';
 // assets
 import { dispatch } from '../../redux';
 import { openSnackbar } from 'redux/reducers/snackbar';
+import { toInteger } from 'lodash';
 
-const toInteger = (boolValue) => {
-  return boolValue ? 1 : 0;
-};
-
-export async function GetInvestorData() {
+export async function GetInvestorData(payload) {
   try {
-    const response = await axios.post('investor/getinvestor', {
-      method_name: 'getall'
-    });
+    const response = await axios.post('investor/getinvestor', payload);
     return response.data.data;
   } catch (err) {
     enqueueSnackbar(err.message, {
@@ -28,15 +23,14 @@ export async function GetInvestorData() {
     return [];
   }
 }
-export async function GetOneInvestor(values, setSearchData) {
+//fetch the ifa
+export async function GetIfa(payload) {
   try {
-    const response = await axios.post('investor/getinvestor', {
-      method_name: 'getone',
-      ...values
-    });
-    setSearchData(response.data.data);
-  } catch (error) {
-    enqueueSnackbar(error.message, {
+    const { data } = await axios.post('/ifa/getifa', payload);
+
+    return data.data;
+  } catch (err) {
+    enqueueSnackbar(err.message, {
       variant: 'error',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -44,17 +38,32 @@ export async function GetOneInvestor(values, setSearchData) {
         horizontal: 'right'
       }
     });
+    return [];
   }
 }
-export async function SaveInvestor(values, InvestorTableDataRefetch, clearFormValues) {
-  try {
-    await axios.post('/investor/save', {
-      ...values,
-      user_id: 2,
-      method_name: 'add'
-    });
 
-    clearFormValues();
+export async function GetIFASearch(payload) {
+  try {
+    const response = await axios.post('investor/getinvestor', payload);
+    return response.data.data;
+  } catch (error) {
+    dispatch(
+      openSnackbar({
+        open: true,
+        anchorOrigin: { vertical: 'top', horizontal: 'right' },
+        message: error.message,
+        variant: 'alert',
+        alert: {
+          color: 'error'
+        }
+      })
+    );
+  }
+}
+export async function SaveInvestor(payload) {
+  try {
+    await axios.post('/investor/save', payload);
+
     enqueueSnackbar('Investor added', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -63,7 +72,6 @@ export async function SaveInvestor(values, InvestorTableDataRefetch, clearFormVa
         horizontal: 'right'
       }
     });
-    InvestorTableDataRefetch();
   } catch (err) {
     enqueueSnackbar(err.message, {
       variant: 'error',
@@ -76,23 +84,9 @@ export async function SaveInvestor(values, InvestorTableDataRefetch, clearFormVa
     console.log('error');
   }
 }
-export async function EditInvestor(
-  values,
-  // isInvestorActive,
-  InvestorTableDataRefetch,
-  clearFormValues,
-  setActiveClose
-) {
+export async function EditInvestor(payload) {
   try {
-    await axios.post('/investor/save', {
-      ...values,
-      // is_active: toInteger(isInvestorActive),
-      user_id: 2,
-      investor_id: values.investor.investor_id,
-      method_name: 'update'
-    });
-    clearFormValues();
-    setActiveClose();
+    await axios.post('/investor/save', payload);
     enqueueSnackbar('Investor Updated', {
       variant: 'success',
       autoHideDuration: 2000,
@@ -101,7 +95,6 @@ export async function EditInvestor(
         horizontal: 'right'
       }
     });
-    // InvestorTableDataRefetch();
   } catch (err) {
     enqueueSnackbar(err.message, {
       variant: 'error',
@@ -136,10 +129,12 @@ export async function GetEditOneInvestor(setEditing, investor_id) {
   }
 }
 export async function DeleteOneInvestor(values) {
+  const userID = localStorage.getItem('userID');
+
   try {
     await axios.post('/investor/save', {
       investor_id: values?.investor_id,
-      user_id: 2,
+      user_id: toInteger(userID),
       method_name: 'delete'
     });
     enqueueSnackbar('Investor Deleted', {
@@ -154,49 +149,22 @@ export async function DeleteOneInvestor(values) {
     console.log(err);
   }
 }
-//fetch the ifa
-export async function GetIfa() {
-  try {
-    const { data } = await axios.post('/ifa/getifa', {
-      method_name: 'getall'
-    });
-    console.log(data);
-    if (data.data.status === 500) {
-      return [];
-    }
-    return data.data;
-  } catch (err) {
-    enqueueSnackbar(err.message, {
-      variant: 'error',
-      autoHideDuration: 2000,
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right'
-      }
-    });
-    return [];
-  }
-}
-export async function GetIFASearch(values, selectedIFA) {
-  try {
-    const response = await axios.post('investor/getinvestor', {
-      method_name: 'getifafilter',
-      // ifa_id: selectedIFA,
-      ...values
-    });
-    // setEditing(response.data.data);
-    return response.data.data;
-  } catch (error) {
-    dispatch(
-      openSnackbar({
-        open: true,
-        anchorOrigin: { vertical: 'top', horizontal: 'right' },
-        message: error.message,
-        variant: 'alert',
-        alert: {
-          color: 'error'
-        }
-      })
-    );
-  }
-}
+
+// export async function GetOneInvestor(values, setSearchData) {
+//   try {
+//     const response = await axios.post('investor/getinvestor', {
+//       method_name: 'getone',
+//       ...values
+//     });
+//     setSearchData(response.data.data);
+//   } catch (error) {
+//     enqueueSnackbar(error.message, {
+//       variant: 'error',
+//       autoHideDuration: 2000,
+//       anchorOrigin: {
+//         vertical: 'top',
+//         horizontal: 'right'
+//       }
+//     });
+//   }
+// }

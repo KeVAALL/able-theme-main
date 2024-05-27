@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, memo } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Divider, Box, Card, Grid, CardContent, Button, Stack, CardHeader, FormControlLabel, Switch } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, Button, Stack, CardHeader } from '@mui/material';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import PropTypes from 'prop-types';
 // third-party
@@ -11,7 +11,7 @@ import Loader from 'components/atoms/loader/Loader';
 // assets
 import { formAllValues, validationSchema, tableColumns, VisibleColumn } from 'constant/interestRateValidation';
 import { DeleteOneInterestRate, GetPayoutMethod, GetSchemeSearch } from 'hooks/interestRate/interestRate';
-import CustomTextField, { FormikAutoComplete } from 'utils/textfield';
+import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
 import DialogForm from 'components/atoms/dialog/InterestRateDialog';
 import InterestRateTable from 'components/molecules/fixedDeposit/interestRateTable';
 
@@ -64,20 +64,6 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
     setSchemeActive(initialValue);
   };
 
-  // Payout Validation
-  const payoutValidate = (value) => {
-    if (typeof value === 'string') {
-      console.log('string');
-      payoutData.find((el) => {
-        if (el.item_value === value) {
-          return el.id;
-        }
-      });
-    } else {
-      return value;
-    }
-  };
-
   // Dialog state
   const handleOpenDialog = () => {
     setOpenDialog(!openDialog);
@@ -95,14 +81,6 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
   // Custom fields/ columns
   const columns = useMemo(() => tableColumns, []);
 
-  // Effect for setting editing state and loading state
-  useEffect(() => {
-    setEditing(formValues);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, [formValues]);
-
   // Query for fetching payout data
   const {
     isPending,
@@ -112,11 +90,25 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
     queryKey: ['payoutData', formValues.fd_id],
     refetchOnWindowFocus: false,
     keepPreviousData: true,
-    queryFn: () => GetPayoutMethod(formValues.fd_id),
+    // queryFn: () => GetPayoutMethod(formValues.fd_id),
+    queryFn: () => {
+      const payload = {
+        method_name: 'getpayouts',
+        fd_id: formValues.fd_id
+      };
+      return GetPayoutMethod(payload);
+    },
     onSuccess: (data) => {
       setPayoutData(data);
     }
   });
+  // Effect for setting editing state and loading state
+  useEffect(() => {
+    setEditing(formValues);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, [formValues]);
 
   // Render Loader if data is loading
   if (loading || isPending) return <Loader />;
@@ -127,8 +119,12 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
         initialValues={IRformValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
-          console.log(formValues.fd_id, formValues.fd_payout_method_id);
-          const searchResult = await GetSchemeSearch(formValues.fd_id, values.fd_payout_method_id);
+          const payload = {
+            method_name: 'getscheme',
+            fd_id: formValues.fd_id,
+            fd_payout_method_id: values.fd_payout_method_id
+          };
+          const searchResult = await GetSchemeSearch(payload);
           if (searchResult) {
             setSchemeData(searchResult);
           }
@@ -273,10 +269,24 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
 };
 
 InterestRate.propTypes = {
-  formValues: PropTypes.array,
+  formValues: PropTypes.object,
   setActiveClose: PropTypes.any,
   changeTableVisibility: PropTypes.any,
   isNotEditingInterestRate: PropTypes.any
 };
 
 export default memo(InterestRate);
+
+// // Payout Validation
+// const payoutValidate = (value) => {
+//   if (typeof value === 'string') {
+//     console.log('string');
+//     payoutData.find((el) => {
+//       if (el.item_value === value) {
+//         return el.id;
+//       }
+//     });
+//   } else {
+//     return value;
+//   }
+// };

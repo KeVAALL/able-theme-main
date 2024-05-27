@@ -19,12 +19,12 @@ import {
 // third-party
 import { PopupTransition } from 'helpers/@extended/Transitions';
 import { Formik } from 'formik';
-import * as yup from 'yup';
 import Loader from '../loader/Loader';
 // assets
-import CustomTextField from 'utils/textfield';
+import { CustomTextField } from 'utils/textfield';
 import { formAllSchemeValues, validationSchema } from 'constant/interestRateSchemeValidation';
-import { SaveInterestRate, EditInterestRate } from 'hooks/interestRate/interestRate';
+import { SaveInterestRate, EditInterestRate, GetSchemeSearch } from 'hooks/interestRate/interestRate';
+import { toInteger } from 'lodash';
 
 const DialogForm = ({
   openDialog,
@@ -114,26 +114,7 @@ const DialogForm = ({
         <Formik
           initialValues={schemeFormValues || formAllSchemeValues}
           validationSchema={validationSchema}
-          onSubmit={async (values, { resetForm }) => {
-            // console.log(isEditingScheme);
-            // console.log(values);
-            // console.log(fdId);
-            // console.log(selectedPayoutMethod);
-            // if (isEditingScheme) {
-            //   EditInterestRate(values, activeButton, liveButton, clearFormValues, handleOpenDialog, setSchemeData, setActiveClose);
-            // } else {
-            //   SaveInterestRate(
-            //     values,
-            //     fdId,
-            //     selectedPayoutMethod,
-            //     liveButton,
-            //     activeButton,
-            //     clearFormValues,
-            //     handleOpenDialog,
-            //     setSchemeData
-            //   );
-            // }
-          }}
+          onSubmit={async (values, { resetForm }) => {}}
         >
           {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
             <Box
@@ -157,7 +138,6 @@ const DialogForm = ({
                       onBlur={handleBlur}
                       touched={touched}
                       errors={errors}
-                      disabled={!activeButton ? false : true}
                       FormHelperTextProps={{
                         style: {
                           marginLeft: 0
@@ -176,7 +156,6 @@ const DialogForm = ({
                       onBlur={handleBlur}
                       touched={touched}
                       errors={errors}
-                      disabled={!activeButton ? false : true}
                       FormHelperTextProps={{
                         style: {
                           marginLeft: 0
@@ -196,7 +175,6 @@ const DialogForm = ({
                       onBlur={handleBlur}
                       touched={touched}
                       errors={errors}
-                      disabled={!activeButton ? false : true}
                       FormHelperTextProps={{
                         style: {
                           marginLeft: 0
@@ -216,7 +194,6 @@ const DialogForm = ({
                       onBlur={handleBlur}
                       touched={touched}
                       errors={errors}
-                      disabled={!activeButton ? false : true}
                       FormHelperTextProps={{
                         style: {
                           marginLeft: 0
@@ -236,7 +213,6 @@ const DialogForm = ({
                       onBlur={handleBlur}
                       touched={touched}
                       errors={errors}
-                      disabled={!activeButton ? false : true}
                       FormHelperTextProps={{
                         style: {
                           marginLeft: 0
@@ -256,7 +232,6 @@ const DialogForm = ({
                       onBlur={handleBlur}
                       touched={touched}
                       errors={errors}
-                      disabled={!activeButton ? false : true}
                       FormHelperTextProps={{
                         style: {
                           marginLeft: 0
@@ -273,8 +248,10 @@ const DialogForm = ({
                   onClick={() => {
                     handleOpenDialog();
                     setActiveClose();
-                    setLiveButton(false);
                     clearFormValues();
+                    setTimeout(() => {
+                      setLiveButton(false);
+                    }, 100);
                   }}
                 >
                   Cancel
@@ -282,25 +259,62 @@ const DialogForm = ({
                 <Button
                   variant="contained"
                   color="success"
-                  // type="submit"
-                  onClick={() => {
+                  onClick={async () => {
                     if (isEditingScheme) {
-                      EditInterestRate(values, activeButton, liveButton, clearFormValues, handleOpenDialog, setSchemeData, setActiveClose);
-                      setLiveButton(false);
+                      const payload = {
+                        ...values,
+                        is_active: toInteger(activeButton),
+                        is_live: toInteger(liveButton),
+                        scheme_master_id: values.scheme_master_id,
+                        method_name: 'update'
+                      };
+                      try {
+                        await EditInterestRate(payload);
+
+                        setActiveClose();
+                        handleOpenDialog();
+                        clearFormValues();
+
+                        const schemePayload = {
+                          method_name: 'getscheme',
+                          fd_id: fdId,
+                          fd_payout_method_id: selectedPayoutMethod
+                        };
+                        const schemeData = await GetSchemeSearch(schemePayload);
+                        setSchemeData(schemeData);
+
+                        setTimeout(() => {
+                          setLiveButton(false);
+                        }, 100);
+                      } catch (err) {
+                        console.log(err);
+                      }
                     } else {
-                      SaveInterestRate(
-                        values,
-                        fdId,
-                        selectedPayoutMethod,
-                        liveButton,
-                        activeButton,
-                        clearFormValues,
-                        handleOpenDialog,
-                        setSchemeData
-                      );
-                      setLiveButton(false);
+                      const payload = {
+                        ...values,
+                        fd_id: fdId,
+                        fd_payout_method_id: selectedPayoutMethod,
+                        is_live: toInteger(liveButton),
+                        is_active: toInteger(activeButton),
+                        method_name: 'add'
+                      };
+                      try {
+                        await SaveInterestRate(payload);
+
+                        handleOpenDialog();
+                        clearFormValues();
+                        // Fetch Scheme Again
+                        const schemePayload = {
+                          method_name: 'getscheme',
+                          fd_id: fdId,
+                          fd_payout_method_id: selectedPayoutMethod
+                        };
+                        const schemeData = await GetSchemeSearch(schemePayload);
+                        setSchemeData(schemeData);
+                      } catch (err) {
+                        console.log(err);
+                      }
                     }
-                    // handleOpenDialog();
                   }}
                 >
                   Save

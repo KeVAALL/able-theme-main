@@ -21,8 +21,8 @@ const validationSchema = yup.object({
   issuer_name: yup.string().required('Issuer Name is required'),
   issuer_pan: yup
     .string()
-    // .matches(/^([A-Z]){3}([P]){1}([A-Z]){1}([0-9]){4}([A-Z]){1}$/, 'Invalid PAN format')
     .matches(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/, 'Invalid PAN format')
+    // .matches(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/, 'Invalid PAN format')
     .required('Issuer PAN is required'),
   issuer_tollfree_number: yup.string().min(11, 'Must be at least 11 digits').required('Tollfree Number is required'),
   logo_url: yup
