@@ -69,9 +69,9 @@ const TabPersonal = () => {
         initialValues={{
           ...formValues,
           countryCode: '+91',
-          address: '3801 Chalk Butte Rd, Cut Bank, MT 59427, United States',
-          address1: '301 Chalk Butte Rd, Cut Bank, NY 96572, New York',
-          country: 'US',
+          address: '',
+          address1: '',
+          country: 'IN',
           state: 'Maharashtra',
           submit: null
         }}
@@ -115,6 +115,7 @@ const TabPersonal = () => {
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
+                    disabled
                     label="User Name"
                     name="user_name"
                     placeholder="Enter User Name"
@@ -149,6 +150,7 @@ const TabPersonal = () => {
                       <MenuItem value="(264)">(264)</MenuItem>
                     </Select> */}
                   <CustomTextField
+                    disabled
                     label="Contact Number"
                     name="mobile_no"
                     placeholder="Enter Contact Number"
@@ -171,6 +173,7 @@ const TabPersonal = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
+                    disabled
                     label="Email ID"
                     name="email_id"
                     placeholder="Enter Email ID"

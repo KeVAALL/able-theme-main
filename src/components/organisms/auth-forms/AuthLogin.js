@@ -89,7 +89,6 @@ const AuthLogin = ({ forgot }) => {
       console.log('No Redirection');
       return;
     }
-    console.log(data);
     setFormValues({
       ...data,
       password: ''

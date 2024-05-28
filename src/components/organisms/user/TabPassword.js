@@ -119,100 +119,102 @@ const TabPassword = () => {
             }}
             sx={{ width: '100%' }}
           >
-            <CardHeader title="Address" />
+            <CardHeader title="Password Details" />
             <Divider />
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3}>
-                <Grid item container spacing={2} display="flex" xs={12} sm={6}>
-                  <Grid item xs={12}>
-                    <CustomTextField
-                      label="Existing Password"
-                      name="existing_password"
-                      placeholder="Enter Password"
-                      values={values}
-                      type={showOldPassword ? 'text' : 'password'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      touched={touched}
-                      errors={errors}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowOldPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              onMouseUp={handleMouseDownPassword}
-                              edge="end"
-                              size="large"
-                              color="secondary"
-                            >
-                              {showOldPassword ? <Eye /> : <EyeSlash />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <CustomTextField
-                      label="New Password"
-                      name="new_password"
-                      placeholder="Enter Password"
-                      values={values}
-                      type={showNewPassword ? 'text' : 'password'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      touched={touched}
-                      errors={errors}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowNewPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              onMouseUp={handleMouseDownPassword}
-                              edge="end"
-                              size="large"
-                              color="secondary"
-                            >
-                              {showNewPassword ? <Eye /> : <EyeSlash />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <CustomTextField
-                      label="Confirm Password"
-                      name="confirm_password"
-                      placeholder="Enter Password"
-                      values={values}
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      touched={touched}
-                      errors={errors}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowConfirmPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              onMouseUp={handleMouseDownPassword}
-                              edge="end"
-                              size="large"
-                              color="secondary"
-                            >
-                              {showConfirmPassword ? <Eye /> : <EyeSlash />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
+                <Grid item xs={12} sm={6} display="flex" justifyContent="center" alignItems="center">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <CustomTextField
+                        label="Existing Password"
+                        name="existing_password"
+                        placeholder="Enter Password"
+                        values={values}
+                        type={showOldPassword ? 'text' : 'password'}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        touched={touched}
+                        errors={errors}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowOldPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                onMouseUp={handleMouseDownPassword}
+                                edge="end"
+                                size="large"
+                                color="secondary"
+                              >
+                                {showOldPassword ? <Eye /> : <EyeSlash />}
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CustomTextField
+                        label="New Password"
+                        name="new_password"
+                        placeholder="Enter Password"
+                        values={values}
+                        type={showNewPassword ? 'text' : 'password'}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        touched={touched}
+                        errors={errors}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowNewPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                onMouseUp={handleMouseDownPassword}
+                                edge="end"
+                                size="large"
+                                color="secondary"
+                              >
+                                {showNewPassword ? <Eye /> : <EyeSlash />}
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CustomTextField
+                        label="Confirm Password"
+                        name="confirm_password"
+                        placeholder="Enter Password"
+                        values={values}
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        touched={touched}
+                        errors={errors}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowConfirmPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                onMouseUp={handleMouseDownPassword}
+                                edge="end"
+                                size="large"
+                                color="secondary"
+                              >
+                                {showConfirmPassword ? <Eye /> : <EyeSlash />}
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={6}>

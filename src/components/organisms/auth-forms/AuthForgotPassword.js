@@ -6,6 +6,7 @@ import { Button, FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Typogra
 // third-party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { enqueueSnackbar } from 'notistack';
 
 // project-imports
 import useAuth from 'hooks/useAuth';
@@ -35,17 +36,14 @@ const AuthForgotPassword = () => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
           try {
-            dispatch(
-              openSnackbar({
-                open: true,
-                message: 'Check mail for reset password link',
-                variant: 'alert',
-                alert: {
-                  color: 'success'
-                },
-                close: false
-              })
-            );
+            enqueueSnackbar('Check your mail for OTP', {
+              variant: 'success',
+              autoHideDuration: 2000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right'
+              }
+            });
             navigate('/login', { state: values });
           } catch (err) {
             console.error(err);

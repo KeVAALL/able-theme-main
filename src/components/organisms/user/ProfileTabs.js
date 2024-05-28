@@ -24,7 +24,7 @@ const avatarImage = require.context('assets/images/users', true);
 const ProfileTabs = ({ focusInput }) => {
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState(undefined);
-  const [avatar, setAvatar] = useState(avatarImage(`./default.png`));
+  const [avatar, setAvatar] = useState(avatarImage(`./avatar-1.png`));
 
   useEffect(() => {
     if (selectedImage) {
