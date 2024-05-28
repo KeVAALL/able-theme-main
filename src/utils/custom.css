@@ -34,11 +34,14 @@ html::-webkit-scrollbar-thumb {
   top: -3px !important;
 }
 .common-autocomplete .MuiAutocomplete-input {
-  padding: 7.5px 4px 3px 5px !important;
+  padding: 8.5px 4px 5.5px 5px !important;
 }
 .common-autocomplete .MuiOutlinedInput-root {
-  padding: 3.02px 9px !important;
+  padding: 3px 10px !important;
   border-radius: 5px;
+}
+.common-autocomplete .autocomplete-textfield input {
+  font-size: 0.75rem !important;
 }
 .icon_button .MuiButton-startIcon {
   margin: 0 !important;

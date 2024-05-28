@@ -7,7 +7,7 @@ import { useState, useEffect, useMemo, memo } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Button, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { CustomTextField } from 'utils/textfield';
-import { Trash, Edit2, FilterSearch, DiscountShape, Additem, Eye } from 'iconsax-react';
+import { Trash, Edit2, FilterSearch, DiscountShape, Eye } from 'iconsax-react';
 
 // third-party
 import { useTable, useFilters, usePagination } from 'react-table';

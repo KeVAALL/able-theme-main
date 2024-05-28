@@ -133,6 +133,7 @@ export const CustomAutoComplete = memo((props) => {
     <Autocomplete
       fullWidth
       disablePortal
+      defaultValue={(props.defaultValue && props.options.find((el) => el[props.optionName] === props.defaultValue)) || props.options[0]}
       className="common-autocomplete"
       componentsProps={{
         popper: {
@@ -150,11 +151,10 @@ export const CustomAutoComplete = memo((props) => {
       }}
       id="basic-autocomplete-label"
       options={props.options}
-      defaultValue={(props.defaultValue && props.options.find((el) => el[props.optionName] === props.defaultValue)) || props.options[0]}
       onChange={(e) => handleOptionChange(e, props.optionName, props.setSelected)}
       // getOptionSelected
       getOptionLabel={(option) => option[props.optionName]} // Assuming 'product_type' is the label you want to display
-      renderInput={(params) => <TextField {...params} label={props.label} />}
+      renderInput={(params) => <TextField {...params} className="autocomplete-textfield" name={props.formName} label={props.label} />}
     />
   );
 });
@@ -181,27 +181,11 @@ export const FormikAutoComplete = memo((props) => {
 
   return (
     <Autocomplete
+      id="basic-autocomplete-label"
+      className="common-autocomplete"
       fullWidth
       disablePortal
-      className="common-autocomplete"
-      componentsProps={{
-        popper: {
-          modifiers: [
-            // {
-            //   name: 'flip',
-            //   enabled: false
-            // },
-            {
-              name: 'preventOverflow',
-              enabled: false
-            }
-          ]
-        }
-      }}
-      id="basic-autocomplete-label"
-      options={props.options || []}
-      disableClearable={props.disableClearable ? true : false}
-      defaultValue={
+      value={
         (typeof props.defaultValue === 'string' &&
           props.options.find((el) => {
             if (props.keyName) {
@@ -222,11 +206,26 @@ export const FormikAutoComplete = memo((props) => {
       onChange={(e) => {
         handleOptionChange(e, props.optionName, props.formName, setFieldValue, props.idName);
       }}
+      options={props.options || []}
       getOptionLabel={(option) => option[props.optionName]} // Assuming 'product_type' is the label you want to display
+      componentsProps={{
+        popper: {
+          modifiers: [
+            {
+              name: 'preventOverflow',
+              enabled: false
+            }
+          ]
+        }
+      }}
+      disableClearable={props.disableClearable ? true : false}
       renderInput={(params) => (
         <TextField
           // error={Boolean(props.errors[props.formName])}
           {...params}
+          // sx={{ fontSize: '0.75rem' }}
+          className="autocomplete-textfield"
+          name={props.formName}
           label={props.label}
         />
       )}

@@ -12,8 +12,8 @@ import MultiTable from '../multiTable/multiTable';
 
 // third-party
 import { Formik } from 'formik';
-import Loader from 'components/atoms/loader/Loader';
 import { toInteger } from 'lodash';
+import Loader from 'components/atoms/loader/Loader';
 
 // assets
 import { SubmitButton } from 'components/atoms/button/button';

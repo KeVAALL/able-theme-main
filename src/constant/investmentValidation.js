@@ -185,7 +185,7 @@ const tableColumns = [
     accessor: 'master_id'
   },
   {
-    Header: 'Transaction ID',
+    Header: 'Application ID',
     accessor: 'application_id'
   },
   {
@@ -229,7 +229,7 @@ const tableColumns = [
     }
   },
   {
-    Header: 'Maturity',
+    Header: 'Payout Method',
     accessor: 'fd_payout_method'
     // customCell: ({ value }) => {
     //   return <span>₹ {value}</span>;

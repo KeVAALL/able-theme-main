@@ -10,10 +10,16 @@ import Investor from '../investor/investor';
 import Investment from '../transaction/investment';
 import UserList from '../userList/userList';
 import Role from '../userList/role';
+import { element } from 'prop-types';
 
 // Product
 const Product = Loadable(lazy(() => import('components/pages/productType/productType')));
-
+// User
+const UserProfile = Loadable(lazy(() => import('components/pages/user/user')));
+const UserTabPersonal = Loadable(lazy(() => import('../../organisms/user/TabPersonal')));
+const UserTabPayment = Loadable(lazy(() => import('../../organisms/user/TabPayment')));
+const UserTabPassword = Loadable(lazy(() => import('../../organisms/user/TabPassword')));
+const UserTabSettings = Loadable(lazy(() => import('../../organisms/user/TabSettings')));
 const FormsBasic = Loadable(lazy(() => import('components/pages/formBasic/basic-form')));
 
 // ==============================|| MAIN ROUTES ||============================== //
@@ -91,11 +97,24 @@ const MainRoutes = {
           ]
         },
         {
-          path: 'form',
+          path: 'user',
+          element: <UserProfile />,
           children: [
             {
-              path: 'basic',
-              element: <FormsBasic />
+              path: 'personal',
+              element: <UserTabPersonal />
+            },
+            {
+              path: 'payment',
+              element: <UserTabPayment />
+            },
+            {
+              path: 'password',
+              element: <UserTabPassword />
+            },
+            {
+              path: 'settings',
+              element: <UserTabSettings />
             }
           ]
         }

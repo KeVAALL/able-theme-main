@@ -141,6 +141,24 @@ export async function DeleteRole(values) {
   }
 }
 // User
+export async function GetUser(payload) {
+  // user_id: userID, method_name: 'get_user_by_id'
+  try {
+    const response = await axios.post('user/getuser', payload);
+    console.log(response.data);
+    return response.data.data;
+  } catch (err) {
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    throw err;
+  }
+}
 export async function GetUsers(payload) {
   try {
     const response = await axios.post('user/getuser', payload);
@@ -240,5 +258,30 @@ export async function DeleteUser(values) {
     });
   } catch (err) {
     console.log(err);
+  }
+}
+// User Details
+export async function ChangeUserPassword(payload) {
+  try {
+    const response = await axios.post('user/updatepassword', payload);
+    enqueueSnackbar('User Password Updated', {
+      variant: 'success',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    return response.data.data;
+  } catch (err) {
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    throw err;
   }
 }
