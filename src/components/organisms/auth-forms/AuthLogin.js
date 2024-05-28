@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 // assets
 import { HomeTrendUp, Profile2User, ShoppingBag, Eye, EyeSlash } from 'iconsax-react';
@@ -29,10 +29,17 @@ import { enqueueSnackbar } from 'notistack';
 
 const AuthLogin = ({ forgot }) => {
   const [checked, setChecked] = useState(false);
+  const location = useLocation();
 
   const { isLoggedIn, login } = useAuth();
   const scriptedRef = useScriptRef();
 
+  const formAllValues = {
+    email_id: '',
+    password: '',
+    submit: null
+  };
+  const [formValues, setFormValues] = useState(formAllValues);
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -54,9 +61,7 @@ const AuthLogin = ({ forgot }) => {
     menu?.forEach((item, index) => {
       organizedMenu[index] = {
         id: item.menu_id,
-        // title: <FormattedMessage id={item.menu_name} />,
         title: item.menu_name,
-        // icon: icons[item.menu_icon],
         icon: item.menu_icon,
         type: item.child_menu === null ? 'item' : 'collapse',
         url: item.child_menu === null && `/${item.menu_url}`,
@@ -65,7 +70,6 @@ const AuthLogin = ({ forgot }) => {
           item.child_menu?.map((item) => {
             return {
               id: item.menu_id,
-              // title: <FormattedMessage id={item.menu_name} />,
               title: item.menu_name,
               type: 'item',
               url: `/${item.menu_url}`
@@ -73,22 +77,30 @@ const AuthLogin = ({ forgot }) => {
           })
       };
     });
-    console.log(organizedMenu);
     return organizedMenu;
   };
 
   useEffect(() => {
     document.title = 'AltCase - Login';
   }, []);
+  useEffect(() => {
+    const data = location.state || {};
+    if (Object.keys(data).length === 0) {
+      console.log('No Redirection');
+      return;
+    }
+    console.log(data);
+    setFormValues({
+      ...data,
+      password: ''
+    });
+  }, [location.state]);
 
   return (
     <>
       <Formik
-        initialValues={{
-          email_id: '',
-          password: '',
-          submit: null
-        }}
+        enableReinitialize
+        initialValues={formValues}
         validationSchema={Yup.object().shape({
           email_id: Yup.string().trim().email('Invalid email').required('Email is required'),
           password: Yup.string()
@@ -238,3 +250,26 @@ AuthLogin.propTypes = {
 };
 
 export default AuthLogin;
+
+// menu?.forEach((item, index) => {
+//   organizedMenu[index] = {
+//     id: item.menu_id,
+//     // title: <FormattedMessage id={item.menu_name} />,
+//     title: item.menu_name,
+//     // icon: icons[item.menu_icon],
+//     icon: item.menu_icon,
+//     type: item.child_menu === null ? 'item' : 'collapse',
+//     url: item.child_menu === null && `/${item.menu_url}`,
+//     children:
+//       item.child_menu?.length > 0 &&
+//       item.child_menu?.map((item) => {
+//         return {
+//           id: item.menu_id,
+//           // title: <FormattedMessage id={item.menu_name} />,
+//           title: item.menu_name,
+//           type: 'item',
+//           url: `/${item.menu_url}`
+//         };
+//       })
+//   };
+// });

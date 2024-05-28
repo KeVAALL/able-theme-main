@@ -27,44 +27,26 @@ const AuthForgotPassword = () => {
     <>
       <Formik
         initialValues={{
-          email: '',
+          email_id: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required')
+          email_id: Yup.string().email('Must be a valid email').max(255).required('Email is required')
         })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
           try {
-            await resetPassword(values.email).then(
-              () => {
-                setStatus({ success: true });
-                setSubmitting(false);
-                dispatch(
-                  openSnackbar({
-                    open: true,
-                    message: 'Check mail for reset password link',
-                    variant: 'alert',
-                    alert: {
-                      color: 'success'
-                    },
-                    close: false
-                  })
-                );
-                setTimeout(() => {
-                  navigate(isLoggedIn ? '/auth/check-mail' : '/check-mail', { replace: true });
-                }, 1500);
-
-                // WARNING: do not set any formik state here as formik might be already destroyed here. You may get following error by doing so.
-                // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application.
-                // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-                // github issue: https://github.com/formium/formik/issues/2430
-              },
-              (err) => {
-                setStatus({ success: false });
-                setErrors({ submit: err.message });
-                setSubmitting(false);
-              }
+            dispatch(
+              openSnackbar({
+                open: true,
+                message: 'Check mail for reset password link',
+                variant: 'alert',
+                alert: {
+                  color: 'success'
+                },
+                close: false
+              })
             );
+            navigate('/login', { state: values });
           } catch (err) {
             console.error(err);
             if (scriptedRef.current) {
@@ -75,13 +57,21 @@ const AuthForgotPassword = () => {
           }
         }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate onSubmit={handleSubmit}>
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => (
+          <form
+            noValidate
+            onSubmit={() => {
+              handleSubmit();
+              // setTimeout(() => {
+              //   resetForm();
+              // });
+            }}
+          >
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <CustomTextField
                   label="Email ID"
-                  name="email"
+                  name="email_id"
                   placeholder="Enter Email ID"
                   values={values}
                   type="email"
