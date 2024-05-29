@@ -112,7 +112,6 @@ export const CustomTextField = memo((props) => {
             marginLeft: 0
           }
         }}
-        endAdornment={props.endAdornment && props.endAdornment}
         inputProps={{ maxLength: 50 }}
         {...props}
       />

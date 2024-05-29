@@ -14,6 +14,7 @@ const GuestGuard = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
+    console.log('Refreshing' + ' ' + isLoggedIn);
     if (isLoggedIn) {
       navigate(location?.state?.from ? location?.state?.from : APP_DEFAULT_PATH, {
         state: {
@@ -24,6 +25,7 @@ const GuestGuard = ({ children }) => {
     }
   }, [isLoggedIn, navigate, location, state]);
 
+  console.log(children);
   return children;
 };
 

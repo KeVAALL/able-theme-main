@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 // assets
 import { HomeTrendUp, Profile2User, ShoppingBag, Eye, EyeSlash } from 'iconsax-react';
@@ -28,19 +28,20 @@ import { enqueueSnackbar } from 'notistack';
 // ============================|| JWT - LOGIN ||============================ //
 
 const AuthLogin = ({ forgot }) => {
-  const [checked, setChecked] = useState(false);
-  const location = useLocation();
-
   const { isLoggedIn, login } = useAuth();
   const scriptedRef = useScriptRef();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const formAllValues = {
     email_id: '',
     password: '',
     submit: null
   };
+  const [checked, setChecked] = useState(false);
   const [formValues, setFormValues] = useState(formAllValues);
   const [showPassword, setShowPassword] = useState(false);
+  const [isReset, setIsReset] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -85,15 +86,23 @@ const AuthLogin = ({ forgot }) => {
   }, []);
   useEffect(() => {
     const data = location.state || {};
+    console.log(Object.keys(data));
+    console.log(data);
     if (Object.keys(data).length === 0) {
       console.log('No Redirection');
+      setIsReset(false);
       return;
     }
-    setFormValues({
-      ...data,
-      password: ''
-    });
-  }, [location.state]);
+    if (Object.keys(data)[0] === 'email_id') {
+      setFormValues({
+        ...data,
+        password: ''
+      });
+      setIsReset(true);
+    } else {
+      setIsReset(false);
+    }
+  }, [isReset, location.state]);
 
   return (
     <>
@@ -109,47 +118,81 @@ const AuthLogin = ({ forgot }) => {
             .required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            const response = await login(values.email_id, values.password);
+          console.log(isReset);
+          if (isReset) {
+            try {
+              const response = await login(values.email_id, values.password);
+              console.log(response);
 
-            const transformedData = transformData(response.data.data.menus);
-
-            dispatch(
-              setMenuItems([
-                {
-                  id: 'group-applications',
-                  title: <FormattedMessage id="applications" />,
-                  icon: icons.data,
-                  type: 'group',
-                  children: transformedData
+              navigate('/reset-password', { state: response.data.data });
+              setIsReset(false);
+            } catch (err) {
+              console.error(err);
+              enqueueSnackbar(err.message, {
+                variant: 'error',
+                autoHideDuration: 2000,
+                anchorOrigin: {
+                  vertical: 'top',
+                  horizontal: 'right'
                 }
-              ])
-            );
-
-            if (scriptedRef.current) {
-              setStatus({ success: true });
-              setSubmitting(false);
-            }
-          } catch (err) {
-            console.error(err);
-            enqueueSnackbar(err.message, {
-              variant: 'error',
-              autoHideDuration: 2000,
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right'
+              });
+              if (scriptedRef.current) {
+                setStatus({ success: false });
+                setErrors({ submit: err.message });
+                setSubmitting(false);
               }
-            });
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
+              setIsReset(false);
+            }
+          }
+          if (!isReset) {
+            try {
+              const response = await login(values.email_id, values.password);
+
+              const transformedData = transformData(response.data.data.menus);
+
+              dispatch(
+                setMenuItems([
+                  {
+                    id: 'group-applications',
+                    title: <FormattedMessage id="applications" />,
+                    icon: icons.data,
+                    type: 'group',
+                    children: transformedData
+                  }
+                ])
+              );
+
+              if (scriptedRef.current) {
+                setStatus({ success: true });
+                setSubmitting(false);
+              }
+            } catch (err) {
+              console.error(err);
+              enqueueSnackbar(err.message, {
+                variant: 'error',
+                autoHideDuration: 2000,
+                anchorOrigin: {
+                  vertical: 'top',
+                  horizontal: 'right'
+                }
+              });
+              if (scriptedRef.current) {
+                setStatus({ success: false });
+                setErrors({ submit: err.message });
+                setSubmitting(false);
+              }
             }
           }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate onSubmit={handleSubmit}>
+          <form
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleSubmit();
+            }}
+          >
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <CustomTextField
@@ -162,7 +205,8 @@ const AuthLogin = ({ forgot }) => {
                   onBlur={handleBlur}
                   touched={touched}
                   errors={errors}
-                  autoComplete
+                  autocomplete="autoComplete"
+                  // autoComplete
                   FormHelperTextProps={{
                     style: {
                       marginLeft: 0
@@ -232,7 +276,13 @@ const AuthLogin = ({ forgot }) => {
               </Grid>
 
               <Grid item xs={12} sx={{ paddingTop: '14px !important' }}>
-                <Link variant="h6" component={RouterLink} to={isLoggedIn && forgot ? forgot : '/forgot-password'} color="text.primary">
+                <Link
+                  variant="body2"
+                  component={RouterLink}
+                  to={isLoggedIn && forgot ? forgot : '/forgot-password'}
+                  color="text.primary"
+                  sx={{ opacity: 0.8 }}
+                >
                   Forgot Password?
                 </Link>
               </Grid>

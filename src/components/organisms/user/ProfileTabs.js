@@ -4,17 +4,16 @@ import { Link } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Box, Divider, FormLabel, Grid, TextField, Menu, MenuItem, Stack, Typography } from '@mui/material';
+import { Box, FormLabel, Grid, TextField, Menu, MenuItem, Stack, Typography } from '@mui/material';
 
 // project-imports
 import MainCard from '../mainCard/MainCard';
 import Avatar from 'helpers/@extended/Avatar';
 import ProfileTab from './ProfileTab';
-import { facebookColor, linkedInColor } from 'config';
 import { ThemeMode } from 'config';
 
 // assets
-import { Apple, Camera, Facebook, Google, More } from 'iconsax-react';
+import { Camera, More } from 'iconsax-react';
 import IconButton from 'helpers/@extended/IconButton';
 
 const avatarImage = require.context('assets/images/users', true);

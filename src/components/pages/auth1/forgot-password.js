@@ -21,7 +21,7 @@ const ForgotPassword = () => {
             <Typography variant="h3" sx={{ fontSize: '1.2rem' }}>
               Forgot Password
             </Typography>
-            <Typography
+            {/* <Typography
               component={Link}
               to={isLoggedIn ? '/auth/login' : '/login'}
               variant="body1"
@@ -29,7 +29,7 @@ const ForgotPassword = () => {
               color="primary"
             >
               Back to Login
-            </Typography>
+            </Typography> */}
           </Stack>
         </Grid>
         <Grid item xs={12}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // material-ui
 import {
@@ -31,19 +31,31 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // assets
 import { Eye, EyeSlash } from 'iconsax-react';
+import { CustomTextField } from 'utils/textfield';
+import { ResetUserPassword } from 'hooks/user/user';
 
 // ============================|| FIREBASE - RESET PASSWORD ||============================ //
 
 const AuthResetPassword = () => {
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const { isLoggedIn } = useAuth();
 
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [userId, setUserID] = useState();
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+  const handleClickShowNewPassword = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+  const handleClickShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleMouseDownPassword = (event) => {
@@ -58,51 +70,48 @@ const AuthResetPassword = () => {
   useEffect(() => {
     changePassword('');
   }, []);
+  useEffect(() => {
+    const data = location.state || {};
+
+    console.log(data);
+
+    setUserID(data.user_id);
+  }, [location.state]);
 
   return (
     <>
       <Formik
         initialValues={{
-          password: '',
-          confirmPassword: '',
+          new_password: '',
+          confirm_password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          password: Yup.string().max(255).required('Password is required'),
-          confirmPassword: Yup.string()
+          new_password: Yup.string().max(255).required('New Password is required'),
+          confirm_password: Yup.string()
             .required('Confirm Password is required')
-            .test('confirmPassword', 'Both Password must be match!', (confirmPassword, yup) => yup.parent.password === confirmPassword)
+            .test('confirm_password', 'Both Password must be match!', (confirmPassword, yup) => yup.parent.new_password === confirmPassword)
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
+            const payload = { method_name: 'resetpassword', user_id: userId, ...values };
             // password reset
-            if (scriptedRef.current) {
-              setStatus({ success: true });
-              setSubmitting(false);
+            // if (scriptedRef.current) {
+            // setStatus({ success: true });
+            await ResetUserPassword(payload);
 
-              dispatch(
-                openSnackbar({
-                  open: true,
-                  message: 'Successfuly reset password.',
-                  variant: 'alert',
-                  alert: {
-                    color: 'success'
-                  },
-                  close: false
-                })
-              );
-
-              setTimeout(() => {
-                navigate(isLoggedIn ? '/auth/login' : '/login', { replace: true });
-              }, 1500);
-            }
+            setSubmitting(false);
+            setTimeout(() => {
+              navigate(isLoggedIn ? '/auth/login' : '/login');
+            }, 1500);
+            // }
           } catch (err) {
             console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+            // if (scriptedRef.current) {
+            // setStatus({ success: false });
+            setErrors({ submit: err.message });
+            setSubmitting(false);
+            // }
           }
         }}
       >
@@ -110,41 +119,37 @@ const AuthResetPassword = () => {
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="password-reset">Password</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.password && errors.password)}
-                    id="password-reset"
-                    type={showPassword ? 'text' : 'password'}
-                    value={values.password}
-                    name="password"
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e);
-                      changePassword(e.target.value);
-                    }}
-                    endAdornment={
+                <CustomTextField
+                  label="New Password"
+                  name="new_password"
+                  placeholder="Enter Password"
+                  values={values}
+                  type={showNewPassword ? 'text' : 'password'}
+                  onChange={(e) => {
+                    handleChange(e);
+                    changePassword(e.target.value);
+                  }}
+                  onBlur={handleBlur}
+                  touched={touched}
+                  errors={errors}
+                  InputProps={{
+                    endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
                           aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
+                          onClick={handleClickShowNewPassword}
                           onMouseDown={handleMouseDownPassword}
+                          onMouseUp={handleMouseDownPassword}
                           edge="end"
+                          size="large"
                           color="secondary"
                         >
-                          {showPassword ? <Eye /> : <EyeSlash />}
+                          {showNewPassword ? <Eye /> : <EyeSlash />}
                         </IconButton>
                       </InputAdornment>
-                    }
-                    placeholder="Enter password"
-                  />
-                  {touched.password && errors.password && (
-                    <FormHelperText error id="helper-text-password-reset">
-                      {errors.password}
-                    </FormHelperText>
-                  )}
-                </Stack>
+                    )
+                  }}
+                />
                 <FormControl fullWidth sx={{ mt: 2 }}>
                   <Grid container spacing={2} alignItems="center">
                     <Grid item>
@@ -159,25 +164,34 @@ const AuthResetPassword = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="confirm-password-reset">Confirm Password</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.confirmPassword && errors.confirmPassword)}
-                    id="confirm-password-reset"
-                    type="password"
-                    value={values.confirmPassword}
-                    name="confirmPassword"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="Enter confirm password"
-                  />
-                  {touched.confirmPassword && errors.confirmPassword && (
-                    <FormHelperText error id="helper-text-confirm-password-reset">
-                      {errors.confirmPassword}
-                    </FormHelperText>
-                  )}
-                </Stack>
+                <CustomTextField
+                  label="Confirm Password"
+                  name="confirm_password"
+                  placeholder="Enter Password"
+                  values={values}
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  touched={touched}
+                  errors={errors}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          onMouseUp={handleMouseDownPassword}
+                          edge="end"
+                          size="large"
+                          color="secondary"
+                        >
+                          {showConfirmPassword ? <Eye /> : <EyeSlash />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
               </Grid>
 
               {errors.submit && (
@@ -187,7 +201,7 @@ const AuthResetPassword = () => {
               )}
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="success">
                     Reset Password
                   </Button>
                 </AnimateButton>

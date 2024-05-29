@@ -5,6 +5,7 @@ import { createContext, useEffect, useReducer } from 'react';
 // third-party
 import { Chance } from 'chance';
 import jwtDecode from 'jwt-decode';
+import { toInteger } from 'lodash';
 
 // reducer - state management
 import { LOGIN, LOGOUT } from 'redux/reducers/actions';
@@ -13,7 +14,6 @@ import authReducer from 'redux/reducers/auth';
 // project-imports
 import Loader from 'components/atoms/loader/Loader';
 import axios from 'utils/axios';
-import { toInteger } from 'lodash';
 
 const chance = new Chance();
 
@@ -101,9 +101,10 @@ export const JWTProvider = ({ children }) => {
     // return response;
 
     console.log(response);
+    if (response.status === 200 && response.data.data.is_resetpassword) {
+      return response;
+    }
     if (response.status === 200) {
-      // const { serviceToken, user } = response.data;
-
       const user = response.data;
       console.log(response.data);
 
@@ -116,8 +117,8 @@ export const JWTProvider = ({ children }) => {
           user
         }
       });
+      return response;
     }
-    return response;
   };
 
   const register = async (email, password, firstName, lastName) => {

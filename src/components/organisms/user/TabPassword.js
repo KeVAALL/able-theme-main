@@ -6,15 +6,12 @@ import {
   Button,
   CardHeader,
   Divider,
-  FormHelperText,
   Grid,
   InputAdornment,
-  InputLabel,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  OutlinedInput,
   Stack,
   Typography
 } from '@mui/material';
@@ -22,19 +19,17 @@ import {
 // project-imports
 import MainCard from '../mainCard/MainCard';
 import IconButton from 'helpers/@extended/IconButton';
-// import { dispatch } from 'store';
-// import { openSnackbar } from 'store/reducers/snackbar';
 import { isNumber, isLowercaseChar, isUppercaseChar, isSpecialChar, minLength } from 'utils/password-validation';
 
 // third-party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { toInteger } from 'lodash';
 
 // assets
 import { Eye, EyeSlash, Minus, TickCircle } from 'iconsax-react';
 import { CustomTextField } from 'utils/textfield';
 import { ChangeUserPassword } from 'hooks/user/user';
-import { toInteger } from 'lodash';
 
 // ==============================|| USER PROFILE - PASSWORD CHANGE ||============================== //
 
@@ -84,20 +79,9 @@ const TabPassword = () => {
 
             setSubmitting(true);
 
-            const payload = { user_id: toInteger(userID), ...values };
+            const payload = { user_id: toInteger(userID), method_name: 'updatepassword', ...values };
 
             await ChangeUserPassword(payload);
-            // dispatch(
-            //   openSnackbar({
-            //     open: true,
-            //     message: 'Password changed successfully.',
-            //     variant: 'alert',
-            //     alert: {
-            //       color: 'success'
-            //     },
-            //     close: false
-            //   })
-            // );
 
             resetForm();
             setStatus({ success: false });

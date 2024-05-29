@@ -59,6 +59,8 @@ import InvestmentDialog from 'components/atoms/dialog/InvestmentDialog';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import InvestmentTabs from 'components/organisms/investmentTabs';
 import enGB from 'date-fns/locale/en-GB';
+import parseISO from 'date-fns/parseISO';
+import format from 'date-fns/format';
 
 function Investment() {
   // Main data states
@@ -148,6 +150,18 @@ function Investment() {
         return [...prev, value.values];
       });
     }
+  };
+  // Date Range
+  const handleDateChange = (newValue) => {
+    // Ensure that the newValue is handled correctly
+    const formattedStartDate = newValue[0] ? format(newValue[0], 'yyyy-MM-dd') : null;
+    const formattedEndDate = newValue[1] ? format(newValue[1], 'yyyy-MM-dd') : null;
+
+    // Log or use the dates as needed
+    console.log('Start Date:', formattedStartDate);
+    console.log('End Date:', formattedEndDate);
+
+    setDateValue([newValue[0], newValue[1]]);
   };
   // Declaration
   const handleDynamicDeclaration = (value) => {
@@ -762,7 +776,13 @@ function Investment() {
               ifa_id: yup.number()
             })}
             onSubmit={async (values, { resetForm }) => {
-              const payload = { ...values, method_name: 'getinvestmentsonifa', from_date: dateValue[0], end_date: dateValue[1] };
+              console.log(dateValue[0], dateValue[1]);
+              const payload = {
+                method_name: 'getinvestmentsonifa',
+                from_date: format(dateValue[0], 'yyyy-MM-dd'),
+                end_date: format(dateValue[1], 'yyyy-MM-dd'),
+                ...values
+              };
 
               const investmentData = await GetInvestments(payload);
 
@@ -790,7 +810,8 @@ function Investment() {
                           className="calendar_main"
                           value={dateValue}
                           onChange={(newValue) => {
-                            setDateValue(newValue);
+                            console.log(newValue);
+                            handleDateChange(newValue);
                           }}
                           slotProps={{ fieldSeparator: { children: <ArrangeHorizontal size={18} /> } }}
                         />
