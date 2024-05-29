@@ -157,8 +157,8 @@ function ReactTable({
           </Grid>
           <Grid
             item
-            md={5.5}
-            sm={5.5}
+            md={5}
+            sm={5}
             xs={12}
             sx={{
               display: 'flex',
