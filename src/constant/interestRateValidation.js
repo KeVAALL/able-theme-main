@@ -35,19 +35,31 @@ const tableColumns = [
   },
   {
     Header: 'Normal Citizen (%)',
-    accessor: 'rate_of_interest_regular'
+    accessor: 'rate_of_interest_regular',
+    customCell: ({ value }) => {
+      return <span>{value}%</span>;
+    }
   },
   {
     Header: 'Senior Citizen (%)',
-    accessor: 'rate_of_interest_senior_citezen'
+    accessor: 'rate_of_interest_senior_citezen',
+    customCell: ({ value }) => {
+      return <span>{value}%</span>;
+    }
   },
   {
     Header: 'Female Citizen (%)',
-    accessor: 'rate_of_interest_female'
+    accessor: 'rate_of_interest_female',
+    customCell: ({ value }) => {
+      return <span>{value}%</span>;
+    }
   },
   {
     Header: 'Senior Female Citizen (%)',
-    accessor: 'rate_of_interest_female_senior_citezen'
+    accessor: 'rate_of_interest_female_senior_citezen',
+    customCell: ({ value }) => {
+      return <span>{value}%</span>;
+    }
   },
   {
     Header: 'Status',

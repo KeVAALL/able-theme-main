@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 // assets
-import { HomeTrendUp, Profile2User, ShoppingBag, Eye, EyeSlash } from 'iconsax-react';
+import { HomeTrendUp, Profile2User, ShoppingBag, Eye, EyeSlash, Add } from 'iconsax-react';
 
 import { FormattedMessage } from 'react-intl';
 // material-ui
@@ -52,11 +52,13 @@ const AuthLogin = ({ forgot }) => {
   const icons = {
     HomeTrendUp: HomeTrendUp,
     Profile2User: Profile2User,
-    ShoppingBag: ShoppingBag
+    ShoppingBag: ShoppingBag,
+    Add: Add
     // data: Fatrows
   };
 
   const transformData = (menu) => {
+    console.log(menu);
     let organizedMenu = [];
 
     menu?.forEach((item, index) => {
@@ -73,7 +75,8 @@ const AuthLogin = ({ forgot }) => {
               id: item.menu_id,
               title: item.menu_name,
               type: 'item',
-              url: `/${item.menu_url}`
+              url: `/${item.menu_url}`,
+              icon: item.menu_icon
             };
           })
       };

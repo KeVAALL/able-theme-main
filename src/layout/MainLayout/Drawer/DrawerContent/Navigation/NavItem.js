@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography, useMediaQuery } from '@mui/material';
-import { HomeTrendUp, Profile2User, ShoppingBag, Bank } from 'iconsax-react';
+import { HomeTrendUp, Profile2User, ShoppingBag, Bank, Add } from 'iconsax-react';
 
 // project-imports
 import Dot from 'helpers/@extended/Dot';
@@ -27,7 +27,8 @@ const NavItem = ({ item, level }) => {
     HomeTrendUp: HomeTrendUp,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
-    Bank: Bank
+    Bank: Bank,
+    Add: Add
   };
 
   let itemTarget = '_self';

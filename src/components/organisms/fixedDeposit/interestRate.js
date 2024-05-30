@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import { useState, useMemo, useEffect, memo } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Divider, Box, Card, Grid, CardContent, Button, Stack, CardHeader } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, Button, Stack, CardHeader, Autocomplete, TextField } from '@mui/material';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import PropTypes from 'prop-types';
 // third-party
@@ -12,6 +13,7 @@ import Loader from 'components/atoms/loader/Loader';
 import { formAllValues, validationSchema, tableColumns, VisibleColumn } from 'constant/interestRateValidation';
 import { DeleteOneInterestRate, GetPayoutMethod, GetSchemeSearch } from 'hooks/interestRate/interestRate';
 import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
+import useMemoize from './useMemoize';
 import DialogForm from 'components/atoms/dialog/InterestRateDialog';
 import InterestRateTable from 'components/molecules/fixedDeposit/interestRateTable';
 
@@ -20,9 +22,84 @@ const headerSX = {
   '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
+const APIAutoComplete = memo((props) => {
+  // const memoizedGetSchemeSearch = useMemoize(GetSchemeSearch);
+
+  const handleOptionChange = async (e, optionName, formName, setFieldValue) => {
+    if (e.target.outerText === undefined) {
+      setFieldValue(formName, 0);
+    } else {
+      for (const el of props.options) {
+        if (el[optionName] === e.target.outerText) {
+          await setFieldValue(formName, el.id);
+          const payload = {
+            method_name: 'getscheme',
+            fd_id: props.fdId,
+            fd_payout_method_id: el.id
+          };
+
+          if (!props.cache[el.id]) {
+            // const searchResult = await memoizedGetSchemeSearch(el.id, payload);
+            const searchResult = await GetSchemeSearch(payload);
+            if (searchResult) {
+              props.setSchemeData(searchResult);
+              props.setCache(el.id, searchResult); // Update the cache
+            }
+          } else {
+            props.setSchemeData(props.cache[el.id]);
+          }
+        }
+      }
+    }
+  };
+
+  return (
+    <Autocomplete
+      id="basic-autocomplete-label"
+      className="common-autocomplete"
+      fullWidth
+      disablePortal
+      value={
+        typeof props.defaultValue === 'string' &&
+        props.options.find((el) => {
+          if (props.keyName) {
+            return el[props.keyName] === props.defaultValue;
+          } else {
+            return el[props.optionName] === props.defaultValue;
+          }
+        })
+      }
+      onChange={(e) => {
+        handleOptionChange(e, props.optionName, props.formName, props.setFieldValue);
+      }}
+      options={props.options || []}
+      getOptionLabel={(option) => option[props.optionName]} // Assuming 'product_type' is the label you want to display
+      componentsProps={{
+        popper: {
+          modifiers: [
+            {
+              name: 'preventOverflow',
+              enabled: false
+            }
+          ]
+        }
+      }}
+      disableClearable={props.disableClearable ? true : false}
+      renderInput={(params) => <TextField {...params} className="autocomplete-textfield" name={props.formName} label={props.label} />}
+    />
+  );
+});
+
+FormikAutoComplete.propTypes = {
+  idName: PropTypes.any,
+  keyName: PropTypes.any
+};
+
 const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestRate, isEditingInterestRate }) => {
   // Main Data state
   const [schemeData, setSchemeData] = useState([]);
+  const [cache, setCache] = useState({});
+
   // Edit Logic State
   const [loading, setLoading] = useState(true);
   const [isEditingScheme, setIsEditingScheme] = useState(false);
@@ -47,6 +124,12 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
       issuer_name: value.issuer_name,
       fd_payout_method_id: 'C'
     });
+  };
+  const updateCache = (key, data) => {
+    setCache((prevCache) => ({
+      ...prevCache,
+      [key]: data
+    }));
   };
   const schemeEditing = (value) => {
     setSchemeFormValues(value);
@@ -102,6 +185,26 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
       setPayoutData(data);
     }
   });
+  const {
+    isPending: schemePending,
+    error: schemeError,
+    refetch: refetchSchemeData
+  } = useQuery({
+    queryKey: ['schemeData'],
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+    queryFn: () => {
+      const payload = {
+        method_name: 'getscheme',
+        fd_id: formValues.fd_id,
+        fd_payout_method_id: 'C'
+      };
+      return GetSchemeSearch(payload);
+    },
+    onSuccess: (data) => {
+      setSchemeData(data);
+    }
+  });
   // Effect for setting editing state and loading state
   useEffect(() => {
     setEditing(formValues);
@@ -119,15 +222,15 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
         initialValues={IRformValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
-          const payload = {
-            method_name: 'getscheme',
-            fd_id: formValues.fd_id,
-            fd_payout_method_id: values.fd_payout_method_id
-          };
-          const searchResult = await GetSchemeSearch(payload);
-          if (searchResult) {
-            setSchemeData(searchResult);
-          }
+          // const payload = {
+          //   method_name: 'getscheme',
+          //   fd_id: formValues.fd_id,
+          //   fd_payout_method_id: values.fd_payout_method_id
+          // };
+          // const searchResult = await GetSchemeSearch(payload);
+          // if (searchResult) {
+          //   setSchemeData(searchResult);
+          // }
         }}
       >
         {({ values, errors, touched, handleChange, handleBlur, setFieldValue, handleSubmit, resetForm }) => (
@@ -150,6 +253,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
               isActive={isSchemeActive}
               isEditingScheme={isEditingScheme}
               setActiveClose={setActiveClose}
+              setCache={updateCache} // Pass the update function
               setSchemeData={setSchemeData}
             />
             <Card
@@ -185,7 +289,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
 
               <CardContent sx={{ p: 2 }}>
                 <Grid container spacing={3}>
-                  <Grid item md={3} xs={6}>
+                  <Grid item md={3} sm={4} xs={6}>
                     <CustomTextField
                       label="FD Name"
                       name="fd_name"
@@ -203,7 +307,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                       }}
                     />
                   </Grid>
-                  <Grid item md={3} xs={6}>
+                  <Grid item md={3} sm={4} xs={6}>
                     <CustomTextField
                       label="Issuer Name"
                       name="issuer_name"
@@ -221,18 +325,22 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                       }}
                     />
                   </Grid>
-                  <Grid item md={3} xs={6}>
-                    <FormikAutoComplete
+                  <Grid item md={3} sm={4} xs={12}>
+                    <APIAutoComplete
                       options={payoutData}
                       defaultValue={values.fd_payout_method_id}
+                      fdId={formValues.fd_id}
+                      cache={cache}
+                      setCache={updateCache} // Pass the update function
                       setFieldValue={setFieldValue}
+                      setSchemeData={setSchemeData}
                       formName="fd_payout_method_id"
                       keyName="id"
                       optionName="item_value"
                       label="Select Payout Method"
                     />
                   </Grid>
-                  <Grid item md={2} xs={6}>
+                  {/* <Grid item md={2} xs={6}>
                     <Box>
                       <AnimateButton>
                         <Button fullWidth variant="contained" color="success" startIcon={<SearchNormal1 />} type="submit">
@@ -240,7 +348,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                         </Button>
                       </AnimateButton>
                     </Box>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item xs={12}>
                     <InterestRateTable

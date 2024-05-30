@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { HomeTrendUp, Profile2User, ShoppingBag, Bank } from 'iconsax-react';
+import { HomeTrendUp, Profile2User, ShoppingBag, Bank, Add } from 'iconsax-react';
 
 // project-imports
 import NavGroup from './NavGroup';
@@ -25,7 +25,8 @@ const Navigation = () => {
     HomeTrendUp: HomeTrendUp,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
-    Bank: Bank
+    Bank: Bank,
+    Add: Add
   };
 
   const downLG = useMediaQuery(theme.breakpoints.down('lg'));

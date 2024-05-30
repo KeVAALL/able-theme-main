@@ -159,11 +159,8 @@ export const CustomAutoComplete = memo((props) => {
 });
 
 export const FormikAutoComplete = memo((props) => {
-  const setFieldValue = props.setFieldValue;
-
   const handleOptionChange = (e, optionName, formName, setFieldValue, idName) => {
     if (e.target.outerText === undefined) {
-      console.log('yes');
       setFieldValue(formName, 0);
     } else {
       props.options.forEach(async (el) => {
@@ -203,7 +200,7 @@ export const FormikAutoComplete = memo((props) => {
           }))
       }
       onChange={(e) => {
-        handleOptionChange(e, props.optionName, props.formName, setFieldValue, props.idName);
+        handleOptionChange(e, props.optionName, props.formName, props.setFieldValue, props.idName);
       }}
       options={props.options || []}
       getOptionLabel={(option) => option[props.optionName]} // Assuming 'product_type' is the label you want to display
@@ -222,7 +219,6 @@ export const FormikAutoComplete = memo((props) => {
         <TextField
           // error={Boolean(props.errors[props.formName])}
           {...params}
-          // sx={{ fontSize: '0.75rem' }}
           className="autocomplete-textfield"
           name={props.formName}
           label={props.label}

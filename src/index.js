@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 // third-party
 import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { LicenseInfo } from '@mui/x-date-pickers-pro';
 
 // fonts
 import 'assets/fonts/inter/inter.css';
@@ -25,6 +26,7 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 const queryClient = new QueryClient();
 const container = document.getElementById('root');
 const root = createRoot(container);
+LicenseInfo.setLicenseKey('8620848f-22e6-4b41-a124-38ac9afa4bb6');
 
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
 

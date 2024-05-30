@@ -36,7 +36,8 @@ const DialogForm = ({
   isActive,
   isEditingScheme,
   setActiveClose,
-  setSchemeData
+  setSchemeData,
+  setCache
 }) => {
   // Active or not Button
   const [activeButton, setActiveButton] = useState(false);
@@ -282,6 +283,7 @@ const DialogForm = ({
                         };
                         const schemeData = await GetSchemeSearch(schemePayload);
                         setSchemeData(schemeData);
+                        setCache(selectedPayoutMethod, schemeData); // Update the cache
 
                         setTimeout(() => {
                           setLiveButton(false);
@@ -311,6 +313,11 @@ const DialogForm = ({
                         };
                         const schemeData = await GetSchemeSearch(schemePayload);
                         setSchemeData(schemeData);
+                        setCache(selectedPayoutMethod, schemeData); // Update the cache
+
+                        setTimeout(() => {
+                          setLiveButton(false);
+                        }, 100);
                       } catch (err) {
                         console.log(err);
                       }

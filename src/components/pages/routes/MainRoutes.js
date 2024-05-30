@@ -69,6 +69,10 @@ const MainRoutes = {
           path: 'product',
           children: [
             {
+              path: 'add_product',
+              element: <></>
+            },
+            {
               path: 'product_type',
               element: <Product />
             },

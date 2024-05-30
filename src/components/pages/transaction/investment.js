@@ -14,7 +14,7 @@ import Loader from 'components/atoms/loader/Loader';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { Eye, FilterSearch, Calculator, TimerStart, ArrangeHorizontal } from 'iconsax-react';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { DateRangePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro';
 import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
 
@@ -806,7 +806,8 @@ function Investment() {
                         localeText={{ start: 'Date From', end: 'Date To' }}
                         adapterLocale={enGB}
                       >
-                        <DesktopDateRangePicker
+                        <DateRangePicker
+                          // <DesktopDateRangePicker
                           className="calendar_main"
                           value={dateValue}
                           onChange={(newValue) => {
@@ -881,7 +882,8 @@ function Investment() {
             // formValueFields={filterValueFields}
             // validationSchema={filterValidationSchema}
             changeTableVisibility={changeTableVisibility}
-            setEditing={setEditing}
+            setEditing={() => {}}
+            // setEditing={setEditing}
             getOneItem={() => {}}
             deleteOneItem={() => {}}
             // getEditData={() => {}}
