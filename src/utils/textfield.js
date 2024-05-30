@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from 'react';
-import { Autocomplete, Checkbox, FormControlLabel, TextField, Box } from '@mui/material';
+import { Autocomplete, Checkbox, FormControlLabel, TextField, Box, useMediaQuery } from '@mui/material';
 import { getIn } from 'formik';
 import PropTypes from 'prop-types';
 import './custom.css';
