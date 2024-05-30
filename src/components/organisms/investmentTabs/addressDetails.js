@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from 'react';
-import { Checkbox, Grid, Typography, Box, Button, Divider } from '@mui/material';
+import { Checkbox, Grid, Typography, Box, Button, Divider, useMediaQuery } from '@mui/material';
 import { NestedCustomTextField } from 'utils/textfield';
 import { UpdateAddressDetails } from 'hooks/transaction/investment';
 
 const AddressDetails = (props) => {
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
   return (
     <>
       <Box id="__permanent _address" style={{ marginBottom: '12px' }}>
@@ -152,9 +154,13 @@ const AddressDetails = (props) => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={2}>
+        {!matchDownSM && (
+          <>
+            <Grid item md={4} sm={3} xs={0}></Grid>
+            <Grid item md={4} sm={3} xs={0}></Grid>
+          </>
+        )}
+        <Grid item md={2} sm={3} xs={6}>
           <Button
             fullWidth
             variant="outlined"
@@ -168,7 +174,7 @@ const AddressDetails = (props) => {
             Back
           </Button>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item md={2} sm={3} xs={6}>
           <Button
             fullWidth
             variant="contained"

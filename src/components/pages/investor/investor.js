@@ -348,7 +348,7 @@ function Investor() {
 
                 <CardContent>
                   <Grid container spacing={3}>
-                    <Grid item xs={4}>
+                    <Grid item md={4} xs={6}>
                       <NestedCustomTextField
                         label="Investor Name"
                         valueName="investor.investor_name"
@@ -362,7 +362,7 @@ function Investor() {
                         errors={errors}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} xs={6}>
                       <NestedCustomTextField
                         label="Pan Number"
                         valueName="investor.pan_no"
@@ -377,7 +377,7 @@ function Investor() {
                         inputProps={{ maxLength: 10 }}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} xs={6}>
                       <NestedCustomTextField
                         label="Mobile Number"
                         valueName="investor.mobile_no"
@@ -392,7 +392,7 @@ function Investor() {
                         inputProps={{ maxLength: 10 }}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} xs={6}>
                       <FormikAutoComplete
                         options={investorType}
                         defaultValue={values.investor.is_senior_citizen}
@@ -402,7 +402,7 @@ function Investor() {
                         label="Investor Type"
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} xs={6}>
                       {/* Using Normal Autocomplete because of API body */}
                       <CustomAutoComplete
                         options={genderData}
@@ -412,7 +412,7 @@ function Investor() {
                         label="Gender"
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item md={4} xs={6}>
                       <NestedCustomTextField
                         label="Place of birth"
                         valueName="investor.place_of_birth"

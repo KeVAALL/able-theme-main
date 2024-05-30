@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from 'react';
-import { Grid, Typography, Chip, FormControlLabel, Switch } from '@mui/material';
+import { Grid, Typography, Chip, FormControlLabel, Switch, useMediaQuery } from '@mui/material';
 
 const Declaration = ({ selectedDeclaration, handleDeclarationClick }) => {
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const matchUpSM = useMediaQuery((theme) => theme.breakpoints.up('sm'));
+
   return (
     <>
       <Grid id="__parent" container spacing={2.5} sx={{ width: '100%', marginLeft: '-10px !important' }}>
@@ -20,6 +23,7 @@ const Declaration = ({ selectedDeclaration, handleDeclarationClick }) => {
             }
             label="Politically Exposed Person (PEP)?"
             labelPlacement="start"
+            sx={{ ml: matchDownSM ? 0 : 2 }}
           />
         </Grid>
 
@@ -37,7 +41,7 @@ const Declaration = ({ selectedDeclaration, handleDeclarationClick }) => {
             }
             label="Relative to politically exposed person (PEP)?"
             labelPlacement="start"
-            sx={{ ml: 0 }}
+            sx={{ ml: matchDownSM ? 0 : matchUpSM ? 2 : 0 }}
           />
         </Grid>
 
@@ -56,6 +60,7 @@ const Declaration = ({ selectedDeclaration, handleDeclarationClick }) => {
             }
             label="Citizen national or tax resident of any other country outside India?"
             labelPlacement="start"
+            sx={{ ml: matchDownSM ? 0 : 2 }}
           />
         </Grid>
       </Grid>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from 'react';
-import { Grid, Button, Divider } from '@mui/material';
+import { Grid, Button, Divider, useMediaQuery } from '@mui/material';
 
 // project-imports
 import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
@@ -12,10 +12,12 @@ import { UpdatePersonalInfo } from 'hooks/transaction/investment';
 import enGB from 'date-fns/locale/en-GB';
 
 const PersonalInfo = (props) => {
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
   return (
     <>
       <Grid container spacing={3} id="grid_box">
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={4}>
           <FormikAutoComplete
             options={residency}
             defaultValue={props.values.investor.is_indian_resident}
@@ -26,7 +28,7 @@ const PersonalInfo = (props) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={4}>
           <FormikAutoComplete
             options={marital_status}
             defaultValue={props.values.investor.is_married}
@@ -41,9 +43,7 @@ const PersonalInfo = (props) => {
           id="__place_of_birth"
           item
           xs={12}
-          sm={6}
-          md={4}
-          lg={4}
+          sm={4}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -69,9 +69,13 @@ const PersonalInfo = (props) => {
           <Divider sx={{ borderColor: '#9a9b9da6' }} />
         </Grid>
 
-        <Grid item xs={4}></Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={2}>
+        {!matchDownSM && (
+          <>
+            <Grid item md={4} sm={3} xs={0}></Grid>
+            <Grid item md={4} sm={3} xs={0}></Grid>
+          </>
+        )}
+        <Grid item md={2} sm={3} xs={6}>
           <Button
             fullWidth
             variant="outlined"
@@ -84,7 +88,7 @@ const PersonalInfo = (props) => {
             Back
           </Button>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item md={2} sm={3} xs={6}>
           <Button
             fullWidth
             variant="contained"

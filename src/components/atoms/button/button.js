@@ -31,9 +31,7 @@ export const SubmitButton = memo(
     isValid,
     dirty
   }) => {
-    console.log(isValid, dirty);
     // Theme
-    const theme = useTheme();
     const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
     useEffect(() => {

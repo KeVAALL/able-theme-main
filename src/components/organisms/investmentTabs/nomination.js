@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { memo, useState } from 'react';
-import { Box, Card, Grid, Button, CardContent, CardHeader, Stack, Divider } from '@mui/material';
+import { Box, Card, Grid, Button, CardContent, CardHeader, Stack, Divider, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -25,6 +25,7 @@ import enGB from 'date-fns/locale/en-GB';
 const Nomination = (props) => {
   // theme
   const theme = useTheme();
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   // Toggle Table and Form Visibility
   const [showTable, setShowTable] = useState(false);
   const changeTableVisibility = () => {
@@ -369,12 +370,16 @@ const Nomination = (props) => {
                 />
               </MainCard>
             </Grid>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-            <Grid item xs={4}></Grid>
-            <Grid item xs={4}></Grid>
-            <Grid item xs={2}>
+            {!matchDownSM && (
+              <>
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
+                <Grid item md={4} sm={3} xs={0}></Grid>
+                <Grid item md={4} sm={3} xs={0}></Grid>
+              </>
+            )}
+            <Grid item md={2} sm={3} xs={6}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -387,7 +392,7 @@ const Nomination = (props) => {
                 Back
               </Button>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item md={2} sm={3} xs={6}>
               <Button
                 fullWidth
                 variant="contained"

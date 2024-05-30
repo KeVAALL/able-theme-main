@@ -659,7 +659,7 @@ function Investment() {
                         inputProps={{ maxLength: 50 }}
                       />
                     </Grid>
-                    {matchDownLG && matchUpSM && <Grid item sm={8} />}
+                    {matchUpSM && matchDownLG && <Grid item sm={8} />}
                     <Grid item md={3} sm={4} xs={12}>
                       <Button
                         // disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
