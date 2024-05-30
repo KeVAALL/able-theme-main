@@ -14,7 +14,8 @@ import {
   Divider,
   FormControlLabel,
   Switch,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material';
 // third-party
 import { PopupTransition } from 'helpers/@extended/Transitions';
@@ -39,6 +40,8 @@ const DialogForm = ({
   setSchemeData,
   setCache
 }) => {
+  // Theme
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   // Active or not Button
   const [activeButton, setActiveButton] = useState(false);
   const [liveButton, setLiveButton] = useState(false);
@@ -88,7 +91,7 @@ const DialogForm = ({
                   value="start"
                   control={<Switch color="primary" checked={activeButton} onChange={handleActiveChange} />}
                   label="Active"
-                  labelPlacement="start"
+                  labelPlacement={matchDownSM ? 'top' : 'start'}
                 />
               </Box>
               <Box>
@@ -104,7 +107,7 @@ const DialogForm = ({
                     />
                   }
                   label="Live"
-                  labelPlacement="start"
+                  labelPlacement={matchDownSM ? 'top' : 'start'}
                   sx={{ mr: 1 }}
                 />
               </Box>
