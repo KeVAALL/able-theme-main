@@ -159,7 +159,7 @@ export const CustomAutoComplete = memo((props) => {
 });
 
 export const FormikAutoComplete = memo((props) => {
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   const handleOptionChange = (e, optionName, formName, setFieldValue, idName) => {
     if (e.target.outerText === undefined) {
