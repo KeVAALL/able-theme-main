@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useMemo, useEffect, memo } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Divider, Box, Card, Grid, CardContent, Button, Stack, CardHeader, Autocomplete, TextField } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, Button, Stack, CardHeader, Autocomplete, TextField, useMediaQuery } from '@mui/material';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import PropTypes from 'prop-types';
 // third-party
@@ -24,6 +24,7 @@ const headerSX = {
 
 const APIAutoComplete = memo((props) => {
   // const memoizedGetSchemeSearch = useMemoize(GetSchemeSearch);
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   const handleOptionChange = async (e, optionName, formName, setFieldValue) => {
     if (e.target.outerText === undefined) {
@@ -85,7 +86,21 @@ const APIAutoComplete = memo((props) => {
         }
       }}
       disableClearable={props.disableClearable ? true : false}
-      renderInput={(params) => <TextField {...params} className="autocomplete-textfield" name={props.formName} label={props.label} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          className="autocomplete-textfield"
+          name={props.formName}
+          label={props.label}
+          InputProps={{
+            ...params.InputProps,
+            inputProps: {
+              ...params.inputProps,
+              readOnly: matchDownSM ? true : false // Prevents mobile keyboard from opening
+            }
+          }}
+        />
+      )}
     />
   );
 });
