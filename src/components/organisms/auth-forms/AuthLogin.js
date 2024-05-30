@@ -3,7 +3,23 @@ import { useState, useEffect } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 // assets
-import { HomeTrendUp, Profile2User, ShoppingBag, Eye, EyeSlash, Add } from 'iconsax-react';
+import {
+  HomeTrendUp,
+  Profile2User,
+  ShoppingBag,
+  Eye,
+  EyeSlash,
+  Add,
+  UserCirlceAdd,
+  MenuBoard,
+  MoneySend,
+  StatusUp,
+  User,
+  Convert,
+  Tag,
+  Moneys,
+  ArrangeHorizontalCircle
+} from 'iconsax-react';
 
 import { FormattedMessage } from 'react-intl';
 // material-ui
@@ -50,11 +66,18 @@ const AuthLogin = ({ forgot }) => {
   };
   // icons
   const icons = {
+    Add: Add,
+    User: User,
+    Tag: Tag,
+    Moneys: Moneys,
     HomeTrendUp: HomeTrendUp,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
-    Add: Add
-    // data: Fatrows
+    UserCirlceAdd: UserCirlceAdd,
+    MenuBoard: MenuBoard,
+    MoneySend: MoneySend,
+    StatusUp: StatusUp,
+    ArrangeHorizontalCircle: ArrangeHorizontalCircle
   };
 
   const transformData = (menu) => {

@@ -3,7 +3,22 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { HomeTrendUp, Profile2User, ShoppingBag, Bank, Add } from 'iconsax-react';
+import {
+  HomeTrendUp,
+  Profile2User,
+  ShoppingBag,
+  Bank,
+  Add,
+  UserCirlceAdd,
+  MenuBoard,
+  MoneySend,
+  StatusUp,
+  User,
+  Convert,
+  Tag,
+  Moneys,
+  ArrangeHorizontalCircle
+} from 'iconsax-react';
 
 // project-imports
 import NavGroup from './NavGroup';
@@ -22,11 +37,19 @@ const Navigation = () => {
   const { menuItem } = useSelector((state) => state.menu);
   // console.log(menuItem);
   const icons = {
+    Add: Add,
+    Bank: Bank,
+    User: User,
+    Tag: Tag,
+    Moneys: Moneys,
     HomeTrendUp: HomeTrendUp,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
-    Bank: Bank,
-    Add: Add
+    UserCirlceAdd: UserCirlceAdd,
+    MenuBoard: MenuBoard,
+    MoneySend: MoneySend,
+    StatusUp: StatusUp,
+    ArrangeHorizontalCircle: ArrangeHorizontalCircle
   };
 
   const downLG = useMediaQuery(theme.breakpoints.down('lg'));

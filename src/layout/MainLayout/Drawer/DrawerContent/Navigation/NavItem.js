@@ -5,7 +5,22 @@ import { Link, useLocation } from 'react-router-dom';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography, useMediaQuery } from '@mui/material';
-import { HomeTrendUp, Profile2User, ShoppingBag, Bank, Add } from 'iconsax-react';
+import {
+  HomeTrendUp,
+  Profile2User,
+  ShoppingBag,
+  Bank,
+  Add,
+  UserCirlceAdd,
+  MenuBoard,
+  MoneySend,
+  StatusUp,
+  User,
+  Convert,
+  Tag,
+  Moneys,
+  ArrangeHorizontalCircle
+} from 'iconsax-react';
 
 // project-imports
 import Dot from 'helpers/@extended/Dot';
@@ -24,11 +39,19 @@ const NavItem = ({ item, level }) => {
   const { drawerOpen, openItem } = useSelector((state) => state.menu);
   const { menuOrientation } = useConfig();
   const icons = {
+    Add: Add,
+    Bank: Bank,
+    User: User,
+    Tag: Tag,
+    Moneys: Moneys,
     HomeTrendUp: HomeTrendUp,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
-    Bank: Bank,
-    Add: Add
+    UserCirlceAdd: UserCirlceAdd,
+    MenuBoard: MenuBoard,
+    MoneySend: MoneySend,
+    StatusUp: StatusUp,
+    ArrangeHorizontalCircle: ArrangeHorizontalCircle
   };
 
   let itemTarget = '_self';
@@ -68,7 +91,7 @@ const NavItem = ({ item, level }) => {
   }, [pathname]);
 
   const textColor = theme.palette.mode === ThemeMode.DARK ? 'secondary.400' : 'secondary.main';
-  const iconSelectedColor = 'primary.main';
+  const iconSelectedColor = 'success.main';
 
   return (
     <>

@@ -30,7 +30,23 @@ import { activeItem } from 'redux/reducers/menu';
 import { MenuOrientation, ThemeMode } from 'config';
 
 // assets
-import { ArrowDown2, ArrowUp2, ArrowRight2, Copy, Bank, Add } from 'iconsax-react';
+import {
+  ArrowDown2,
+  ArrowUp2,
+  ArrowRight2,
+  Copy,
+  Bank,
+  Add,
+  UserCirlceAdd,
+  MenuBoard,
+  MoneySend,
+  StatusUp,
+  User,
+  Convert,
+  Tag,
+  Moneys,
+  ArrangeHorizontalCircle
+} from 'iconsax-react';
 import { HomeTrendUp, Profile2User, ShoppingBag } from 'iconsax-react';
 
 // mini-menu - wrapper
@@ -60,11 +76,19 @@ const NavCollapse = ({ menu, level, parentId, setSelectedItems, selectedItems, s
   const theme = useTheme();
   const navigation = useNavigate();
   const icons = {
+    Add: Add,
+    Bank: Bank,
+    User: User,
+    Tag: Tag,
+    Moneys: Moneys,
     HomeTrendUp: HomeTrendUp,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
-    Bank: Bank,
-    Add: Add
+    UserCirlceAdd: UserCirlceAdd,
+    MenuBoard: MenuBoard,
+    MoneySend: MoneySend,
+    StatusUp: StatusUp,
+    ArrangeHorizontalCircle: ArrangeHorizontalCircle
   };
 
   const downLG = useMediaQuery(theme.breakpoints.down('lg'));
