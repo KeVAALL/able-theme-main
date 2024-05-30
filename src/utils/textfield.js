@@ -159,6 +159,8 @@ export const CustomAutoComplete = memo((props) => {
 });
 
 export const FormikAutoComplete = memo((props) => {
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
+
   const handleOptionChange = (e, optionName, formName, setFieldValue, idName) => {
     if (e.target.outerText === undefined) {
       setFieldValue(formName, 0);
@@ -222,6 +224,13 @@ export const FormikAutoComplete = memo((props) => {
           className="autocomplete-textfield"
           name={props.formName}
           label={props.label}
+          InputProps={{
+            ...params.InputProps,
+            inputProps: {
+              ...params.inputProps,
+              readOnly: matchDownSM ? true : false // Prevents mobile keyboard from opening
+            }
+          }}
         />
       )}
     />
