@@ -63,6 +63,7 @@ html::-webkit-scrollbar-thumb {
   padding: 8px 32px 8px 12px !important;
 }
 
+/* Calendar */
 .calendar_main {
   display: flex;
   /* justify-content: center; */
@@ -73,6 +74,19 @@ html::-webkit-scrollbar-thumb {
 }
 .calendar_main .MuiInputLabel-root {
   margin-top: -3px !important;
+}
+/* Color Picker */
+.color_picker_main {
+}
+.color_picker_main .MuiColorInput-Button {
+  height: 16px;
+  width: 16px;
+}
+.color_picker_main .MuiOutlinedInput-root {
+  border-radius: 5px;
+}
+.color_picker_main input {
+  padding: 8.5px 14px 8.5px 0px !important;
 }
 
 /* Chip */

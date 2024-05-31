@@ -30,6 +30,10 @@ const StatusCell = ({ value }) => {
 const VisibleColumn = [];
 const tableColumns = [
   {
+    Header: 'Payout Method',
+    accessor: 'fd_payout_method'
+  },
+  {
     Header: 'Tenure (Years)',
     accessor: 'tenure'
   },
@@ -38,28 +42,32 @@ const tableColumns = [
     accessor: 'period'
   },
   {
-    Header: 'Normal Citizen (%)',
+    // Header: 'Normal Citizen (%)',
+    Header: 'NC (%)',
     accessor: 'rate_of_interest_regular',
     customCell: ({ value }) => {
       return <span>{value}%</span>;
     }
   },
   {
-    Header: 'Senior Citizen (%)',
+    // Header: 'Senior Citizen (%)',
+    Header: 'SC (%)',
     accessor: 'rate_of_interest_senior_citezen',
     customCell: ({ value }) => {
       return <span>{value}%</span>;
     }
   },
   {
-    Header: 'Female Citizen (%)',
+    // Header: 'Female Citizen (%)',
+    Header: 'FC (%)',
     accessor: 'rate_of_interest_female',
     customCell: ({ value }) => {
       return <span>{value}%</span>;
     }
   },
   {
-    Header: 'Senior Female Citizen (%)',
+    // Header: 'Senior Female Citizen (%)',
+    Header: 'SFC (%)',
     accessor: 'rate_of_interest_female_senior_citezen',
     customCell: ({ value }) => {
       return <span>{value}%</span>;

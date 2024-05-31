@@ -14,8 +14,8 @@ const filterFormValues = {
 const formValueFields = [
   {
     fieldName: 'product_type',
-    label: 'Product Type',
-    placeholder: 'Please enter Product Type',
+    label: 'Product',
+    placeholder: 'Please enter Product',
     type: 'text',
     regType: 'noSpecial'
   }
@@ -28,7 +28,7 @@ const filterValidationSchema = yup.object({
 const VisibleColumn = [];
 const tableColumns = [
   {
-    Header: 'Product Type',
+    Header: 'Product',
     accessor: 'product_type'
   }
 ];

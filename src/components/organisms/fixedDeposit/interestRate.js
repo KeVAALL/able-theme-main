@@ -1,7 +1,25 @@
 /* eslint-disable react/prop-types */
 import { useState, useMemo, useEffect, memo } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Divider, Box, Card, Grid, CardContent, Button, Stack, CardHeader, Autocomplete, TextField, useMediaQuery } from '@mui/material';
+import {
+  Divider,
+  Box,
+  Card,
+  Grid,
+  CardContent,
+  Button,
+  Stack,
+  CardHeader,
+  Autocomplete,
+  TextField,
+  useMediaQuery,
+  Typography,
+  FormControl,
+  ListItemText,
+  ListItemIcon,
+  ListItemButton,
+  List
+} from '@mui/material';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import PropTypes from 'prop-types';
 // third-party
@@ -16,6 +34,7 @@ import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
 import useMemoize from './useMemoize';
 import DialogForm from 'components/atoms/dialog/InterestRateDialog';
 import InterestRateTable from 'components/molecules/fixedDeposit/interestRateTable';
+import Dot from 'helpers/@extended/Dot';
 
 const headerSX = {
   p: 2.5,
@@ -383,6 +402,46 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                       isFetching={isFetching}
                     />
                     {/* New table for this */}
+                  </Grid>
+
+                  <Grid item md={8}>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{
+                        '& .MuiListItemButton-root': { borderRadius: 0, my: 0, py: 0.2, px: 0.3 },
+                        '& .MuiListItemText-root': { color: 'text.primary' }
+                      }}
+                    >
+                      <Typography variant="body2">Notes: </Typography>
+                      <Stack direction="row" alignItems="center">
+                        <ListItemIcon sx={{ minWidth: '14px' }}>
+                          <Dot color="secondary" size={5} />
+                        </ListItemIcon>
+                        <Typography variant="body2">NC: Normal Citizen</Typography>
+                        {/* <ListItemText  primary="Incoming requests" /> */}
+                      </Stack>
+                      <Stack direction="row" alignItems="center">
+                        <ListItemIcon sx={{ minWidth: '14px' }}>
+                          <Dot color="secondary" size={5} />
+                        </ListItemIcon>
+                        <Typography variant="body2">SC: Senior Citizen</Typography>
+                      </Stack>
+                      <Stack direction="row" alignItems="center">
+                        <ListItemIcon sx={{ minWidth: '14px' }}>
+                          <Dot color="secondary" size={5} />
+                        </ListItemIcon>
+
+                        <Typography variant="body2">FC: Female Citizen</Typography>
+                      </Stack>
+                      <Stack direction="row" alignItems="center">
+                        <ListItemIcon sx={{ minWidth: '14px' }}>
+                          <Dot color="secondary" size={5} />
+                        </ListItemIcon>
+
+                        <Typography variant="body2">SFC: Senior Female Citizen</Typography>
+                      </Stack>
+                    </Stack>
                   </Grid>
                 </Grid>
               </CardContent>

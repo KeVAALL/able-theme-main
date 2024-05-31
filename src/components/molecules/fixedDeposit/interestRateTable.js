@@ -304,7 +304,7 @@ function ReactTable({
                           </Grid>
 
                           {Boolean(row.original.is_live) === true ? (
-                            <Grid item md={4}></Grid>
+                            <Grid item md={2}></Grid>
                           ) : (
                             <Grid item md={4}>
                               <IconButton

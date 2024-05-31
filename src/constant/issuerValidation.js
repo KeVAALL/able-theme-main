@@ -11,7 +11,10 @@ const formAllValues = {
   issuer_name: '',
   issuer_pan: '',
   issuer_tollfree_number: '',
-  logo_url: ''
+  logo_url: '',
+  app_bg_colour: '',
+  start_colour: '',
+  end_colour: ''
 };
 const validationSchema = yup.object({
   issuer_gst_number: yup

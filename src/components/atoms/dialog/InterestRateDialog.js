@@ -96,6 +96,7 @@ const DialogForm = ({
               </Box>
               <Box>
                 <FormControlLabel
+                  disabled={isEditingScheme}
                   value="live"
                   control={
                     <Switch

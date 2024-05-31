@@ -73,7 +73,7 @@ const MainRoutes = {
               element: <></>
             },
             {
-              path: 'product_type',
+              path: 'product',
               element: <Product />
             },
             {

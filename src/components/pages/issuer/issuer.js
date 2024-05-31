@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 // material-ui
-import { Divider, Box, Card, Grid, CardContent } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useQuery } from 'react-query';
 
@@ -11,6 +11,7 @@ import MultiTable from '../multiTable/multiTable';
 
 // third-party
 import { Formik } from 'formik';
+import { MuiColorInput } from 'mui-color-input';
 import Loader from 'components/atoms/loader/Loader';
 
 // assets
@@ -38,12 +39,19 @@ function Issuer() {
   const [showTable, setShowTable] = useState(false); // State to hold form input values
   // Form State
   const [formValues, setFormValues] = useState(formAllValues); // State to hold form input values
+  // Color picker
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [startColor, setStartColor] = useState('#ffffff');
+  const [endColor, setEndColor] = useState('#ffffff');
   // Theme
   const theme = useTheme();
 
   // Functions
   // Editing States
   const setEditing = (value) => {
+    setBackgroundColor(value.app_bg_colour);
+    setStartColor(value.start_colour);
+    setEndColor(value.end_colour);
     setFormValues(value);
   };
   // Activates editing mode
@@ -57,6 +65,16 @@ function Issuer() {
   const handleIsIssuerActive = (initialValue) => {
     setIssuerActive(initialValue);
   };
+  // Color Picker
+  const handleBGColorChange = (newValue) => {
+    setBackgroundColor(newValue);
+  };
+  const handleStartColorChange = (newValue) => {
+    setStartColor(newValue);
+  };
+  const handleEndColorChange = (newValue) => {
+    setEndColor(newValue);
+  };
   // Form Visibility
   const changeTableVisibility = () => {
     setShowTable(!showTable);
@@ -69,6 +87,9 @@ function Issuer() {
   // Empty Form Fields
   const clearFormValues = () => {
     setFormValues(formAllValues);
+    setBackgroundColor('#ffffff');
+    setStartColor('#ffffff');
+    setEndColor('#ffffff');
   };
   // Table Columns
   const columns = useMemo(() => tableColumns, []);
@@ -109,6 +130,9 @@ function Issuer() {
               const formValues = {
                 ...values,
                 method_name: 'add',
+                app_bg_colour: backgroundColor,
+                start_colour: startColor,
+                end_colour: endColor,
                 max_dp_fd_limit: 0,
                 max_fd_nominee_limit: 0,
                 max_pms_nominee_limit: 0,
@@ -190,6 +214,7 @@ function Issuer() {
                   <Grid container spacing={3}>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
+                        disabled={isEditing}
                         label="Issuer Name"
                         name="issuer_name"
                         placeholder={'Please enter Issuer Name'}
@@ -210,6 +235,7 @@ function Issuer() {
                     </Grid>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
+                        disabled={isEditing}
                         label="GST Number"
                         name="issuer_gst_number"
                         placeholder={'Please enter GST Number'}
@@ -254,6 +280,7 @@ function Issuer() {
                     </Grid>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
+                        disabled={isEditing}
                         label="Issuer Tollfree Number"
                         name="issuer_tollfree_number"
                         placeholder={'Please enter Toll-free Number'}
@@ -273,7 +300,7 @@ function Issuer() {
                         inputProps={{ maxLength: 15 }}
                       />
                     </Grid>
-                    <Grid item md={4} sm={6} xs={12}>
+                    <Grid item md={8} sm={6} xs={12}>
                       <CustomTextField
                         label="Logo URL"
                         name="logo_url"
@@ -293,6 +320,51 @@ function Issuer() {
                           }
                         }}
                         inputProps={{ maxLength: 150 }}
+                      />
+                    </Grid>
+                    <Grid item md={4} sm={4} xs={12}>
+                      <MuiColorInput
+                        fullWidth
+                        label="BG Color"
+                        className="color_picker_main"
+                        format="hex"
+                        // value={values.app_bg_colour}
+                        value={backgroundColor}
+                        fallbackValue="#ffffff"
+                        onChange={(e) => {
+                          handleBGColorChange(e);
+                          // setFieldValue('app_bg_colour', e);
+                        }}
+                      />
+                    </Grid>
+                    <Grid item md={4} sm={4} xs={12}>
+                      <MuiColorInput
+                        fullWidth
+                        label="Start Color"
+                        className="color_picker_main"
+                        format="hex"
+                        // value={values.start_color}
+                        value={startColor}
+                        fallbackValue="#ffffff"
+                        onChange={(e) => {
+                          handleStartColorChange(e);
+                          // setFieldValue('start_color', e);
+                        }}
+                      />
+                    </Grid>
+                    <Grid item md={4} sm={4} xs={12}>
+                      <MuiColorInput
+                        fullWidth
+                        label="End Color"
+                        className="color_picker_main"
+                        format="hex"
+                        // value={values.end_color}
+                        value={endColor}
+                        fallbackValue="#ffffff"
+                        onChange={(e) => {
+                          handleEndColorChange(e);
+                          // setFieldValue('end_color', e);
+                        }}
                       />
                     </Grid>
                   </Grid>

@@ -165,7 +165,7 @@ function ProductType() {
                 }}
               >
                 <SubmitButton
-                  title="Product Type Entry"
+                  title="Product Entry"
                   changeTableVisibility={changeTableVisibility}
                   clearFormValues={clearFormValues}
                   isEditing={isEditing}
@@ -182,9 +182,9 @@ function ProductType() {
                   <Grid container spacing={3}>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
-                        label="Product Type"
+                        label="Product"
                         name="product_type"
-                        placeholder={'Please enter Product Type'}
+                        placeholder={'Please enter Product'}
                         values={values}
                         type="text"
                         regType="string"
@@ -208,7 +208,7 @@ function ProductType() {
       )}
       {!showTable && (
         <MainCard
-          title="Product Type Search"
+          title="Product Search"
           changeTableVisibility={changeTableVisibility}
           showButton
           setActiveAdding={setActiveClose}
