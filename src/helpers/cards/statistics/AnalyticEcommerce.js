@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 
 // project-imports
-import MainCard from 'componentss/organisms/mainCard/MainCard';
+import MainCard from '../../../components/organisms/mainCard/MainCard';
 
 // assets
 import { ArrowRight, ArrowUp } from 'iconsax-react';

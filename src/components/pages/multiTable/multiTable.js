@@ -344,6 +344,7 @@ const ReactTable = ({
                                   // setTimeout(() => {
                                   isEditingInterestRate();
                                   // }, 500);
+                                  console.log(row.original);
                                   setEditing(row.original);
                                 }}
                               >

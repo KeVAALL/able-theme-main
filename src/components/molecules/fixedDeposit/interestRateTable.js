@@ -27,6 +27,7 @@ import IconButton from 'helpers/@extended/IconButton';
 function ReactTable({
   columns,
   data,
+  selectedPayout,
   formValues,
   formValueFields,
   validationSchema,
@@ -81,6 +82,7 @@ function ReactTable({
     usePagination
   );
   const sortingRow = rows.slice(0, 10);
+  console.log(selectedPayout);
 
   // For Delete Item
   const [item, setItem] = useState();
@@ -254,7 +256,7 @@ function ReactTable({
                   </TableCell>
                 ))}
 
-                {!hideActions && (
+                {!hideActions && selectedPayout !== 'A' && (
                   <TableCell width={150} sx={{ textAlign: 'right' }}>
                     <Box>
                       <AnimateButton>
@@ -356,6 +358,7 @@ ReactTable.propTypes = {
 const InterestRateTable = ({
   columns,
   data,
+  selectedPayout,
   formValues,
   formValueFields,
   validationSchema,
@@ -380,6 +383,7 @@ const InterestRateTable = ({
         <ReactTable
           columns={columns}
           data={data}
+          selectedPayout={selectedPayout}
           formValues={formValues}
           formValueFields={formValueFields}
           validationSchema={validationSchema}
@@ -406,6 +410,7 @@ const InterestRateTable = ({
 InterestRateTable.propTypes = {
   columns: PropTypes.array,
   data: PropTypes.array,
+  selectedPayout: PropTypes.any,
   formValues: PropTypes.object,
   formValueFields: PropTypes.any,
   validationSchema: PropTypes.any,

@@ -21,7 +21,7 @@ import {
 import { PopupTransition } from 'helpers/@extended/Transitions';
 import { Formik } from 'formik';
 // assets
-import { CustomTextField } from 'utils/textfield';
+import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
 import { formAllSchemeValues, validationSchema } from 'constant/interestRateSchemeValidation';
 import { SaveInterestRate, EditInterestRate, GetSchemeSearch } from 'hooks/interestRate/interestRate';
 import { toInteger } from 'lodash';
@@ -31,6 +31,7 @@ const DialogForm = ({
   handleOpenDialog,
   schemeEditFormValues,
   fdId,
+  // payoutData,
   selectedPayoutMethod,
   setIsActive,
   isActive,
@@ -119,7 +120,73 @@ const DialogForm = ({
         <Formik
           initialValues={schemeFormValues || formAllSchemeValues}
           validationSchema={validationSchema}
-          onSubmit={async (values, { resetForm }) => {}}
+          onSubmit={async (values, { resetForm }) => {
+            if (isEditingScheme) {
+              const payload = {
+                ...values,
+                is_active: toInteger(activeButton),
+                is_live: toInteger(liveButton),
+                scheme_master_id: values.scheme_master_id,
+                method_name: 'update'
+              };
+              try {
+                await EditInterestRate(payload);
+
+                setActiveClose();
+                handleOpenDialog();
+                clearFormValues();
+
+                const schemePayload = {
+                  method_name: 'getscheme',
+                  fd_id: fdId,
+                  fd_payout_method_id: selectedPayoutMethod
+                  // fd_payout_method_id: values.fd_payout_method_id
+                };
+                const schemeData = await GetSchemeSearch(schemePayload);
+                setSchemeData(schemeData);
+                setCache(selectedPayoutMethod, schemeData); // Update the cache
+                // setCache(values.fd_payout_method_id, schemeData); // Update the cache
+
+                setTimeout(() => {
+                  setLiveButton(false);
+                }, 100);
+              } catch (err) {
+                console.log(err);
+              }
+            } else {
+              const payload = {
+                ...values,
+                fd_id: fdId,
+                fd_payout_method_id: selectedPayoutMethod,
+                is_live: toInteger(liveButton),
+                is_active: toInteger(activeButton),
+                method_name: 'add'
+              };
+              try {
+                await SaveInterestRate(payload);
+
+                handleOpenDialog();
+                clearFormValues();
+                // Fetch Scheme Again
+                const schemePayload = {
+                  method_name: 'getscheme',
+                  fd_id: fdId,
+                  // fd_payout_method_id: values.fd_payout_method_id
+                  fd_payout_method_id: selectedPayoutMethod
+                };
+                const schemeData = await GetSchemeSearch(schemePayload);
+                setSchemeData(schemeData);
+                setCache(selectedPayoutMethod, schemeData); // Update the cache
+                // setCache(values.fd_payout_method_id, schemeData); // Update the cache
+
+                setTimeout(() => {
+                  setLiveButton(false);
+                }, 100);
+              } catch (err) {
+                console.log(err);
+              }
+            }
+          }}
         >
           {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
             <Box
@@ -244,6 +311,18 @@ const DialogForm = ({
                       }}
                     />
                   </Grid>
+                  {/* <Grid item xs={12}>
+                    <FormikAutoComplete
+                      disableClearable
+                      options={payoutData}
+                      defaultValue={values.fd_payout_method_id || selectedPayoutMethod}
+                      setFieldValue={setFieldValue}
+                      formName="fd_payout_method_id"
+                      keyName="id"
+                      optionName="item_value"
+                      label="Select Payout Method"
+                    />
+                  </Grid> */}
                 </Grid>
               </DialogContent>
               <Divider />
@@ -264,69 +343,10 @@ const DialogForm = ({
                 <Button
                   variant="contained"
                   color="success"
-                  onClick={async () => {
-                    if (isEditingScheme) {
-                      const payload = {
-                        ...values,
-                        is_active: toInteger(activeButton),
-                        is_live: toInteger(liveButton),
-                        scheme_master_id: values.scheme_master_id,
-                        method_name: 'update'
-                      };
-                      try {
-                        await EditInterestRate(payload);
+                  type="submit"
+                  // onClick={async () => {
 
-                        setActiveClose();
-                        handleOpenDialog();
-                        clearFormValues();
-
-                        const schemePayload = {
-                          method_name: 'getscheme',
-                          fd_id: fdId,
-                          fd_payout_method_id: selectedPayoutMethod
-                        };
-                        const schemeData = await GetSchemeSearch(schemePayload);
-                        setSchemeData(schemeData);
-                        setCache(selectedPayoutMethod, schemeData); // Update the cache
-
-                        setTimeout(() => {
-                          setLiveButton(false);
-                        }, 100);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    } else {
-                      const payload = {
-                        ...values,
-                        fd_id: fdId,
-                        fd_payout_method_id: selectedPayoutMethod,
-                        is_live: toInteger(liveButton),
-                        is_active: toInteger(activeButton),
-                        method_name: 'add'
-                      };
-                      try {
-                        await SaveInterestRate(payload);
-
-                        handleOpenDialog();
-                        clearFormValues();
-                        // Fetch Scheme Again
-                        const schemePayload = {
-                          method_name: 'getscheme',
-                          fd_id: fdId,
-                          fd_payout_method_id: selectedPayoutMethod
-                        };
-                        const schemeData = await GetSchemeSearch(schemePayload);
-                        setSchemeData(schemeData);
-                        setCache(selectedPayoutMethod, schemeData); // Update the cache
-
-                        setTimeout(() => {
-                          setLiveButton(false);
-                        }, 100);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    }
-                  }}
+                  // }}
                 >
                   Save
                 </Button>

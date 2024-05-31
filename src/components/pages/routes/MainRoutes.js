@@ -11,6 +11,7 @@ import Investment from '../transaction/investment';
 import UserList from '../userList/userList';
 import Role from '../userList/role';
 import { element } from 'prop-types';
+import Dashboard from '../dashboard/dashboard';
 
 // Product
 const Product = Loadable(lazy(() => import('components/pages/productType/productType')));
@@ -37,7 +38,7 @@ const MainRoutes = {
       children: [
         {
           path: 'dashboard',
-          element: <></>
+          element: <Dashboard />
         },
         {
           path: 'investor',

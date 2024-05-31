@@ -58,6 +58,14 @@ const APIAutoComplete = memo((props) => {
             fd_payout_method_id: el.id
           };
 
+          if (el.id === 'A') {
+            const searchResult = await GetSchemeSearch(payload);
+            if (searchResult) {
+              props.setSchemeData(searchResult);
+              props.setCache(el.id, searchResult); // Update the cache
+            }
+            return;
+          }
           if (!props.cache[el.id]) {
             // const searchResult = await memoizedGetSchemeSearch(el.id, payload);
             const searchResult = await GetSchemeSearch(payload);
@@ -129,7 +137,7 @@ FormikAutoComplete.propTypes = {
   keyName: PropTypes.any
 };
 
-const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestRate, isEditingInterestRate }) => {
+const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEditingInterestRate, isEditingInterestRate }) => {
   // Main Data state
   const [schemeData, setSchemeData] = useState([]);
   const [cache, setCache] = useState({});
@@ -153,7 +161,12 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
 
   // Sets form values for editing
   const setEditing = (value) => {
+    console.log(productData);
+    console.log(value.fd_name);
+    // const fd = productData.find((fd) => fd.fd_name === value.fd_name);
     setFormValues({
+      // fd_id: fd.fd_id,
+      fd_id: value.fd_id,
       fd_name: value.fd_name,
       issuer_name: value.issuer_name,
       fd_payout_method_id: 'C'
@@ -282,6 +295,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
               handleOpenDialog={handleOpenDialog}
               schemeEditFormValues={schemeFormValues}
               fdId={formValues.fd_id}
+              // payoutData={payoutData.filter((payout) => payout.item_value !== 'All')}
               selectedPayoutMethod={values.fd_payout_method_id}
               clearFormValues={clearFormValues}
               setIsActive={handleIsSchemeActive}
@@ -324,7 +338,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
 
               <CardContent sx={{ p: 2 }}>
                 <Grid container spacing={3}>
-                  <Grid item md={3} sm={4} xs={6}>
+                  {/* <Grid item md={3} sm={4} xs={6}>
                     <CustomTextField
                       label="FD Name"
                       name="fd_name"
@@ -341,8 +355,20 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                         }
                       }}
                     />
-                  </Grid>
+                  </Grid> */}
                   <Grid item md={3} sm={4} xs={6}>
+                    <FormikAutoComplete
+                      options={productData}
+                      defaultValue={values.fd_id}
+                      setFieldValue={setFieldValue}
+                      // errors={errors}
+                      formName="fd_id"
+                      idName="fd_id"
+                      optionName="fd_name"
+                      label="Select FD"
+                    />
+                  </Grid>
+                  {/* <Grid item md={3} sm={4} xs={6}>
                     <CustomTextField
                       label="Issuer Name"
                       name="issuer_name"
@@ -359,8 +385,8 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                         }
                       }}
                     />
-                  </Grid>
-                  <Grid item md={3} sm={4} xs={12}>
+                  </Grid> */}
+                  <Grid item md={3} sm={4} xs={6}>
                     <APIAutoComplete
                       disableClearable
                       options={payoutData}
@@ -390,6 +416,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                     <InterestRateTable
                       columns={columns}
                       data={schemeData}
+                      selectedPayout={values.fd_payout_method_id}
                       changeTableVisibility={changeTableVisibility}
                       schemeEditing={schemeEditing}
                       deleteOneItem={DeleteOneInterestRate}

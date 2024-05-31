@@ -187,6 +187,7 @@ function FixDeposit() {
     return (
       <InterestRate
         formValues={formValues}
+        productData={productData}
         changeTableVisibility={changeTableVisibility}
         isNotEditingInterestRate={isNotEditingInterestRate}
         isEditingInterestRate={editingInterestRate}

@@ -6,11 +6,13 @@ import '../utils/custom.css';
 
 // Add form values
 const formAllValues = {
+  fd_id: 0,
   fd_name: '',
   issuer_name: '',
   fd_payout_method_id: 'C'
 };
 const validationSchema = yup.object({
+  fd_id: yup.number(),
   fd_name: yup.string().required('FD Name is required'),
   issuer_name: yup.string().required('Issuer Name is required'),
   fd_payout_method_id: yup.string()

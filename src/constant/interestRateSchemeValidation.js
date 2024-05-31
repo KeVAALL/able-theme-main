@@ -8,6 +8,7 @@ const formAllSchemeValues = {
   rate_of_interest_senior_citezen: null,
   rate_of_interest_female: null,
   rate_of_interest_female_senior_citezen: null
+  // fd_payout_method_id: ''
 };
 const validationSchema = yup.object().shape(
   {
@@ -35,6 +36,7 @@ const validationSchema = yup.object().shape(
     rate_of_interest_senior_citezen: yup.number().required('Rate is required').min(1, 'Number must be greater than or equal to 1'),
     rate_of_interest_female: yup.number().required('Rate is required').min(1, 'Number must be greater than or equal to 1'),
     rate_of_interest_female_senior_citezen: yup.number().required('Rate is required').min(1, 'Number must be greater than or equal to 1')
+    // fd_payout_method_id: yup.string()
   },
   [['min_days', 'max_days']]
 );
