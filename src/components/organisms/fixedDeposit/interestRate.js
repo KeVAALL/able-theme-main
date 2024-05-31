@@ -51,30 +51,58 @@ const APIAutoComplete = memo((props) => {
     } else {
       for (const el of props.options) {
         if (el[optionName] === e.target.outerText) {
-          await setFieldValue(formName, el.id);
-          const payload = {
-            method_name: 'getscheme',
-            fd_id: props.fdId,
-            fd_payout_method_id: el.id
-          };
+          if (props.idName) {
+            await setFieldValue(formName, el[props.idName]);
+            const payload = {
+              method_name: 'getscheme',
+              fd_id: el[props.idName],
+              fd_payout_method_id: props.correspondingId
+            };
 
-          if (el.id === 'A') {
-            const searchResult = await GetSchemeSearch(payload);
-            if (searchResult) {
-              props.setSchemeData(searchResult);
-              props.setCache(el.id, searchResult); // Update the cache
+            if (props.correspondingId === 'A') {
+              const searchResult = await GetSchemeSearch(payload);
+              if (searchResult) {
+                props.setSchemeData(searchResult);
+                // props.setCache(el.id, searchResult); // Update the cache
+              }
+              return;
             }
-            return;
-          }
-          if (!props.cache[el.id]) {
+            // if (!props.cache[el.id]) {
             // const searchResult = await memoizedGetSchemeSearch(el.id, payload);
             const searchResult = await GetSchemeSearch(payload);
             if (searchResult) {
               props.setSchemeData(searchResult);
-              props.setCache(el.id, searchResult); // Update the cache
+              // props.setCache(el.id, searchResult); // Update the cache
             }
+            // } else {
+            //   props.setSchemeData(props.cache[el.id]);
+            // }
           } else {
-            props.setSchemeData(props.cache[el.id]);
+            await setFieldValue(formName, el.id);
+            const payload = {
+              method_name: 'getscheme',
+              fd_id: props.correspondingId,
+              fd_payout_method_id: el.id
+            };
+
+            if (el.id === 'A') {
+              const searchResult = await GetSchemeSearch(payload);
+              if (searchResult) {
+                props.setSchemeData(searchResult);
+                props.setCache(el.id, searchResult); // Update the cache
+              }
+              return;
+            }
+            // if (!props.cache[el.id]) {
+            // const searchResult = await memoizedGetSchemeSearch(el.id, payload);
+            const searchResult = await GetSchemeSearch(payload);
+            if (searchResult) {
+              props.setSchemeData(searchResult);
+              // props.setCache(el.id, searchResult); // Update the cache
+            }
+            // } else {
+            //   props.setSchemeData(props.cache[el.id]);
+            // }
           }
         }
       }
@@ -88,17 +116,25 @@ const APIAutoComplete = memo((props) => {
       fullWidth
       disablePortal
       value={
-        typeof props.defaultValue === 'string' &&
-        props.options.find((el) => {
-          if (props.keyName) {
-            return el[props.keyName] === props.defaultValue;
-          } else {
-            return el[props.optionName] === props.defaultValue;
-          }
-        })
+        (typeof props.defaultValue === 'string' &&
+          props.options.find((el) => {
+            if (props.keyName) {
+              return el[props.keyName] === props.defaultValue;
+            } else {
+              return el[props.optionName] === props.defaultValue;
+            }
+          })) ||
+        (typeof props.defaultValue === 'number' &&
+          props.options.find((el) => {
+            if (props.idName) {
+              return el[props.idName] === props.defaultValue;
+            } else {
+              return el.id === props.defaultValue;
+            }
+          }))
       }
       onChange={(e) => {
-        handleOptionChange(e, props.optionName, props.formName, props.setFieldValue);
+        handleOptionChange(e, props.optionName, props.formName, props.setFieldValue, props.idName);
       }}
       options={props.options || []}
       getOptionLabel={(option) => option[props.optionName]} // Assuming 'product_type' is the label you want to display
@@ -115,6 +151,7 @@ const APIAutoComplete = memo((props) => {
       disableClearable={props.disableClearable ? true : false}
       renderInput={(params) => (
         <TextField
+          // error={Boolean(props.errors[props.formName])}
           {...params}
           className="autocomplete-textfield"
           name={props.formName}
@@ -294,7 +331,7 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
               openDialog={openDialog}
               handleOpenDialog={handleOpenDialog}
               schemeEditFormValues={schemeFormValues}
-              fdId={formValues.fd_id}
+              fdId={values.fd_id}
               // payoutData={payoutData.filter((payout) => payout.item_value !== 'All')}
               selectedPayoutMethod={values.fd_payout_method_id}
               clearFormValues={clearFormValues}
@@ -357,11 +394,25 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
                     />
                   </Grid> */}
                   <Grid item md={3} sm={4} xs={6}>
-                    <FormikAutoComplete
+                    {/* <FormikAutoComplete
                       options={productData}
                       defaultValue={values.fd_id}
                       setFieldValue={setFieldValue}
                       // errors={errors}
+                      formName="fd_id"
+                      idName="fd_id"
+                      optionName="fd_name"
+                      label="Select FD"
+                    /> */}
+                    <APIAutoComplete
+                      disableClearable
+                      options={productData}
+                      defaultValue={values.fd_id}
+                      correspondingId={values.fd_payout_method_id}
+                      cache={cache}
+                      setCache={updateCache} // Pass the update function
+                      setFieldValue={setFieldValue}
+                      setSchemeData={setSchemeData}
                       formName="fd_id"
                       idName="fd_id"
                       optionName="fd_name"
@@ -391,7 +442,7 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
                       disableClearable
                       options={payoutData}
                       defaultValue={values.fd_payout_method_id}
-                      fdId={formValues.fd_id}
+                      correspondingId={values.fd_id}
                       cache={cache}
                       setCache={updateCache} // Pass the update function
                       setFieldValue={setFieldValue}
