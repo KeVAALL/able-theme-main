@@ -108,6 +108,7 @@ function UserList() {
   });
   // Query for fetching All Users
   const {
+    isFetching,
     isPending: userPending, // Flag indicating if query is pending
     error: userError, // Error object if query fails
     refetch: userListRefetch // Function to refetch issuer data
@@ -126,7 +127,7 @@ function UserList() {
     }
   });
 
-  if (rolePending || userPending) return <Loader />;
+  // if (rolePending || userPending) return <Loader />;
 
   return (
     <>
@@ -435,6 +436,7 @@ function UserList() {
             tableDataRefetch={userListRefetch}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
+            isFetching={isFetching}
           />
         </MainCard>
       )}

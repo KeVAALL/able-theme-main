@@ -111,7 +111,7 @@ export const SubmitButton = memo(
                   type="button"
                   onClick={CancelForm}
                 >
-                  {!matchDownSM && 'Cancel'}
+                  {!matchDownSM && 'Back'}
                 </Button>
               </AnimateButton>
             </Box>

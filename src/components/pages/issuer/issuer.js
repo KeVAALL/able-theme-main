@@ -76,6 +76,7 @@ function Issuer() {
   // Query for fetching issuer data // Main Data
   const {
     isPending, // Flag indicating if query is pending
+    isFetching,
     error, // Error object if query fails
     refetch: issuerTableDataRefetch // Function to refetch issuer data
   } = useQuery({
@@ -325,6 +326,7 @@ function Issuer() {
             tableDataRefetch={issuerTableDataRefetch}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
+            isFetching={isFetching}
           />
         </MainCard>
       )}

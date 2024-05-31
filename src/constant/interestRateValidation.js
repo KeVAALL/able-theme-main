@@ -30,8 +30,12 @@ const StatusCell = ({ value }) => {
 const VisibleColumn = [];
 const tableColumns = [
   {
-    Header: 'Tenure (Days)',
+    Header: 'Tenure (Years)',
     accessor: 'tenure'
+  },
+  {
+    Header: 'Tenure (Days)',
+    accessor: 'period'
   },
   {
     Header: 'Normal Citizen (%)',

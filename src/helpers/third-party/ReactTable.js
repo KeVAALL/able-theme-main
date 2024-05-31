@@ -33,6 +33,7 @@ import '../../utils/custom.css';
 
 // project import
 import { ThemeMode } from 'config';
+import TableLoader from 'components/atoms/loader/TableLoader';
 
 // ==============================|| SORT HEADER ||============================== //
 
@@ -525,11 +526,11 @@ const StyledGridOverlay = styled(Stack)(({ theme }) => ({
   }
 }));
 
-export const EmptyTable = ({ msg, colSpan }) => {
+export const EmptyTable = ({ msg, colSpan, isFetching }) => {
   return (
     <TableRow>
-      <TableCell colSpan={colSpan}>
-        <StyledGridOverlay alignItems="center" justifyContent="center" spacing={1}>
+      <TableCell colSpan={colSpan} sx={{ position: 'relative' }}>
+        <StyledGridOverlay alignItems="center" justifyContent="center" spacing={2}>
           <svg width="120" height="100" viewBox="0 0 184 152" aria-hidden focusable="false">
             <g fill="none" fillRule="evenodd">
               <g transform="translate(24 31.67)">
@@ -558,9 +559,16 @@ export const EmptyTable = ({ msg, colSpan }) => {
             </g>
           </svg>
           <Typography align="center" color="secondary">
-            {msg}
+            {isFetching ? 'Fetching...' : msg}
           </Typography>
         </StyledGridOverlay>
+        {isFetching && ( // Add Loader condition here
+          <TableRow>
+            <TableCell colSpan={colSpan}>
+              <TableLoader />
+            </TableCell>
+          </TableRow>
+        )}
       </TableCell>
     </TableRow>
   );
@@ -568,5 +576,6 @@ export const EmptyTable = ({ msg, colSpan }) => {
 
 EmptyTable.propTypes = {
   msg: PropTypes.string,
-  colSpan: PropTypes.number
+  colSpan: PropTypes.number,
+  isFetching: PropTypes.any
 };

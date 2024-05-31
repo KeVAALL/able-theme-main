@@ -22,6 +22,8 @@ import { useSortBy } from 'react-table';
 import DialogBox from 'components/atoms/dialog/dialog';
 import './multiTable.css';
 import IconButton from 'helpers/@extended/IconButton';
+import Loader from 'components/atoms/loader/Loader';
+import TableLoader from 'components/atoms/loader/TableLoader';
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -46,7 +48,8 @@ const ReactTable = ({
   VisibleColumn,
   doNotShowHeader,
   isNomination,
-  isInvestment
+  isInvestment,
+  isFetching
 }) => {
   // const filterTypes = useMemo(() => renderFilterTypes, []);
   // const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);
@@ -401,7 +404,9 @@ const ReactTable = ({
                 );
               })
             ) : (
-              <EmptyTable msg="No Data" colSpan={columns.length + 1} />
+              <>
+                <EmptyTable msg="No Data" colSpan={columns.length + 1} isFetching={isFetching} />
+              </>
             )}
           </TableBody>
         </Table>
@@ -441,7 +446,8 @@ const MultiTable = ({
   VisibleColumn,
   doNotShowHeader,
   isNomination,
-  isInvestment
+  isInvestment,
+  isFetching
 }) => {
   return (
     <MainCard sx={{ borderRadius: 0 }} content={false} secondary={<CSVExport data={data} filename={'pagination-bottom-table.csv'} />}>
@@ -468,6 +474,7 @@ const MultiTable = ({
           doNotShowHeader={doNotShowHeader}
           isNomination={isNomination}
           isInvestment={isInvestment}
+          isFetching={isFetching}
         />
       </ScrollX>
     </MainCard>
@@ -496,7 +503,8 @@ MultiTable.propTypes = {
   VisibleColumn: PropTypes.any,
   doNotShowHeader: PropTypes.any,
   isNomination: PropTypes.any,
-  isInvestment: PropTypes.any
+  isInvestment: PropTypes.any,
+  isFetching: PropTypes.any
 };
 
 export default memo(MultiTable);

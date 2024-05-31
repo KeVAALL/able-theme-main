@@ -187,29 +187,6 @@ function Investor() {
   // Custom fields/ Table Columns
   const columns = useMemo(() => tableColumns, []);
 
-  // Query for fetching investor data
-  const {
-    isPending,
-    error,
-    refetch: InvestorTableDataRefetch
-  } = useQuery({
-    queryKey: ['investorTableData'],
-    refetchOnWindowFocus: false,
-    keepPreviousData: true,
-    queryFn: () => {
-      const payload = {
-        method_name: 'getinvestor',
-        search: '',
-        ifa_id: 0
-      };
-      return GetInvestorData(payload);
-    },
-    onSuccess: (data) => {
-      setInvestorData(data);
-      // setLoading(false);
-    }
-  });
-
   // Query for fetching IFA data
   const {
     isPending: ifaPending,
@@ -227,6 +204,29 @@ function Investor() {
     },
     onSuccess: (data) => {
       setIfaData(data);
+    }
+  });
+
+  // Query for fetching investor data
+  const {
+    isFetching,
+    isPending,
+    error,
+    refetch: InvestorTableDataRefetch
+  } = useQuery({
+    queryKey: ['investorTableData'],
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+    queryFn: () => {
+      const payload = {
+        method_name: 'getinvestor',
+        search: '',
+        ifa_id: 0
+      };
+      return GetInvestorData(payload);
+    },
+    onSuccess: (data) => {
+      setInvestorData(data);
     }
   });
 
@@ -585,6 +585,7 @@ function Investor() {
             tableDataRefetch={InvestorTableDataRefetch}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
+            isFetching={isFetching}
           />
         </MainCard>
       )}

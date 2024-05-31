@@ -15,7 +15,7 @@ import { element } from 'prop-types';
 // Product
 const Product = Loadable(lazy(() => import('components/pages/productType/productType')));
 // User
-const UserProfile = Loadable(lazy(() => import('components/pages/user/user')));
+const UserProfile = Loadable(lazy(() => import('components/pages/userProfile/user')));
 const UserTabPersonal = Loadable(lazy(() => import('../../organisms/user/TabPersonal')));
 const UserTabPayment = Loadable(lazy(() => import('../../organisms/user/TabPayment')));
 const UserTabPassword = Loadable(lazy(() => import('../../organisms/user/TabPassword')));

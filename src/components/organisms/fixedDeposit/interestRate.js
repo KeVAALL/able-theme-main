@@ -201,6 +201,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
     }
   });
   const {
+    isFetching,
     isPending: schemePending,
     error: schemeError,
     refetch: refetchSchemeData
@@ -293,7 +294,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                           isNotEditingInterestRate();
                         }}
                       >
-                        Cancel
+                        Back
                       </Button>
                     </AnimateButton>
                   </Box>
@@ -342,6 +343,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                   </Grid>
                   <Grid item md={3} sm={4} xs={12}>
                     <APIAutoComplete
+                      disableClearable
                       options={payoutData}
                       defaultValue={values.fd_payout_method_id}
                       fdId={formValues.fd_id}
@@ -378,6 +380,7 @@ const InterestRate = ({ formValues, changeTableVisibility, isNotEditingInterestR
                       setActiveEditing={setActiveEditing}
                       handleIROpenDialog={handleOpenDialog}
                       VisibleColumn={VisibleColumn}
+                      isFetching={isFetching}
                     />
                     {/* New table for this */}
                   </Grid>

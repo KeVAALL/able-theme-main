@@ -20,7 +20,6 @@ import {
 // third-party
 import { PopupTransition } from 'helpers/@extended/Transitions';
 import { Formik } from 'formik';
-import Loader from '../loader/Loader';
 // assets
 import { CustomTextField } from 'utils/textfield';
 import { formAllSchemeValues, validationSchema } from 'constant/interestRateSchemeValidation';
@@ -54,6 +53,7 @@ const DialogForm = ({
   const clearFormValues = () => {
     setSchemeFormValues(formAllSchemeValues);
     setActiveButton(false);
+    setLiveButton(false);
   };
 
   useEffect(() => {
@@ -248,7 +248,7 @@ const DialogForm = ({
               <Divider />
               <DialogActions sx={{ p: 2 }}>
                 <Button
-                  color="error"
+                  color="secondary"
                   onClick={() => {
                     handleOpenDialog();
                     setActiveClose();
@@ -258,7 +258,7 @@ const DialogForm = ({
                     }, 100);
                   }}
                 >
-                  Cancel
+                  Back
                 </Button>
                 <Button
                   variant="contained"

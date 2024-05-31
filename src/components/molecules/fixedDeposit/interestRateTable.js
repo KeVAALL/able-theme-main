@@ -42,7 +42,8 @@ function ReactTable({
   handleIROpenDialog,
   isEditingInterestRateLogic,
   VisibleColumn,
-  hideActions
+  hideActions,
+  isFetching
 }) {
   const {
     getTableProps,
@@ -326,7 +327,7 @@ function ReactTable({
                 );
               })
             ) : (
-              <EmptyTable msg="No Data" colSpan={columns.length + 1} />
+              <EmptyTable msg="No Data" colSpan={columns.length + 1} isFetching={isFetching} />
             )}
           </TableBody>
         </Table>
@@ -370,7 +371,8 @@ const InterestRateTable = ({
   handleIROpenDialog,
   isEditingInterestRateLogic,
   VisibleColumn,
-  hideActions
+  hideActions,
+  isFetching
 }) => {
   return (
     <MainCard sx={{ borderRadius: 0 }} content={false} secondary={<CSVExport data={data} filename={'pagination-bottom-table.csv'} />}>
@@ -394,6 +396,7 @@ const InterestRateTable = ({
           isEditingInterestRateLogic={isEditingInterestRateLogic}
           VisibleColumn={VisibleColumn}
           hideActions={hideActions}
+          isFetching={isFetching}
         />
       </ScrollX>
     </MainCard>
@@ -419,7 +422,8 @@ InterestRateTable.propTypes = {
   handleIROpenDialog: PropTypes.any,
   isEditingInterestRateLogic: PropTypes.any,
   VisibleColumn: PropTypes.array,
-  hideActions: PropTypes.any
+  hideActions: PropTypes.any,
+  isFetching: PropTypes.any
 };
 
 export default memo(InterestRateTable);

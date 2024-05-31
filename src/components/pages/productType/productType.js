@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 // material-ui
 import { Divider, Box, Card, Grid, CardContent } from '@mui/material';
@@ -86,6 +86,7 @@ function ProductType() {
   // Fetching Data using React Query // Main data
   const {
     isPending, // Flag indicating if query is pending
+    isFetching,
     error, // Error object if query fails
     refetch: productTypeTableDataRefetch // Function to refetch product type data
   } = useQuery({
@@ -103,7 +104,7 @@ function ProductType() {
     }
   });
 
-  if (isPending) return <Loader />;
+  // if (isFetching) return <Loader />;
 
   return (
     <>
@@ -229,6 +230,7 @@ function ProductType() {
             tableDataRefetch={productTypeTableDataRefetch}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
+            isFetching={isFetching}
           />
         </MainCard>
       )}

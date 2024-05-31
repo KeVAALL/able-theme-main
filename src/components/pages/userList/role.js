@@ -118,27 +118,6 @@ function Role() {
   // Table Columns
   const columns = useMemo(() => tableColumns, []);
 
-  // Query for fetching role Data
-  const {
-    isPending: rolePending, // Flag indicating if query is pending
-    error: roleError, // Error object if query fails
-    refetch: refetchRole // Function to refetch issuer data
-  } = useQuery({
-    queryKey: ['getAllRoles'], // Unique key for the query
-    refetchOnWindowFocus: false, // Disable refetch on window focus
-    keepPreviousData: true, // Keep previous data when refetching
-    queryFn: () => {
-      const payload = {
-        method_name: 'getall'
-      };
-      return GetRoles(payload);
-    }, // Function to fetch issuer data
-    onSuccess: (data) => {
-      setRoleDropdown(data);
-      setUserRoleData(data);
-    }
-  });
-
   // Query for fetching menu Data
   const {
     isPending, // Flag indicating if query is pending
@@ -165,7 +144,29 @@ function Role() {
     }
   });
 
-  if (isPending || rolePending) return <Loader />;
+  // Query for fetching role Data
+  const {
+    isFetching,
+    isPending: rolePending, // Flag indicating if query is pending
+    error: roleError, // Error object if query fails
+    refetch: refetchRole // Function to refetch issuer data
+  } = useQuery({
+    queryKey: ['getAllRoles'], // Unique key for the query
+    refetchOnWindowFocus: false, // Disable refetch on window focus
+    keepPreviousData: true, // Keep previous data when refetching
+    queryFn: () => {
+      const payload = {
+        method_name: 'getall'
+      };
+      return GetRoles(payload);
+    }, // Function to fetch issuer data
+    onSuccess: (data) => {
+      setRoleDropdown(data);
+      setUserRoleData(data);
+    }
+  });
+
+  // if (isPending || rolePending) return <Loader />;
 
   return (
     <>
@@ -445,6 +446,7 @@ function Role() {
             tableDataRefetch={refetchRole}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
+            isFetching={isFetching}
           />
         </MainCard>
       )}

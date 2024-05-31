@@ -147,6 +147,7 @@ function FixDeposit() {
 
   // Query for fetching product data
   const {
+    isFetching,
     isPending,
     error,
     refetch: ProductTableDataRefetch
@@ -180,7 +181,7 @@ function FixDeposit() {
     }
   });
 
-  if (isPending) return <Loader />;
+  // if (isPending) return <Loader />;
 
   if (editingInterestRate)
     return (
@@ -448,6 +449,7 @@ function FixDeposit() {
             isEditingInterestRateButton={true}
             isEditingInterestRate={isEditingInterestRate}
             VisibleColumn={VisibleColumn}
+            isFetching={isFetching}
           />
         </MainCard>
       )}
