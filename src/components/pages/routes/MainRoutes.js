@@ -42,20 +42,7 @@ const MainRoutes = {
         },
         {
           path: 'investor',
-          children: [
-            {
-              path: 'investor_list',
-              element: <Investor />
-            },
-            {
-              path: 'add_new_investor',
-              element: <></>
-            },
-            {
-              path: 'transaction_list',
-              element: <></>
-            }
-          ]
+          element: <Investor />
         },
         {
           path: 'transaction',
