@@ -6,11 +6,13 @@ import { Add, InfoCircle, Money, Money3, Money4, MoneyAdd, ProfileTick } from 'i
 
 import TabPortfolio from 'components/molecules/portfolio/userPortfolio';
 import LinearWithLabel from 'helpers/@extended/progress/LinearWithLabel';
-import progress from '../../../assets/images/progress.png';
 import MainCard from '../mainCard/MainCard';
 import InvoiceChart from 'helpers/cards/invoice/InvoiceChart';
 import InvoiceCard from 'helpers/cards/invoice/InvoiceCard';
 import AnalyticEcommerce from 'helpers/cards/statistics/AnalyticEcommerce';
+import CustomerCard from 'components/molecules/portfolio/fixDepositCard';
+import progress from '../../../assets/images/progress.png';
+import pie from '../../../assets/images/ChartPie.png';
 
 function Portfolio(props) {
   // Theme
@@ -122,6 +124,20 @@ function Portfolio(props) {
               />
             </Grid>
           </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <CardMedia component="img" sx={{ height: '20px', width: '20px' }} image={pie} alt="My Image" />
+            <Typography variant="body1" color="#5E718D" fontWeight={500}>
+              Fixed Deposits (1)
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <CustomerCard title="Shriram Finance" />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <CustomerCard title="Bajaj Finance" />
         </Grid>
       </Grid>
     </>
