@@ -18,6 +18,7 @@ html::-webkit-scrollbar-thumb {
 }
 .common-textfield .MuiFormLabel-root {
   line-height: 1.5em !important;
+  font-size: 0.75rem !important;
 }
 .common-textfield .MuiOutlinedInput-root {
   border-radius: 5px;
@@ -43,6 +44,9 @@ html::-webkit-scrollbar-thumb {
 .common-autocomplete .autocomplete-textfield input {
   font-size: 0.75rem !important;
 }
+/* .common-autocomplete .autocomplete-textfield label {
+  font-size: 0.75rem !important;
+} */
 .icon_button .MuiButton-startIcon {
   margin: 0 !important;
 }

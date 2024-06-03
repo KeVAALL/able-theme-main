@@ -1,29 +1,87 @@
 /* eslint-disable react/prop-types */
 import React, { memo } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, InputAdornment, Typography } from '@mui/material';
 
 // project-imports
-import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
+import { CustomAutoComplete, CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { residency, marital_status } from 'constant/investorValidation';
+import { residency, marital_status, investorType, genderData } from 'constant/investorValidation';
 
 // third-party
 import enGB from 'date-fns/locale/en-GB';
+import IconButton from 'helpers/@extended/IconButton';
 
 const PersonalInfo = (props) => {
   return (
     <>
-      <Grid container spacing={2} id="grid_box" sx={{ marginBottom: '20px' }}>
+      <Grid container spacing={2.5} id="grid_box" sx={{ marginBottom: '20px' }}>
+        <Grid item xs={12} md={4}>
+          <NestedCustomTextField
+            label="Pan Number"
+            valueName="investor.pan_no"
+            placeholder="Please enter your PAN Number"
+            values={props.values.investor.pan_no}
+            type="string"
+            regType="pan"
+            setFieldValue={props.setFieldValue}
+            handleBlur={props.handleBlur}
+            touched={props.touched}
+            errors={props.errors}
+            inputProps={{ maxLength: 10 }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    className="personal_info_icon_button"
+                    aria-label="toggle password visibility"
+                    onClick={() => {}}
+                    onMouseDown={() => {}}
+                    onMouseUp={() => {}}
+                    edge="end"
+                    color="secondary"
+                  >
+                    <Typography variant="caption" fontWeight={500}>
+                      VERIFY
+                    </Typography>
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
+        <Grid item md={4} xs={6}>
+          <NestedCustomTextField
+            label="Email ID"
+            valueName="investor.email_id"
+            placeholder="Please enter your Email ID"
+            values={props.values.investor.email_id}
+            type="email"
+            onChange={props.handleChange}
+            onBlur={props.handleBlur}
+            touched={props.touched}
+            errors={props.errors}
+          />
+        </Grid>
         <Grid item xs={12} md={4}>
           <FormikAutoComplete
-            options={residency}
-            defaultValue={props.values.investor.is_indian_resident}
+            options={investorType}
+            defaultValue={props.values.investor.is_senior_citizen}
             setFieldValue={props.setFieldValue}
-            formName="investor.is_indian_resident"
-            optionName="status"
-            label="Resident Status"
+            formName="investor.is_senior_citizen"
+            optionName="investor"
+            label="Investor Type"
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          {/* Using Normal Autocomplete because of API body */}
+          <CustomAutoComplete
+            options={genderData}
+            defaultValue={props.selectedGender}
+            setSelected={props.setSelectedGender}
+            optionName="gender"
+            label="Gender"
           />
         </Grid>
 
@@ -64,6 +122,32 @@ const PersonalInfo = (props) => {
               renderInput={(params) => <CustomTextField {...params} />}
             />
           </LocalizationProvider>
+        </Grid>
+
+        <Grid item md={4} xs={6}>
+          <NestedCustomTextField
+            label="Place of birth"
+            valueName="investor.place_of_birth"
+            placeholder="Please enter your Place of Birth"
+            values={props.values.investor.place_of_birth}
+            type="string"
+            regType="string"
+            setFieldValue={props.setFieldValue}
+            handleBlur={props.handleBlur}
+            touched={props.touched}
+            errors={props.errors}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <FormikAutoComplete
+            options={residency}
+            defaultValue={props.values.investor.is_indian_resident}
+            setFieldValue={props.setFieldValue}
+            formName="investor.is_indian_resident"
+            optionName="status"
+            label="Resident Status"
+          />
         </Grid>
       </Grid>
     </>

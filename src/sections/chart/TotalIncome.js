@@ -153,17 +153,17 @@ const TotalIncome = () => {
             <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Dot componentDiv />
-                <Typography>Item01</Typography>
+                <Typography>Bajaj Finance</Typography>
               </Stack>
 
               <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
+                ₹23,876
                 <Typography
                   variant="caption"
                   color="text.secondary"
                   sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
                 >
-                  <ArrowUp size={14} /> +$76,343
+                  <ArrowUp size={14} /> +₹76,343
                 </Typography>
               </Typography>
             </Stack>
@@ -174,16 +174,16 @@ const TotalIncome = () => {
             <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Dot componentDiv sx={{ bgcolor: 'primary.200' }} />
-                <Typography>Item02</Typography>
+                <Typography>Mahindra Finance</Typography>
               </Stack>
               <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
+                ₹23,876
                 <Typography
                   variant="caption"
                   color="text.secondary"
                   sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
                 >
-                  <ArrowUp size={14} /> +$76,343
+                  <ArrowUp size={14} /> +₹76,343
                 </Typography>
               </Typography>
             </Stack>
@@ -194,16 +194,16 @@ const TotalIncome = () => {
             <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Dot componentDiv color="warning" />
-                <Typography>Item03</Typography>
+                <Typography>Shriram Finance</Typography>
               </Stack>
               <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
+                ₹23,876
                 <Typography
                   variant="caption"
                   color="text.secondary"
                   sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
                 >
-                  <ArrowUp size={14} /> +$76,343
+                  <ArrowUp size={14} /> +₹76,343
                 </Typography>
               </Typography>
             </Stack>
@@ -214,16 +214,16 @@ const TotalIncome = () => {
             <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Dot componentDiv color="success" />
-                <Typography>Item04</Typography>
+                <Typography>Utkarsh Bank</Typography>
               </Stack>
               <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
+                ₹23,876
                 <Typography
                   variant="caption"
                   color="text.secondary"
                   sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
                 >
-                  <ArrowUp size={14} /> +$76,343
+                  <ArrowUp size={14} /> +₹76,343
                 </Typography>
               </Typography>
             </Stack>

@@ -4,10 +4,12 @@
 .tab_main .MuiTabScrollButton-root {
   width: 20px !important;
 }
+.tab_main .tab_0,
 .tab_main .tab_1,
 .tab_main .tab_2,
 .tab_main .tab_3,
-.tab_main .tab_4 {
+.tab_main .tab_4,
+.tab_main .tab_5 {
   color: red !important;
   border-radius: 0 !important;
   margin-bottom: 0px !important;
@@ -20,6 +22,19 @@
   background-color: #068e44 !important;
   /* height: 0 !important; */
 }
+/* Personal Info */
+.personal_info_icon_button {
+  width: 65px;
+  color: #068e44;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+.personal_info_icon_button:hover {
+  color: #068e44;
+  background-color: none;
+  /* background-color: #068e4430; */
+}
 .calendar_main input {
-  padding: 8.2px 0px 8.2px 14px !important;
+  padding: 10px 0px 10px 14px !important;
+  font-size: 0.75rem !important;
 }

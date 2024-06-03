@@ -195,6 +195,7 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
   const [IRformValues, setFormValues] = useState(formAllValues);
   // Theme
   const theme = useTheme();
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   // Sets form values for editing
   const setEditing = (value) => {
@@ -482,21 +483,22 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
                     {/* New table for this */}
                   </Grid>
 
-                  <Grid item md={8}>
+                  <Grid item md={8} xs={12}>
                     <Stack
-                      direction="row"
-                      spacing={2}
+                      direction={matchDownSM ? 'column' : 'row'}
+                      // direction={'row'}
+                      spacing={matchDownSM ? 0 : 2}
                       sx={{
                         '& .MuiListItemButton-root': { borderRadius: 0, my: 0, py: 0.2, px: 0.3 },
                         '& .MuiListItemText-root': { color: 'text.primary' }
                       }}
                     >
-                      <Typography variant="body2">Notes: </Typography>
+                      <Typography variant={matchDownSM ? 'caption' : 'body2'}>Note: </Typography>
                       <Stack direction="row" alignItems="center">
                         <ListItemIcon sx={{ minWidth: '14px' }}>
                           <Dot color="secondary" size={5} />
                         </ListItemIcon>
-                        <Typography variant="body2">NC: Normal Citizen</Typography>
+                        <Typography variant={matchDownSM ? 'caption' : 'body2'}>NC: Normal Citizen</Typography>
                         {/* <ListItemText  primary="Incoming requests" /> */}
                       </Stack>
                       <Stack direction="row" alignItems="center">

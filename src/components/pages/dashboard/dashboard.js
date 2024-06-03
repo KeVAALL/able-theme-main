@@ -1,7 +1,8 @@
 import { Grid, Typography, useTheme } from '@mui/material';
 import AnalyticEcommerce from 'helpers/cards/statistics/AnalyticEcommerce';
 import EcommerceDataCard from 'helpers/cards/statistics/EcommerceDataCard';
-import { ArrowUp, MoneyAdd, User, Wallet3 } from 'iconsax-react';
+import EcommerceMetrix from 'helpers/cards/statistics/EcommerceMetrix';
+import { ArrowUp, MoneyAdd, User, UserAdd, Wallet3 } from 'iconsax-react';
 import React from 'react';
 import EcommerceDataChart from 'sections/chart/EcommerceDataChart';
 import TotalIncome from 'sections/chart/TotalIncome';
@@ -11,7 +12,14 @@ function Dashboard() {
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} sm={6} md={4}>
-        <EcommerceDataCard
+        <EcommerceMetrix
+          primary="Total Investors"
+          secondary="50,000"
+          content="20,032 Last Month"
+          color={theme.palette.primary.main}
+          iconPrimary={UserAdd}
+        />
+        {/* <EcommerceDataCard
           title="Total Investors"
           count="50,000"
           iconPrimary={<User variant="Bold" />}
@@ -22,7 +30,7 @@ function Dashboard() {
           }
         >
           <EcommerceDataChart color={theme.palette.success.light} />
-        </EcommerceDataCard>
+        </EcommerceDataCard> */}
       </Grid>
       {/* <Grid item xs={12} sm={6} md={4}>
         <AnalyticEcommerce title="Total AUM" count="₹50,00,0000" percentage={27.4} extra="₹50,395" />

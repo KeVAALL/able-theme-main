@@ -7,50 +7,61 @@ import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import MainCard from '../../../components/organisms/mainCard/MainCard';
 
 // assets
-import { ArrowRight, ArrowUp } from 'iconsax-react';
+import { ArrowRight, ArrowUp, Money } from 'iconsax-react';
+import Avatar from 'helpers/@extended/Avatar';
+import { border } from '@mui/system';
 
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
-const AnalyticEcommerce = ({ color = 'primary', title, count, percentage, isLoss, extra }) => (
-  <MainCard contentSX={{ p: 2.25 }}>
-    <Stack spacing={0.5}>
-      <Typography variant="h6" color="textSecondary">
-        {title}
-      </Typography>
-      <Grid container alignItems="center">
-        <Grid item>
-          <Typography variant="h4" color="inherit">
-            {count}
+const AnalyticEcommerce = ({ color = 'primary', icon, title, count, percentage, isLoss, extra }) => (
+  <MainCard contentSX={{ padding: '0px !important' }}>
+    <MainCard sx={{ border: 'none' }} contentSX={{ p: 2.25 }}>
+      <Stack direction="row" spacing={2} alignItems="center">
+        <Avatar variant="rounded" type="filled" sx={{ border: '1px solid #068e44', backgroundColor: '#E0F5EA80' }}>
+          {icon}
+        </Avatar>
+        <Stack spacing={0.5}>
+          <Typography variant="h6" color="textSecondary">
+            {title}
           </Typography>
-        </Grid>
-        {percentage && (
-          <Grid item>
-            <Chip
-              variant="combined"
-              color={color}
-              icon={
-                <>
-                  {!isLoss && <ArrowUp style={{ transform: 'rotate(45deg)' }} />}
-                  {isLoss && <ArrowRight style={{ transform: 'rotate(45deg)' }} />}
-                </>
-              }
-              label={`${percentage}%`}
-              sx={{ ml: 1.25, pl: 1, borderRadius: 1 }}
-              size="small"
-            />
+          <Grid container alignItems="center">
+            <Grid item>
+              <Typography variant="h4" color="inherit">
+                {count}
+              </Typography>
+            </Grid>
+            {percentage && (
+              <Grid item>
+                <Chip
+                  variant="combined"
+                  color={color}
+                  icon={
+                    <>
+                      {!isLoss && <ArrowUp style={{ transform: 'rotate(45deg)' }} />}
+                      {isLoss && <ArrowRight style={{ transform: 'rotate(45deg)' }} />}
+                    </>
+                  }
+                  label={`${percentage}%`}
+                  sx={{ ml: 1.25, pl: 1, borderRadius: 1 }}
+                  size="small"
+                />
+              </Grid>
+            )}
           </Grid>
-        )}
-      </Grid>
-    </Stack>
-    <Box sx={{ pt: 2.25 }}>
-      <Typography variant="caption" color="textSecondary">
-        You made an extra{' '}
-        <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
-          {extra}
-        </Typography>{' '}
-        this year
-      </Typography>
-    </Box>
+        </Stack>
+      </Stack>
+    </MainCard>
+    {extra && (
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', px: 2.2, py: 1.1, backgroundColor: '#E8FFED' }}>
+        <Typography variant="body2" color="textSecondary">
+          💰 You made an extra{' '}
+          <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
+            {extra}
+          </Typography>{' '}
+          this year
+        </Typography>
+      </Box>
+    )}
   </MainCard>
 );
 

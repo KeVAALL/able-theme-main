@@ -146,6 +146,7 @@ const formAllValues = {
   investor: {
     investor_name: '',
     pan_no: '',
+    email_id: '',
     mobile_no: '',
     // gender_id: 1,
     birth_date: new Date(),
@@ -182,6 +183,7 @@ const validationSchema = yup.object().shape({
       .string()
       .matches(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/, 'Invalid PAN format')
       .required('Pan number is required'),
+    email_id: yup.string().trim().email('Invalid email').required('Email is required'),
     mobile_no: yup.string().required('Mobile number is required'),
     is_senior_citizen: yup.number().required('Investor type is required'),
     birth_date: yup.date(),

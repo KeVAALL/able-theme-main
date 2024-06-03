@@ -9,7 +9,7 @@ import { Box, Tab, Tabs, Divider } from '@mui/material';
 import MainCard from 'components/molecules/mainCard';
 
 // assets
-import { Briefcase, LocationTick, UserOctagon, Personalcard, ProfileTick } from 'iconsax-react';
+import { Briefcase, LocationTick, UserOctagon, Personalcard, ProfileTick, UserSquare, Bank } from 'iconsax-react';
 import PersonalInfo from './personalInfo';
 import AddressDetails from './addressDetails';
 import ProfessionalDetails from './professionalDetails';
@@ -19,6 +19,7 @@ import Declaration from './declaration';
 // css
 import './index.css';
 import { enqueueSnackbar } from 'notistack';
+import Portfolio from './portfolio';
 
 // ==============================|| TAB PANEL ||============================== //
 
@@ -58,7 +59,11 @@ export default function IconTabs(props) {
     switch (tabValue) {
       case 0:
         return true;
-      case 1: {
+      case 1:
+        return true;
+      case 2:
+        return true;
+      case 3: {
         if (
           errors.investor_address ||
           (!isEditing && !dirty.valueOf('investor_address')) ||
@@ -87,7 +92,8 @@ export default function IconTabs(props) {
 
         return true;
       }
-      case 2: {
+
+      case 4: {
         if (errors.professional_details) {
           if (!professionalErrorShown) {
             enqueueSnackbar('Please fill Professional Details', {
@@ -108,7 +114,7 @@ export default function IconTabs(props) {
 
         return true;
       }
-      case 3: {
+      case 5: {
         if (errors.nominee || (!isEditing && !dirty.valueOf('nominee'))) {
           if (!nomineeErrorShown) {
             enqueueSnackbar('Please fill Nominee Details', {
@@ -139,11 +145,11 @@ export default function IconTabs(props) {
     switch (tabValue) {
       case 0:
         return 'indicator_secondary';
-      case 1:
-        return addressDetailsError ? 'indicator_main' : 'indicator_secondary';
-      case 2:
-        return professionalDetailsError ? 'indicator_main' : 'indicator_secondary';
       case 3:
+        return addressDetailsError ? 'indicator_main' : 'indicator_secondary';
+      case 4:
+        return professionalDetailsError ? 'indicator_main' : 'indicator_secondary';
+      case 5:
         return nomineeError ? 'indicator_main' : 'indicator_secondary';
       default:
         return 'indicator_secondary';
@@ -179,49 +185,77 @@ export default function IconTabs(props) {
         >
           {/* <CustomTooltip title="Add" arrow color="#fff" bg="pink"> */}
           <Tab
-            className={props.personalInfoError ? 'tab_1' : ''}
-            label="Personal Info"
-            icon={<Personalcard />}
+            // className='tab_0'
+            label="Portfolio"
+            icon={<UserSquare />}
             iconPosition="start"
             {...a11yProps(0)}
           />
           <Tab
-            className={props.addressDetailsError ? 'tab_2' : ''}
-            label="Address Details"
-            icon={<LocationTick />}
+            className={props.personalInfoError ? 'tab_1' : ''}
+            label="Personal Info"
+            icon={<Personalcard />}
             iconPosition="start"
             {...a11yProps(1)}
           />
           <Tab
-            className={props.professionalDetailsError ? 'tab_3' : ''}
-            label="Professional Details"
-            icon={<Briefcase />}
+            // className='tab_2'
+            label="Bank Details"
+            icon={<Bank />}
             iconPosition="start"
             {...a11yProps(2)}
           />
           <Tab
-            className={props.nomineeError ? 'tab_4' : ''}
-            label="Add Nomination"
-            icon={<UserOctagon />}
+            className={props.addressDetailsError ? 'tab_3' : ''}
+            label="Address Details"
+            icon={<LocationTick />}
             iconPosition="start"
             {...a11yProps(3)}
           />
-          <Tab className="tab_5" label="Declaration" icon={<ProfileTick />} iconPosition="start" {...a11yProps(4)} />
+          <Tab
+            className={props.professionalDetailsError ? 'tab_4' : ''}
+            label="Professional Details"
+            icon={<Briefcase />}
+            iconPosition="start"
+            {...a11yProps(4)}
+          />
+          <Tab
+            className={props.nomineeError ? 'tab_5' : ''}
+            label="Nominee Details"
+            icon={<UserOctagon />}
+            iconPosition="start"
+            {...a11yProps(5)}
+          />
+          {/* <Tab className="tab_5" label="Declaration" icon={<ProfileTick />} iconPosition="start" {...a11yProps(4)} /> */}
         </Tabs>
       </Box>
       <TabPanel className="panel" value={tabValue} index={0}>
         <MainCard sx={tabStyle}>
-          <PersonalInfo
+          <Portfolio
             values={props.values}
+            setFieldValue={props.setFieldValue}
             handleChange={props.handleChange}
             handleBlur={props.handleBlur}
-            setFieldValue={props.setFieldValue}
             touched={props.touched}
             errors={props.errors}
           />
         </MainCard>
       </TabPanel>
-      <TabPanel className={`panel`} value={tabValue} index={1}>
+      <TabPanel className="panel" value={tabValue} index={1}>
+        <MainCard sx={tabStyle}>
+          <PersonalInfo
+            values={props.values}
+            selectedGender={props.selectedGender}
+            setSelectedGender={props.setSelectedGender}
+            setFieldValue={props.setFieldValue}
+            handleChange={props.handleChange}
+            handleBlur={props.handleBlur}
+            touched={props.touched}
+            errors={props.errors}
+          />
+        </MainCard>
+      </TabPanel>
+      <TabPanel className={`panel`} value={tabValue} index={3}>
         <MainCard sx={tabStyle}>
           <AddressDetails
             values={props.values}
@@ -233,12 +267,12 @@ export default function IconTabs(props) {
           />
         </MainCard>
       </TabPanel>
-      <TabPanel className="panel" value={tabValue} index={2}>
+      <TabPanel className="panel" value={tabValue} index={4}>
         <MainCard sx={tabStyle}>
           <ProfessionalDetails values={props.values} setFieldValue={props.setFieldValue} />
         </MainCard>
       </TabPanel>
-      <TabPanel className="panel" value={tabValue} index={3}>
+      <TabPanel className="panel" value={tabValue} index={5}>
         <MainCard sx={tabStyle}>
           <Nomination
             values={props.values}
@@ -252,11 +286,11 @@ export default function IconTabs(props) {
           />
         </MainCard>
       </TabPanel>
-      <TabPanel className="panel" value={tabValue} index={4}>
+      {/* <TabPanel className="panel" value={tabValue} index={4}>
         <MainCard sx={tabStyle}>
           <Declaration selectedDeclaration={props.selectedDeclaration} handleDeclarationClick={props.handleDeclarationClick} />
         </MainCard>
-      </TabPanel>
+      </TabPanel> */}
     </Box>
   );
 }

@@ -364,21 +364,6 @@ function Investor() {
                     </Grid>
                     <Grid item md={4} xs={6}>
                       <NestedCustomTextField
-                        label="Pan Number"
-                        valueName="investor.pan_no"
-                        placeholder="Please enter your PAN Number"
-                        values={values.investor.pan_no}
-                        type="string"
-                        regType="pan"
-                        setFieldValue={setFieldValue}
-                        handleBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                        inputProps={{ maxLength: 10 }}
-                      />
-                    </Grid>
-                    <Grid item md={4} xs={6}>
-                      <NestedCustomTextField
                         label="Mobile Number"
                         valueName="investor.mobile_no"
                         placeholder="Please enter your Mobile Number"
@@ -392,7 +377,23 @@ function Investor() {
                         inputProps={{ maxLength: 10 }}
                       />
                     </Grid>
-                    <Grid item md={4} xs={6}>
+                    {/* <Grid item md={4} xs={6}>
+                      <NestedCustomTextField
+                        label="Pan Number"
+                        valueName="investor.pan_no"
+                        placeholder="Please enter your PAN Number"
+                        values={values.investor.pan_no}
+                        type="string"
+                        regType="pan"
+                        setFieldValue={setFieldValue}
+                        handleBlur={handleBlur}
+                        touched={touched}
+                        errors={errors}
+                        inputProps={{ maxLength: 10 }}
+                      />
+                    </Grid> */}
+
+                    {/* <Grid item md={4} xs={6}>
                       <FormikAutoComplete
                         options={investorType}
                         defaultValue={values.investor.is_senior_citizen}
@@ -401,9 +402,9 @@ function Investor() {
                         optionName="investor"
                         label="Investor Type"
                       />
-                    </Grid>
-                    <Grid item md={4} xs={6}>
-                      {/* Using Normal Autocomplete because of API body */}
+                    </Grid> */}
+                    {/* <Grid item md={4} xs={6}>
+                      Using Normal Autocomplete because of API body
                       <CustomAutoComplete
                         options={genderData}
                         defaultValue={selectedGender}
@@ -411,8 +412,8 @@ function Investor() {
                         optionName="gender"
                         label="Gender"
                       />
-                    </Grid>
-                    <Grid item md={4} xs={6}>
+                    </Grid> */}
+                    {/* <Grid item md={4} xs={6}>
                       <NestedCustomTextField
                         label="Place of birth"
                         valueName="investor.place_of_birth"
@@ -425,7 +426,7 @@ function Investor() {
                         touched={touched}
                         errors={errors}
                       />
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </CardContent>
 
@@ -438,6 +439,8 @@ function Investor() {
                     touched={touched}
                     errors={errors}
                     setFieldValue={setFieldValue}
+                    selectedGender={selectedGender}
+                    setSelectedGender={setSelectedGender}
                     selectedDeclaration={selectedDeclaration}
                     handleDeclarationClick={handleDeclarationClick}
                     nomineeData={nomineeData}
