@@ -239,6 +239,7 @@ function Investor() {
           // validateOnBlur={false}
           // validateOnChange={false}
           // validate={validate}
+          enableReinitialize={true}
           initialValues={formValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -433,6 +434,7 @@ function Investor() {
                 <Grid item xs={12} lg={6}>
                   <IconTabs
                     values={values}
+                    validationSchema={validationSchema}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     isEditing={isEditing}

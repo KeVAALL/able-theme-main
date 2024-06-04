@@ -20,6 +20,8 @@ import Declaration from './declaration';
 import './index.css';
 import { enqueueSnackbar } from 'notistack';
 import Portfolio from './portfolio';
+import BankDetails from './bankDetails';
+import { height } from '@mui/system';
 
 // ==============================|| TAB PANEL ||============================== //
 
@@ -56,7 +58,7 @@ export default function IconTabs(props) {
 
   const validateCurrentTab = () => {
     const { errors, dirty, setAddressDetailsError, setProfessionalDetailsError, setNomineeError, isEditing } = props;
-    switch (tabValue) {
+    switch (isEditing ? tabValue : tabValue + 1) {
       case 0:
         return true;
       case 1:
@@ -141,9 +143,13 @@ export default function IconTabs(props) {
   };
 
   const getTabClass = () => {
-    const { addressDetailsError, professionalDetailsError, nomineeError } = props;
-    switch (tabValue) {
+    const { addressDetailsError, professionalDetailsError, nomineeError, isEditing } = props;
+    switch (isEditing ? tabValue : tabValue + 1) {
       case 0:
+        return 'indicator_secondary';
+      case 1:
+        return 'indicator_secondary';
+      case 2:
         return 'indicator_secondary';
       case 3:
         return addressDetailsError ? 'indicator_main' : 'indicator_secondary';
@@ -164,10 +170,6 @@ export default function IconTabs(props) {
     }
   };
 
-  useEffect(() => {
-    console.log(props.errors);
-  }, [props.errors]);
-
   const tabStyle = { borderTopLeftRadius: 0, borderTopRightRadius: 0, borderRadius: 1.5, overflow: 'visible' };
 
   return (
@@ -184,13 +186,15 @@ export default function IconTabs(props) {
           aria-label="scrollable force tabs example"
         >
           {/* <CustomTooltip title="Add" arrow color="#fff" bg="pink"> */}
-          <Tab
-            // className='tab_0'
-            label="Portfolio"
-            icon={<UserSquare />}
-            iconPosition="start"
-            {...a11yProps(0)}
-          />
+          {props.isEditing && (
+            <Tab
+              // className='tab_0'
+              label="Portfolio"
+              icon={<UserSquare />}
+              iconPosition="start"
+              {...a11yProps(0)}
+            />
+          )}
           <Tab
             className={props.personalInfoError ? 'tab_1' : ''}
             label="Personal Info"
@@ -229,19 +233,21 @@ export default function IconTabs(props) {
           {/* <Tab className="tab_5" label="Declaration" icon={<ProfileTick />} iconPosition="start" {...a11yProps(4)} /> */}
         </Tabs>
       </Box>
-      <TabPanel className="panel" value={tabValue} index={0}>
-        <MainCard sx={tabStyle}>
-          <Portfolio
-            values={props.values}
-            setFieldValue={props.setFieldValue}
-            handleChange={props.handleChange}
-            handleBlur={props.handleBlur}
-            touched={props.touched}
-            errors={props.errors}
-          />
-        </MainCard>
-      </TabPanel>
-      <TabPanel className="panel" value={tabValue} index={1}>
+      {props.isEditing && (
+        <TabPanel className="panel" value={tabValue} index={0}>
+          <MainCard sx={tabStyle} contentSX={{ height: '500px', overflow: 'scroll' }}>
+            <Portfolio
+              values={props.values}
+              setFieldValue={props.setFieldValue}
+              handleChange={props.handleChange}
+              handleBlur={props.handleBlur}
+              touched={props.touched}
+              errors={props.errors}
+            />
+          </MainCard>
+        </TabPanel>
+      )}
+      <TabPanel className="panel" value={tabValue} index={props.isEditing ? 1 : 0}>
         <MainCard sx={tabStyle}>
           <PersonalInfo
             values={props.values}
@@ -255,7 +261,22 @@ export default function IconTabs(props) {
           />
         </MainCard>
       </TabPanel>
-      <TabPanel className={`panel`} value={tabValue} index={3}>
+      <TabPanel className="panel" value={tabValue} index={props.isEditing ? 2 : 1}>
+        <MainCard sx={tabStyle}>
+          <BankDetails
+            values={props.values}
+            validationSchema={props.validationSchema}
+            handleChange={props.handleChange}
+            setFieldValue={props.setFieldValue}
+            handleBlur={props.handleBlur}
+            touched={props.touched}
+            errors={props.errors}
+            isValid={props.isValid}
+            dirty={props.dirty}
+          />
+        </MainCard>
+      </TabPanel>
+      <TabPanel className={`panel`} value={tabValue} index={props.isEditing ? 3 : 2}>
         <MainCard sx={tabStyle}>
           <AddressDetails
             values={props.values}
@@ -267,12 +288,12 @@ export default function IconTabs(props) {
           />
         </MainCard>
       </TabPanel>
-      <TabPanel className="panel" value={tabValue} index={4}>
+      <TabPanel className="panel" value={tabValue} index={props.isEditing ? 4 : 3}>
         <MainCard sx={tabStyle}>
           <ProfessionalDetails values={props.values} setFieldValue={props.setFieldValue} />
         </MainCard>
       </TabPanel>
-      <TabPanel className="panel" value={tabValue} index={5}>
+      <TabPanel className="panel" value={tabValue} index={props.isEditing ? 5 : 4}>
         <MainCard sx={tabStyle}>
           <Nomination
             values={props.values}

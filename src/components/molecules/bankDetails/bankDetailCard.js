@@ -28,7 +28,7 @@ import progress from '../../../assets/images/progress.png';
 
 // ==============================|| CUSTOMER - CARD ||============================== //
 
-const CustomerCard = ({ logoURL, title, tenure, currentValue, interestEarned, maturityDate }) => {
+const BankDetailCard = ({ logoURL, title, accountNumber, IFSC, branchName, isPrimary }) => {
   return (
     <>
       <MainCard sx={{ height: 1, '& .MuiCardContent-root': { height: 1, display: 'flex', flexDirection: 'column' } }}>
@@ -47,7 +47,7 @@ const CustomerCard = ({ logoURL, title, tenure, currentValue, interestEarned, ma
                       width: '100%',
                       height: '100%',
                       // border: "1px solid red",
-                      borderRadius: '100%',
+                      borderRadius: '8px',
                       objectFit: 'contain',
                       boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
                       padding: '4px'
@@ -67,77 +67,61 @@ const CustomerCard = ({ logoURL, title, tenure, currentValue, interestEarned, ma
             </List>
             <Divider sx={{ mt: 2 }} />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Stack spacing={0.5}>
               <Typography variant="h6" color="#5E718D">
-                Current Value
+                Bank Account Number
               </Typography>
               <Grid container alignItems="center">
                 <Grid item>
                   <Typography variant="h4" color="inherit" fontSize={16}>
-                    ₹ {currentValue}
+                    {accountNumber}
                   </Typography>
                 </Grid>
               </Grid>
             </Stack>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Stack spacing={0.5}>
               <Typography variant="h6" color="#5E718D">
-                Tenure
+                IFSC Code
               </Typography>
               <Grid container alignItems="center">
                 <Grid item>
                   <Typography variant="h4" color="inherit" fontSize={16}>
-                    {tenure}
+                    {IFSC}
                   </Typography>
                 </Grid>
               </Grid>
             </Stack>
           </Grid>
-          <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Grid item xs={6} sx={{ display: 'flex' }}>
             <Stack spacing={0.5}>
               <Typography variant="h6" color="#5E718D">
-                Interest Earned
+                Branch
               </Typography>
               <Grid container alignItems="center" justifyContent="flex-end">
                 <Grid item>
-                  <Typography variant="h4" color="#21B546" fontSize={16}>
-                    ₹ {interestEarned}
+                  <Typography variant="h4" fontSize={16}>
+                    {branchName}
                   </Typography>
                 </Grid>
               </Grid>
             </Stack>
           </Grid>
+          <Grid item xs={6}>
+            {isPrimary ? (
+              <Chip label="Primary Account" sx={{ backgroundColor: '#1DB4691F', color: '#11A75C', fontWeight: 600, borderRadius: '6px' }} />
+            ) : (
+              <Chip label="Make Primary" sx={{ backgroundColor: '#1DB4691F', color: '#21B546', fontWeight: 600, borderRadius: '6px' }} />
+            )}
+          </Grid>
         </Grid>
-        <Stack
-          direction="row"
-          className="hideforPDf"
-          alignItems="center"
-          spacing={1}
-          justifyContent="space-between"
-          sx={{ mt: 'auto', mb: 0, pt: 2.25 }}
-        >
-          <Stack direction="row" spacing={1}>
-            <Typography variant="body1" color="#21B546">
-              8.75% XIRR
-            </Typography>
-            <CardMedia component="img" sx={{ height: '20px', width: '20px' }} image={progress} alt="My Image" />
-          </Stack>
-          <Chip
-            label={`Maturity on ${new Date(maturityDate).getDay()} ${new Date(maturityDate).toLocaleString('default', {
-              month: 'long'
-            })} ${new Date(maturityDate).getFullYear()}`}
-            sx={{ backgroundColor: '#F0F3F9', color: '#5E718D', fontWeight: 600, borderRadius: '6px' }}
-          />
-        </Stack>
+
+        {/* </Stack> */}
       </MainCard>
     </>
   );
 };
 
-CustomerCard.propTypes = {
-  customer: PropTypes.object
-};
-
-export default CustomerCard;
+export default BankDetailCard;

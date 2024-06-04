@@ -172,7 +172,14 @@ const formAllValues = {
     occupation_id: 1,
     annual_income_id: 1,
     income_source_id: 1
-  }
+  },
+  investor_bank: [
+    {
+      account_no: '',
+      ifsc_code: '',
+      beneficiary_name: ''
+    }
+  ]
 };
 const validationSchema = yup.object().shape({
   is_permanent_address_correspondent: yup.number(),
@@ -223,7 +230,14 @@ const validationSchema = yup.object().shape({
     occupation_id: yup.number().notOneOf([0], 'Please select Occupation'),
     annual_income_id: yup.number().notOneOf([0], 'Please select Annual Income'),
     income_source_id: yup.number().notOneOf([0], 'Please select Income Source')
-  })
+  }),
+  investor_bank: yup.array().of(
+    yup.object().shape({
+      account_no: yup.string().required('Account Number required'),
+      ifsc_code: yup.string().required('IFSC required'),
+      beneficiary_name: yup.string().required('Account Holder Name')
+    })
+  )
 });
 // Search Item form fields
 const filterFormValues = {

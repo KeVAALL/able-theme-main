@@ -54,11 +54,11 @@ const AnalyticEcommerce = ({ color = 'primary', icon, title, count, percentage, 
     {extra && (
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', px: 2.2, py: 1.1, backgroundColor: '#E8FFED' }}>
         <Typography variant="body2" color="textSecondary">
-          💰 You made an extra{' '}
+          💰 An extra{' '}
           <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
             {extra}
           </Typography>{' '}
-          this year
+          was made this year
         </Typography>
       </Box>
     )}

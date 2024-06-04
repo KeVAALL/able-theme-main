@@ -32,6 +32,7 @@ export const NestedCustomTextField = memo(
         if (regType === 'pan') {
           setFieldValue(valueName, value.toUpperCase());
         } else {
+          console.log(valueName);
           setFieldValue(valueName, value);
         }
       }

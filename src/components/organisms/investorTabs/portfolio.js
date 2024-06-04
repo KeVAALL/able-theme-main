@@ -12,7 +12,7 @@ import InvoiceCard from 'helpers/cards/invoice/InvoiceCard';
 import AnalyticEcommerce from 'helpers/cards/statistics/AnalyticEcommerce';
 import CustomerCard from 'components/molecules/portfolio/fixDepositCard';
 import progress from '../../../assets/images/progress.png';
-import pie from '../../../assets/images/ChartPie.png';
+import pie from '../../../assets/images/ChartPie.svg';
 
 function Portfolio(props) {
   // Theme
@@ -80,7 +80,7 @@ function Portfolio(props) {
                         <InfoCircle color={theme.palette.background.paper} />
                       </Stack>
                       <Typography variant="h4" color="white">
-                        ₹43,078
+                        ₹ {props.values.port_folio.investor_total_earning.current_earning}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -108,9 +108,9 @@ function Portfolio(props) {
               <AnalyticEcommerce
                 title="Total Investment"
                 icon={<MoneyAdd color="#068e44" style={{ fontSize: '20px', height: '22px', width: '22px' }} />}
-                count="₹35,078"
+                count={`₹ ${props.values.port_folio.investor_total_earning.total_investment_amount}`}
                 color="success"
-                extra="₹20,395"
+                extra="₹ 20,395"
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -118,9 +118,9 @@ function Portfolio(props) {
                 title="Total Earnings"
                 icon={<Add color="#068e44" style={{ fontSize: '20px', height: '22px', width: '22px' }} />}
                 percentage={10}
-                count="₹11,078"
+                count={`₹ ${props.values.port_folio.investor_total_earning.total_interest_amount}`}
                 color="success"
-                extra="₹10,395"
+                extra="₹ 10,395"
               />
             </Grid>
           </Grid>
@@ -129,16 +129,26 @@ function Portfolio(props) {
           <Stack direction="row" alignItems="center" spacing={1}>
             <CardMedia component="img" sx={{ height: '20px', width: '20px' }} image={pie} alt="My Image" />
             <Typography variant="body1" color="#5E718D" fontWeight={500}>
-              Fixed Deposits (1)
+              Fixed Deposits ({props.values.port_folio.fd_investments.length})
             </Typography>
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <CustomerCard title="Shriram Finance" />
-        </Grid>
-        <Grid item xs={12} md={6}>
+        {props.values.port_folio.fd_investments &&
+          props.values.port_folio.fd_investments.map((fd, index) => (
+            <Grid key={index} item xs={12} md={6}>
+              <CustomerCard
+                logoURL={fd.logo_url}
+                title={fd.fd_name}
+                tenure={fd.tenure}
+                currentValue={fd.total_earning}
+                interestEarned={fd.interest_earned}
+                maturityDate={fd.maturity_date}
+              />
+            </Grid>
+          ))}
+        {/* <Grid item xs={12} md={6}>
           <CustomerCard title="Bajaj Finance" />
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );
