@@ -174,11 +174,11 @@ const formAllValues = {
     income_source_id: 1
   },
   investor_bank: [
-    {
-      account_no: '',
-      ifsc_code: '',
-      beneficiary_name: ''
-    }
+    // {
+    //   account_no: '',
+    //   ifsc_code: '',
+    //   beneficiary_name: ''
+    // }
   ]
 };
 const validationSchema = yup.object().shape({

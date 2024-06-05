@@ -42,3 +42,18 @@
   padding: 10px 0px 10px 14px !important;
   font-size: 0.75rem !important;
 }
+
+.add_circle_button {
+  margin-top: 0px !important;
+  border-radius: 50%;
+  height: 45px;
+  min-width: 40px;
+  padding: 6px 12px;
+}
+.add_circle_button .MuiButton-startIcon {
+  margin: 0;
+}
+.add_circle_button svg {
+  height: 24px;
+  width: 22px;
+}

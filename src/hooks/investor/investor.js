@@ -149,7 +149,71 @@ export async function DeleteOneInvestor(values) {
     console.log(err);
   }
 }
-
+// Bank APIs
+export async function GetBankDetails(payload) {
+  try {
+    const response = await axios.post('onboarding/getbankbranch', payload);
+    return response.data.data;
+  } catch (err) {
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    throw err;
+  }
+}
+export async function AddBankDetails(payload) {
+  try {
+    const response = await axios.post('onboarding/verifybank', payload);
+    enqueueSnackbar('Bank Details Added', {
+      variant: 'success',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    return response.data.data;
+  } catch (err) {
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    throw err;
+  }
+}
+export async function VerifyPAN(payload) {
+  try {
+    const response = await axios.post('investor/verifypan', payload);
+    enqueueSnackbar('PAN Verified', {
+      variant: 'success',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    return response.data.data;
+  } catch (err) {
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    throw err;
+  }
+}
 // export async function GetOneInvestor(values, setSearchData) {
 //   try {
 //     const response = await axios.post('investor/getinvestor', {

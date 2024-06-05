@@ -154,7 +154,10 @@ function Issuer() {
                   ...values,
                   is_active: toInteger(isIssuerActive),
                   method_name: 'update',
-                  user_id: toInteger(userID)
+                  user_id: toInteger(userID),
+                  app_bg_colour: backgroundColor,
+                  start_colour: startColor,
+                  end_colour: endColor
                 };
                 await EditIssuer(formValues, issuerTableDataRefetch, clearFormValues, setActiveClose);
                 changeTableVisibility();
@@ -214,7 +217,7 @@ function Issuer() {
                   <Grid container spacing={3}>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
-                        disabled={isEditing}
+                        // disabled={isEditing}
                         label="Issuer Name"
                         name="issuer_name"
                         placeholder={'Please enter Issuer Name'}
@@ -235,7 +238,7 @@ function Issuer() {
                     </Grid>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
-                        disabled={isEditing}
+                        // disabled={isEditing}
                         label="GST Number"
                         name="issuer_gst_number"
                         placeholder={'Please enter GST Number'}
@@ -258,7 +261,7 @@ function Issuer() {
 
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
-                        disabled={isEditing}
+                        // disabled={isEditing}
                         label="Issuer PAN"
                         name="issuer_pan"
                         placeholder={'Please enter Issuer PAN'}
@@ -280,7 +283,7 @@ function Issuer() {
                     </Grid>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
-                        disabled={isEditing}
+                        // disabled={isEditing}
                         label="Issuer Tollfree Number"
                         name="issuer_tollfree_number"
                         placeholder={'Please enter Toll-free Number'}

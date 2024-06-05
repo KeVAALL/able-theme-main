@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { memo, useEffect, useState } from 'react';
-import { Box, Card, Grid, Button, CardContent, CardHeader, Stack, Divider, Typography } from '@mui/material';
+import { Box, Card, Grid, Button, CardContent, CardHeader, Stack, Divider, Typography, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,35 +14,37 @@ import MainCard from '../mainCard/MainCard';
 import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
 
 // third-party
-import { Formik } from 'formik';
+import { Formik, getIn } from 'formik';
 import * as yup from 'yup';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Add, Additem, Bank } from 'iconsax-react';
 import { v4 as uuidv4 } from 'uuid';
 import enGB from 'date-fns/locale/en-GB';
 import Avatar from 'helpers/@extended/Avatar';
+import BankDetailCard from 'components/molecules/bankDetails/bankDetailCard';
+import { AddBankDetails, GetBankDetails } from 'hooks/investor/investor';
 
 const BankDetails = (props) => {
   // theme
   const theme = useTheme();
   // Toggle Table and Form Visibility
   const [showTable, setShowTable] = useState(true);
-  const changeTableVisibility = () => {
-    setShowTable(!showTable);
-  };
-  const [isEditing, setIsEditing] = useState(false);
-  const setEditing = (value) => {
-    console.log(value);
-    setFormValues(value);
-  };
-  const setActiveEditing = () => {
-    setIsEditing(true);
-  };
-  const setActiveClose = () => {
-    setIsEditing(false);
-  };
+  //   const changeTableVisibility = () => {
+  //     setShowTable(!showTable);
+  //   };
+  //   const [isEditing, setIsEditing] = useState(false);
+  //   const setEditing = (value) => {
+  //     console.log(value);
+  //     setFormValues(value);
+  //   };
+  //   const setActiveEditing = () => {
+  //     setIsEditing(true);
+  //   };
+  //   const setActiveClose = () => {
+  //     setIsEditing(false);
+  //   };
 
-  //   const [formValues, setFormValues] = useState(formAllValues);
+  const [formValues, setFormValues] = useState();
   // Handle Editing
   // Make Dynamic States First
   // Make Conditional Rendering for Bank Details
@@ -64,15 +66,37 @@ const BankDetails = (props) => {
     props.setFieldValue('nominee', deleteNominee);
   };
 
-  const headerSX = {
-    p: 2.5,
-    '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
-  };
+  useEffect(() => {
+    setFormValues(props.values.investor_bank);
+  }, []);
 
   return (
-    <>
-      {showTable && props.values.investor_bank && props.values.investor_bank.length > 0 && (
-        <Stack spacing={2}>
+    <Stack spacing={2} justifyContent="center" alignItems="center">
+      <Stack spacing={2} sx={{ width: '70%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6" color="#5E718D">
+          Effortlessly add, remove or manage your linked bank accounts
+        </Typography>
+        <Button
+          className="add_circle_button"
+          variant="contained"
+          color="success"
+          startIcon={<Add style={{ margin: '0px !important' }} />}
+          onClick={() => {
+            props.setFieldValue('investor_bank', [
+              ...props.values.investor_bank,
+              {
+                account_no: '',
+                ifsc_code: '',
+                beneficiary_name: '',
+                is_editing: 1,
+                is_new: 1
+              }
+            ]);
+          }}
+        ></Button>
+      </Stack>
+      {props.values.investor_bank && props.values.investor_bank.length > 0 && (
+        <Stack spacing={2} sx={{ width: '70%' }}>
           <Formik
             initialValues={props.values}
             //   props.values.investor_bank.map((el) => {
@@ -103,10 +127,10 @@ const BankDetails = (props) => {
 
                   handleSubmit();
                 }}
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}
               >
                 {props.values.investor_bank.map((bank, index) =>
-                  bank.isEditing ? (
+                  bank.is_editing ? (
                     <Card
                       elevation={0}
                       key={index}
@@ -116,7 +140,7 @@ const BankDetails = (props) => {
                         borderRadius: 1.5,
                         borderColor: '#068e44',
                         overflow: 'visible',
-                        marginBottom: 2
+                        my: 2
                       }}
                     >
                       <CardContent sx={{}}>
@@ -126,7 +150,7 @@ const BankDetails = (props) => {
                           </Avatar>
                           <Stack spacing={0}>
                             <Typography variant="body1" fontWeight={600} color="black">
-                              Add Bank Account
+                              {bank.is_editing && bank.is_new ? 'Add' : 'Edit'} Bank Account
                             </Typography>
                             <Grid container alignItems="center">
                               <Grid item>
@@ -150,12 +174,12 @@ const BankDetails = (props) => {
                               handleBlur={props.handleBlur}
                               touched={props.touched}
                               errors={props.errors}
-                              inputProps={{ maxLength: 12 }}
+                              inputProps={{ maxLength: 14 }}
                             />
                           </Grid>
 
                           <Grid item xs={12} sm={6} md={4}>
-                            <NestedCustomTextField
+                            {/* <NestedCustomTextField
                               label="IFSC Code"
                               valueName={`investor_bank[${index}].ifsc_code`}
                               placeholder="Please enter IFSC Code"
@@ -166,6 +190,55 @@ const BankDetails = (props) => {
                               handleBlur={props.handleBlur}
                               touched={props.touched}
                               errors={props.errors}
+                            /> */}
+                            <TextField
+                              fullWidth
+                              className="common-textfield"
+                              size="small"
+                              label="IFSC Code"
+                              name={`investor_bank[${index}].ifsc_code`}
+                              onChange={async (e) => {
+                                e.preventDefault();
+                                const { value } = e.target;
+                                const regex = /^[A-Za-z]{4}[a-zA-Z0-9]{7}$/;
+                                props.setFieldValue(`investor_bank[${index}].ifsc_code`, value);
+                                if (regex.test(value.toString()) && value.length === 11) {
+                                  let payload = { ifsc: value };
+                                  try {
+                                    const response = await GetBankDetails(payload);
+                                    console.log(response);
+
+                                    const newBankDetails = props.values.investor_bank.map((el, elIndex) => {
+                                      if (elIndex == index) {
+                                        console.log(el);
+                                        return { ...el, ...response, ifsc_code: value };
+                                      }
+                                      return el;
+                                    });
+
+                                    props.setFieldValue('investor_bank', newBankDetails);
+                                  } catch (err) {
+                                    console.log(err);
+                                  }
+                                }
+                              }}
+                              onBlur={props.handleBlur}
+                              value={props.values.investor_bank[index].ifsc_code}
+                              type="text"
+                              error={Boolean(
+                                getIn(props.touched, `investor_bank[${index}].ifsc_code`) &&
+                                  getIn(props.errors, `investor_bank[${index}].ifsc_code`)
+                              )}
+                              helperText={
+                                getIn(props.touched, `investor_bank[${index}].ifsc_code`) &&
+                                getIn(props.errors, `investor_bank[${index}].ifsc_code`)
+                              }
+                              FormHelperTextProps={{
+                                style: {
+                                  marginLeft: 0
+                                }
+                              }}
+                              inputProps={{ maxLength: 11 }}
                             />
                           </Grid>
                           <Grid item xs={12} sm={6} md={4}>
@@ -194,12 +267,27 @@ const BankDetails = (props) => {
                                 variant="contained"
                                 color="success"
                                 // type="submit"
-                                startIcon={<Additem />}
-                                onClick={(e) => {
+                                onClick={async (e) => {
                                   //   e.preventDefault();
-                                  console.log({
-                                    ...values
-                                  });
+                                  const payload = {
+                                    investor_id: props.values.investor.investor_id,
+                                    account_number: props.values.investor_bank[index].account_no,
+                                    ifsc_code: props.values.investor_bank[index].ifsc_code
+                                  };
+                                  try {
+                                    const response = await AddBankDetails(payload);
+                                    const newBank = props.values.investor_bank.map((el, elIndex) => {
+                                      if (elIndex == index) {
+                                        return { ...el, is_editing: 0, is_new: 0 };
+                                      }
+                                      return el;
+                                    });
+                                    console.log(newBank);
+
+                                    props.setFieldValue('investor_bank', newBank);
+                                  } catch (err) {
+                                    console.log(err);
+                                  }
                                 }}
                               >
                                 Save & Continue
@@ -214,14 +302,20 @@ const BankDetails = (props) => {
                                 color="secondary"
                                 type="button"
                                 onClick={() => {
-                                  // changeTableVisibility();
-                                  // if (setActiveClose) {
-                                  //   setActiveClose();
-                                  // }
-                                  // clearFormValues();
-                                  const remove = props.values.investor_bank.filter((el, elIndex) => elIndex !== index);
+                                  if (bank.is_editing && bank.is_new) {
+                                    const remove = props.values.investor_bank.filter((el, elIndex) => elIndex !== index);
 
-                                  props.setFieldValue('investor_bank', remove);
+                                    props.setFieldValue('investor_bank', remove);
+                                  } else {
+                                    const editItem = formValues.map((el, elIndex) => {
+                                      if (elIndex == index) {
+                                        return { ...el, is_editing: 0 };
+                                      }
+                                      return el;
+                                    });
+
+                                    props.setFieldValue('investor_bank', editItem);
+                                  }
                                 }}
                               >
                                 Back
@@ -232,14 +326,36 @@ const BankDetails = (props) => {
                       </CardContent>
                     </Card>
                   ) : (
-                    <></>
+                    <BankDetailCard
+                      key={index}
+                      index={index}
+                      values={props.values}
+                      setFieldValue={props.setFieldValue}
+                      logoURL={bank.bank_logo}
+                      title={bank.bank_name}
+                      accountNumber={bank.account_no}
+                      IFSC={bank.ifsc_code}
+                      branchName={bank.branch}
+                      isPrimary={bank.is_primary_account}
+                    />
                   )
                 )}
               </Box>
             )}
           </Formik>
-          <Grid container>
-            <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
+        </Stack>
+      )}
+    </Stack>
+  );
+};
+
+export default memo(BankDetails);
+
+{
+  /* <Grid container> */
+}
+{
+  /* <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
               <AnimateButton>
                 <Button
                   fullWidth
@@ -248,15 +364,14 @@ const BankDetails = (props) => {
                   // type="submit"
                   startIcon={<Add />}
                   onClick={(e) => {
-                    console.log({
-                      ...props.values
-                    });
                     props.setFieldValue('investor_bank', [
                       ...props.values.investor_bank,
                       {
                         account_no: '',
                         ifsc_code: '',
-                        beneficiary_name: ''
+                        beneficiary_name: '',
+                        is_editing: 1,
+                        is_new: 1
                       }
                     ]);
                   }}
@@ -264,19 +379,8 @@ const BankDetails = (props) => {
                   Add more
                 </Button>
               </AnimateButton>
-            </Grid>
-          </Grid>
-        </Stack>
-      )}
-    </>
-  );
-};
-
-export default memo(BankDetails);
-
-// const relation = relationship.find((el) => el.id === value.relationship_id);
-// if (relation.relation_name) {
-//   setSelectedRelation(relation.relation_name);
-// } else {
-//   selectedRelation(relation.relationship_id);
-// }
+            </Grid> */
+}
+{
+  /* </Grid> */
+}

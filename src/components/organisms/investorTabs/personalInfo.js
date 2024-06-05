@@ -12,6 +12,7 @@ import { residency, marital_status, investorType, genderData } from 'constant/in
 // third-party
 import enGB from 'date-fns/locale/en-GB';
 import IconButton from 'helpers/@extended/IconButton';
+import { VerifyPAN } from 'hooks/investor/investor';
 
 const PersonalInfo = (props) => {
   return (
@@ -36,9 +37,19 @@ const PersonalInfo = (props) => {
                   <IconButton
                     className="personal_info_icon_button"
                     aria-label="toggle password visibility"
-                    onClick={() => {}}
-                    onMouseDown={() => {}}
-                    onMouseUp={() => {}}
+                    onClick={async (e) => {
+                      try {
+                        const payload = {
+                          pan_no: props.values.investor.pan_no,
+                          investor_id: props.values.investor.investor_id,
+                          redirection_url: 'https://altcaseadmin.we3.in/api/v1/onboarding/digilocker-sso/callback?status=success'
+                        };
+
+                        const response = await VerifyPAN(payload);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
                     edge="end"
                     color="secondary"
                   >
@@ -51,7 +62,7 @@ const PersonalInfo = (props) => {
             }}
           />
         </Grid>
-        <Grid item md={4} xs={6}>
+        <Grid item md={4} sm={6} xs={12}>
           <NestedCustomTextField
             label="Email ID"
             valueName="investor.email_id"
@@ -124,7 +135,7 @@ const PersonalInfo = (props) => {
           </LocalizationProvider>
         </Grid>
 
-        <Grid item md={4} xs={6}>
+        <Grid item md={4} sm={6} xs={12}>
           <NestedCustomTextField
             label="Place of birth"
             valueName="investor.place_of_birth"
