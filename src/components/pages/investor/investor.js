@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // material-ui
 import { Divider, Box, Card, Grid, CardContent, Button, useMediaQuery } from '@mui/material';
@@ -41,6 +41,9 @@ import {
   GetIFASearch
 } from 'hooks/investor/investor';
 import IconTabs from 'components/organisms/investorTabs';
+import { useLocation, useNavigate } from 'react-router';
+import axios from 'utils/axios';
+import { enqueueSnackbar } from 'notistack';
 
 function Investor() {
   // Main data states
@@ -229,6 +232,58 @@ function Investor() {
       setInvestorData(data);
     }
   });
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const callFirstApi = useCallback(async (data) => {
+    try {
+      console.log(data, 'calling api');
+      const response = await axios.get(
+        `https://altcaseinvestor.we3.in/api/v1/onboarding/digilocker-sso/callback?status=success&initiation_decentro_transaction_id=${data}`
+      );
+      console.log('First API call', response);
+
+      console.log(response.data.status);
+      if (response.data.status === 200) {
+        console.log('2nd api call');
+        enqueueSnackbar('Success', {
+          variant: 'success',
+          autoHideDuration: 2000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right'
+          }
+        });
+        const retrievedObject = localStorage.getItem('tempVar');
+
+        const currentUrl = location.pathname + location.search;
+        const newUrl = '/investor';
+
+        if (currentUrl !== newUrl) {
+          // This will update the URL without reloading the page
+          navigate(newUrl, { replace: true });
+        }
+
+        await GetEditOneInvestor(setEditing, JSON.parse(retrievedObject).investor_id);
+        setActiveEditing();
+        changeTableVisibility();
+        localStorage.removeItem('tempVar');
+      }
+    } catch (error) {
+      console.error('Error in first API call:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!!location?.search?.split('=').slice(1)[0] && !!localStorage.getItem('tempVar')) {
+      callFirstApi(location?.search?.split('=').slice(1)[0]);
+    }
+
+    const retrievedObject = localStorage.getItem('tempVar');
+
+    console.log('retrievedObject: ', JSON.parse(retrievedObject));
+  }, [location, navigate]);
 
   if (isPending || ifaPending) return <Loader />;
 

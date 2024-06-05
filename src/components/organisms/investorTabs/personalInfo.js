@@ -13,6 +13,7 @@ import { residency, marital_status, investorType, genderData } from 'constant/in
 import enGB from 'date-fns/locale/en-GB';
 import IconButton from 'helpers/@extended/IconButton';
 import { VerifyPAN } from 'hooks/investor/investor';
+import { TickCircle } from 'iconsax-react';
 
 const PersonalInfo = (props) => {
   return (
@@ -32,20 +33,28 @@ const PersonalInfo = (props) => {
             errors={props.errors}
             inputProps={{ maxLength: 10 }}
             InputProps={{
-              endAdornment: (
+              endAdornment: !props.values.investor.is_digilocker_verified ? (
                 <InputAdornment position="end">
                   <IconButton
                     className="personal_info_icon_button"
                     aria-label="toggle password visibility"
                     onClick={async (e) => {
+                      const testObject = {
+                        pan_no: props.values.investor.pan_no,
+                        investor_id: props.values.investor.investor_id
+                      };
+                      localStorage.setItem('tempVar', JSON.stringify(testObject));
                       try {
                         const payload = {
                           pan_no: props.values.investor.pan_no,
                           investor_id: props.values.investor.investor_id,
-                          redirection_url: 'https://altcaseadmin.we3.in/api/v1/onboarding/digilocker-sso/callback?status=success'
+                          redirection_url: 'http://localhost:3000/investor'
                         };
 
                         const response = await VerifyPAN(payload);
+                        console.log(response);
+
+                        window.location.href = response.details.data.authorizationUrl;
                       } catch (err) {
                         console.log(err);
                       }
@@ -57,6 +66,10 @@ const PersonalInfo = (props) => {
                       VERIFY
                     </Typography>
                   </IconButton>
+                </InputAdornment>
+              ) : (
+                <InputAdornment position="end">
+                  <TickCircle color="#068e44" />
                 </InputAdornment>
               )
             }}

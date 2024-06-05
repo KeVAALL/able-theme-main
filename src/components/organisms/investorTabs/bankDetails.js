@@ -17,7 +17,7 @@ import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'util
 import { Formik, getIn } from 'formik';
 import * as yup from 'yup';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { Add, Additem, Bank } from 'iconsax-react';
+import { Add, Additem, Bank, EmptyWalletAdd } from 'iconsax-react';
 import { v4 as uuidv4 } from 'uuid';
 import enGB from 'date-fns/locale/en-GB';
 import Avatar from 'helpers/@extended/Avatar';
@@ -95,7 +95,7 @@ const BankDetails = (props) => {
           }}
         ></Button>
       </Stack>
-      {props.values.investor_bank && props.values.investor_bank.length > 0 && (
+      {props.values.investor_bank && props.values.investor_bank.length > 0 ? (
         <Stack spacing={2} sx={{ width: '70%' }}>
           <Formik
             initialValues={props.values}
@@ -344,6 +344,26 @@ const BankDetails = (props) => {
             )}
           </Formik>
         </Stack>
+      ) : (
+        <Card
+          elevation={0}
+          sx={{
+            width: '70%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#F8F9FA',
+            my: 2,
+            p: 4
+          }}
+        >
+          <Stack spacing={2} alignItems="center">
+            <EmptyWalletAdd color="#BEC8D0" style={{ height: '100px', width: '100px' }} />
+            <Typography variant="h4" color="secondary">
+              Add Bank Account
+            </Typography>
+          </Stack>
+        </Card>
       )}
     </Stack>
   );

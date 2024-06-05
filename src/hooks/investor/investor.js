@@ -193,8 +193,8 @@ export async function AddBankDetails(payload) {
 export async function VerifyPAN(payload) {
   try {
     const response = await axios.post('investor/verifypan', payload);
-    enqueueSnackbar('PAN Verified', {
-      variant: 'success',
+    enqueueSnackbar('Redirecting', {
+      variant: 'info',
       autoHideDuration: 2000,
       anchorOrigin: {
         vertical: 'top',
