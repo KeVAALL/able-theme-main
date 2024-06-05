@@ -358,7 +358,7 @@ const BankDetails = (props) => {
           }}
         >
           <Stack spacing={2} alignItems="center">
-            <EmptyWalletAdd color="#BEC8D0" style={{ height: '100px', width: '100px' }} />
+            <EmptyWalletAdd color="#BEC8D0" style={{ height: '70px', width: '70px' }} />
             <Typography variant="h4" color="secondary">
               Add Bank Account
             </Typography>
