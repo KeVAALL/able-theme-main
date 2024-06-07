@@ -14,6 +14,7 @@ const AddressDetails = (props) => {
         <Grid container spacing={3}>
           <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
             <NestedCustomTextField
+              disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
               label="Address Line 1"
               valueName="investor_address.address_line_1"
               placeholder="Please enter your Address Line 1"
@@ -28,6 +29,7 @@ const AddressDetails = (props) => {
           </Grid>
           <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
             <NestedCustomTextField
+              disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
               label="Address Line 2"
               valueName="investor_address.address_line_2"
               placeholder="Please enter your Address Line 2"
@@ -43,6 +45,7 @@ const AddressDetails = (props) => {
 
           <Grid item sm={6} xs={12} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <NestedCustomTextField
+              disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
               label="Pincode"
               valueName="investor_address.pincode"
               placeholder="Please enter your Pin Code"
@@ -58,6 +61,7 @@ const AddressDetails = (props) => {
 
           <Grid item sm={6} xs={12} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <NestedCustomTextField
+              disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
               label="City"
               valueName="investor_address.city"
               placeholder="Please enter your City"
@@ -96,6 +100,7 @@ const AddressDetails = (props) => {
 
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
+              disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
               <NestedCustomTextField
                 label="Address Line 1"
                 valueName="correspondent_address.address_line_1"
@@ -111,6 +116,7 @@ const AddressDetails = (props) => {
             </Grid>
             <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
               <NestedCustomTextField
+                disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
                 label="Address Line 2"
                 valueName="correspondent_address.address_line_2"
                 placeholder="Please enter your Address Line 2"
@@ -126,6 +132,7 @@ const AddressDetails = (props) => {
 
             <Grid item sm={6} xs={12} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <NestedCustomTextField
+                disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
                 label="Pincode"
                 valueName="correspondent_address.pincode"
                 placeholder="Please enter your Pin Code"
@@ -141,6 +148,7 @@ const AddressDetails = (props) => {
 
             <Grid item sm={6} xs={12} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <NestedCustomTextField
+                disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
                 label="City"
                 valueName="correspondent_address.city"
                 placeholder="Please enter your City"

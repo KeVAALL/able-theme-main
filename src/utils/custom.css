@@ -44,6 +44,12 @@ html::-webkit-scrollbar-thumb {
 .common-autocomplete .autocomplete-textfield input {
   font-size: 0.75rem !important;
 }
+.common-autocomplete .Mui-disabled {
+  color: #768087 !important;
+}
+.common-autocomplete .MuiOutlinedInput-root .Mui-disabled {
+  -webkit-text-fill-color: #768087 !important;
+}
 /* .common-autocomplete .autocomplete-textfield label {
   font-size: 0.75rem !important;
 } */
@@ -78,6 +84,9 @@ html::-webkit-scrollbar-thumb {
 }
 .calendar_main .MuiInputLabel-root {
   margin-top: -3px !important;
+}
+.calendar_main .Mui-disabled {
+  color: #5b6b79 !important;
 }
 /* Color Picker */
 .color_picker_main {

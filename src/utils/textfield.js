@@ -130,6 +130,7 @@ export const CustomAutoComplete = memo((props) => {
 
   return (
     <Autocomplete
+      disabled={props.disabled ? true : false}
       fullWidth
       disablePortal
       defaultValue={(props.defaultValue && props.options.find((el) => el[props.optionName] === props.defaultValue)) || props.options[0]}
@@ -153,7 +154,21 @@ export const CustomAutoComplete = memo((props) => {
       onChange={(e) => handleOptionChange(e, props.optionName, props.setSelected)}
       // getOptionSelected
       getOptionLabel={(option) => option[props.optionName]} // Assuming 'product_type' is the label you want to display
-      renderInput={(params) => <TextField {...params} className="autocomplete-textfield" name={props.formName} label={props.label} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          className="autocomplete-textfield"
+          name={props.formName}
+          label={props.label}
+          InputProps={{
+            ...params.InputProps,
+            inputProps: {
+              ...params.inputProps,
+              readOnly: true // Prevents mobile keyboard from opening
+            }
+          }}
+        />
+      )}
     />
   );
 });
@@ -179,6 +194,7 @@ export const FormikAutoComplete = memo((props) => {
 
   return (
     <Autocomplete
+      disabled={props.disabled ? true : false}
       id="basic-autocomplete-label"
       className="common-autocomplete"
       fullWidth

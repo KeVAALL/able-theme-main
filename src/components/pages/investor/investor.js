@@ -323,9 +323,12 @@ function Investor() {
               }
             }
             if (isEditing === true) {
+              // console.log(values.filter((el) => el));
+              // const newData = delete values.port_folio;
+              const { port_folio, investor_bank, ...newData } = values;
               try {
                 const payload = {
-                  ...values,
+                  ...newData,
                   user_id: toInteger(userID),
                   investor_id: values.investor.investor_id,
                   method_name: 'update',
@@ -367,12 +370,6 @@ function Investor() {
             <Box
               component="form"
               onSubmit={(event) => {
-                console.log(errors);
-                console.log(dirty.valueOf('investor_address'));
-                console.log(isValid.valueOf('investor_address'));
-                // const errorsList = validate(values);
-                // console.log(errorsList);
-
                 handleSubmit();
                 event.preventDefault();
               }}
@@ -406,6 +403,7 @@ function Investor() {
                   <Grid container spacing={3}>
                     <Grid item md={4} xs={6}>
                       <NestedCustomTextField
+                        disabled={values.investor.is_ckyc_verified || values.investor.is_digilocker_verified}
                         label="Investor Name"
                         valueName="investor.investor_name"
                         placeholder="Please enter your Investor Name"
@@ -420,6 +418,7 @@ function Investor() {
                     </Grid>
                     <Grid item md={4} xs={6}>
                       <NestedCustomTextField
+                        disabled={values.investor.is_ckyc_verified || values.investor.is_digilocker_verified}
                         label="Mobile Number"
                         valueName="investor.mobile_no"
                         placeholder="Please enter your Mobile Number"
@@ -433,21 +432,6 @@ function Investor() {
                         inputProps={{ maxLength: 10 }}
                       />
                     </Grid>
-                    {/* <Grid item md={4} xs={6}>
-                      <NestedCustomTextField
-                        label="Pan Number"
-                        valueName="investor.pan_no"
-                        placeholder="Please enter your PAN Number"
-                        values={values.investor.pan_no}
-                        type="string"
-                        regType="pan"
-                        setFieldValue={setFieldValue}
-                        handleBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                        inputProps={{ maxLength: 10 }}
-                      />
-                    </Grid> */}
 
                     {/* <Grid item md={4} xs={6}>
                       <FormikAutoComplete

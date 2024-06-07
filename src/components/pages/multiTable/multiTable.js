@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect, useMemo, memo } from 'react';
 
 // material-ui
-import { Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Button, Grid } from '@mui/material';
+import { Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Button, Grid, Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { CustomTextField } from 'utils/textfield';
 import { Trash, Edit2, FilterSearch, DiscountShape, Eye } from 'iconsax-react';
@@ -278,10 +278,12 @@ const ReactTable = ({
                   <TableCell
                     key={column}
                     cell={column}
+                    sx={{ position: 'sticky !important' }}
                     // {...column.getHeaderProps([{ className: column.className }])}
                     {...column.getHeaderProps({ style: { minWidth: column.minWidth } })}
                   >
                     <HeaderSort column={column} sort />
+                    {/* {column.render('Header')} */}
                   </TableCell>
                 ))}
                 <TableCell
@@ -338,18 +340,20 @@ const ReactTable = ({
 
                           {isEditingInterestRateButton && (
                             <Grid item md={4}>
-                              <IconButton
-                                color="black"
-                                onClick={async () => {
-                                  // setTimeout(() => {
-                                  isEditingInterestRate();
-                                  // }, 500);
-                                  console.log(row.original);
-                                  setEditing(row.original);
-                                }}
-                              >
-                                <DiscountShape size={22} style={{ cursor: 'pointer' }} />
-                              </IconButton>
+                              <Tooltip title="View Schemes">
+                                <IconButton
+                                  color="black"
+                                  onClick={async () => {
+                                    // setTimeout(() => {
+                                    isEditingInterestRate();
+                                    // }, 500);
+                                    console.log(row.original);
+                                    setEditing(row.original);
+                                  }}
+                                >
+                                  <DiscountShape size={22} style={{ cursor: 'pointer' }} />
+                                </IconButton>
+                              </Tooltip>
                             </Grid>
                           )}
 

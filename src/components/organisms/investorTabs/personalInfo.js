@@ -8,12 +8,14 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { residency, marital_status, investorType, genderData } from 'constant/investorValidation';
+import { VerifyPAN } from 'hooks/investor/investor';
 
 // third-party
 import enGB from 'date-fns/locale/en-GB';
 import IconButton from 'helpers/@extended/IconButton';
-import { VerifyPAN } from 'hooks/investor/investor';
 import { TickCircle } from 'iconsax-react';
+import { toInteger } from 'lodash';
+import { enqueueSnackbar } from 'notistack';
 
 const PersonalInfo = (props) => {
   return (
@@ -32,51 +34,91 @@ const PersonalInfo = (props) => {
             touched={props.touched}
             errors={props.errors}
             inputProps={{ maxLength: 10 }}
+            disabled={props.values.investor.is_digilocker_verified || props.values.investor.is_ckyc_verified}
             InputProps={{
-              endAdornment: !props.values.investor.is_digilocker_verified ? (
-                <InputAdornment position="end">
-                  <IconButton
-                    className="personal_info_icon_button"
-                    aria-label="toggle password visibility"
-                    onClick={async (e) => {
-                      const testObject = {
-                        pan_no: props.values.investor.pan_no,
-                        investor_id: props.values.investor.investor_id
-                      };
-                      localStorage.setItem('tempVar', JSON.stringify(testObject));
-                      try {
-                        const payload = {
-                          pan_no: props.values.investor.pan_no,
-                          investor_id: props.values.investor.investor_id,
-                          redirection_url: 'https://able-theme-main.vercel.app/investor'
-                        };
-
-                        const response = await VerifyPAN(payload);
-                        console.log(response);
-
-                        window.location.href = response.details.data.authorizationUrl;
-                      } catch (err) {
-                        console.log(err);
+              endAdornment:
+                !props.values.investor.is_digilocker_verified && !props.values.investor.is_ckyc_verified ? (
+                  <InputAdornment position="end">
+                    <IconButton
+                      disabled={
+                        props.isEditing
+                          ? props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified
+                          : !(props.values.investor.pan_no.length === 10)
                       }
-                    }}
-                    edge="end"
-                    color="secondary"
-                  >
-                    <Typography variant="caption" fontWeight={500}>
-                      VERIFY
-                    </Typography>
-                  </IconButton>
-                </InputAdornment>
-              ) : (
-                <InputAdornment position="end">
-                  <TickCircle color="#068e44" />
-                </InputAdornment>
-              )
+                      className="personal_info_icon_button"
+                      aria-label="toggle password visibility"
+                      onClick={async (e) => {
+                        const userID = localStorage.getItem('userID');
+
+                        const testObject = {
+                          pan_no: props.values.investor.pan_no,
+                          investor_id: props.values.investor.investor_id
+                        };
+                        localStorage.setItem('tempVar', JSON.stringify(testObject));
+
+                        try {
+                          const payload = {
+                            user_id: toInteger(userID),
+                            investor: {
+                              investor_name: props.values.investor.investor_name,
+                              mobile_no: props.values.investor.mobile_no,
+                              pan_no: props.values.investor.pan_no
+                            },
+                            investor_id: props.values.investor.investor_id,
+                            redirection_url: 'http://localhost:3000/investor'
+                          };
+
+                          const response = await VerifyPAN(payload);
+                          console.log(response.type_name);
+
+                          if (response.type_name === 'Digilocker') {
+                            enqueueSnackbar('Redirecting', {
+                              variant: 'info',
+                              autoHideDuration: 2000,
+                              anchorOrigin: {
+                                vertical: 'top',
+                                horizontal: 'right'
+                              }
+                            });
+                            // window.location.href = response.details.data.authorizationUrl;
+                            console.log('me');
+                          }
+                          if (response.type_name === 'CKYC') {
+                            enqueueSnackbar('Success', {
+                              variant: 'success',
+                              autoHideDuration: 2000,
+                              anchorOrigin: {
+                                vertical: 'top',
+                                horizontal: 'right'
+                              }
+                            });
+                            props.setFieldValue('investor.is_ckyc_verified', 1);
+                            props.setFieldValue('investor.investor_name', response.details.investor_name);
+                            props.setFieldValue('investor.birth_date', response.details.birth_date);
+                          }
+                        } catch (err) {
+                          console.log(err);
+                        }
+                      }}
+                      edge="end"
+                      color="secondary"
+                    >
+                      <Typography variant="caption" fontWeight={500}>
+                        VERIFY
+                      </Typography>
+                    </IconButton>
+                  </InputAdornment>
+                ) : (
+                  <InputAdornment position="end">
+                    <TickCircle color="#068e44" />
+                  </InputAdornment>
+                )
             }}
           />
         </Grid>
         <Grid item md={4} sm={6} xs={12}>
           <NestedCustomTextField
+            disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
             label="Email ID"
             valueName="investor.email_id"
             placeholder="Please enter your Email ID"
@@ -90,6 +132,7 @@ const PersonalInfo = (props) => {
         </Grid>
         <Grid item xs={12} md={4}>
           <FormikAutoComplete
+            disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
             options={investorType}
             defaultValue={props.values.investor.is_senior_citizen}
             setFieldValue={props.setFieldValue}
@@ -101,6 +144,7 @@ const PersonalInfo = (props) => {
         <Grid item xs={12} md={4}>
           {/* Using Normal Autocomplete because of API body */}
           <CustomAutoComplete
+            disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
             options={genderData}
             defaultValue={props.selectedGender}
             setSelected={props.setSelectedGender}
@@ -111,6 +155,7 @@ const PersonalInfo = (props) => {
 
         <Grid item xs={12} md={4}>
           <FormikAutoComplete
+            disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
             options={marital_status}
             defaultValue={props.values.investor.is_married}
             setFieldValue={props.setFieldValue}
@@ -135,6 +180,7 @@ const PersonalInfo = (props) => {
         >
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
             <DesktopDatePicker
+              disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
               className="calendar_main"
               label="Date of Birth"
               inputFormat="dd/MM/yyyy"
@@ -165,6 +211,7 @@ const PersonalInfo = (props) => {
 
         <Grid item xs={12} md={4}>
           <FormikAutoComplete
+            disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
             options={residency}
             defaultValue={props.values.investor.is_indian_resident}
             setFieldValue={props.setFieldValue}

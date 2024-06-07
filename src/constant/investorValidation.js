@@ -153,7 +153,9 @@ const formAllValues = {
     place_of_birth: '',
     is_senior_citizen: 1,
     is_married: 1,
-    is_indian_resident: 1
+    is_indian_resident: 1,
+    is_ckyc_verified: 0,
+    is_digilocker_verified: 0
   },
   // Investor Address
   investor_address: {

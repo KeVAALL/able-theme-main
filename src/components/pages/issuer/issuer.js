@@ -218,6 +218,28 @@ function Issuer() {
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         // disabled={isEditing}
+                        label="Issuer PAN"
+                        name="issuer_pan"
+                        placeholder={'Please enter Issuer PAN'}
+                        values={values}
+                        type="text"
+                        regType="pan"
+                        setFieldValue={setFieldValue}
+                        onBlur={handleBlur}
+                        touched={touched}
+                        errors={errors}
+                        fullWidth
+                        FormHelperTextProps={{
+                          style: {
+                            marginLeft: 0
+                          }
+                        }}
+                        inputProps={{ maxLength: 10 }}
+                      />
+                    </Grid>
+                    <Grid item md={4} sm={6} xs={12}>
+                      <CustomTextField
+                        disabled={true}
                         label="Issuer Name"
                         name="issuer_name"
                         placeholder={'Please enter Issuer Name'}
@@ -259,28 +281,6 @@ function Issuer() {
                       />
                     </Grid>
 
-                    <Grid item md={4} sm={6} xs={12}>
-                      <CustomTextField
-                        // disabled={isEditing}
-                        label="Issuer PAN"
-                        name="issuer_pan"
-                        placeholder={'Please enter Issuer PAN'}
-                        values={values}
-                        type="text"
-                        regType="pan"
-                        setFieldValue={setFieldValue}
-                        onBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                        fullWidth
-                        FormHelperTextProps={{
-                          style: {
-                            marginLeft: 0
-                          }
-                        }}
-                        inputProps={{ maxLength: 10 }}
-                      />
-                    </Grid>
                     <Grid item md={4} sm={6} xs={12}>
                       <CustomTextField
                         // disabled={isEditing}

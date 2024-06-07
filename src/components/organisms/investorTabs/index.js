@@ -250,6 +250,7 @@ export default function IconTabs(props) {
       <TabPanel className="panel" value={tabValue} index={props.isEditing ? 1 : 0}>
         <MainCard sx={tabStyle}>
           <PersonalInfo
+            isEditing={props.isEditing}
             values={props.values}
             selectedGender={props.selectedGender}
             setSelectedGender={props.setSelectedGender}

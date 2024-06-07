@@ -198,6 +198,20 @@ const tableColumns = [
     accessor: 'tenure_selected',
     minWidth: 150
   },
+  // {
+  //   Header: 'Scheme Details',
+  //   columns: [
+  //     {
+  //       Header: 'Scheme Details 1',
+  //       accessor: 'visits'
+  //     },
+  //     {
+  //       Header: 'Scheme Details 2',
+  //       accessor: 'status2'
+  //     }
+  //   ],
+  //   minWidth: 400
+  // },
   {
     Header: 'FD Name',
     accessor: 'fd_name',

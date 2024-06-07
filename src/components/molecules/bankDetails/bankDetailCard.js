@@ -66,25 +66,28 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
                 />
               </ListItem>
               <Stack spacing={1} direction="row">
-                {/* <IconButton color="error" sx={{ border: '1.5px solid #FFC5C1' }} onClick={async () => {}}>
-                  <Trash size={26} style={{ cursor: 'pointer' }} />
-                </IconButton> */}
-                <IconButton
-                  color="secondary"
-                  sx={{ border: '1.5px solid #D7DFE9' }}
-                  onClick={async () => {
-                    const editItem = values.investor_bank.map((el, elIndex) => {
-                      if (elIndex == index) {
-                        return { ...el, is_editing: 1 };
-                      }
-                      return el;
-                    });
+                {values.investor.is_bank_verified ? (
+                  <IconButton color="error" sx={{ border: '1.5px solid #FFC5C1' }} onClick={async () => {}}>
+                    <Trash size={26} style={{ cursor: 'pointer' }} />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    color="secondary"
+                    sx={{ border: '1.5px solid #D7DFE9' }}
+                    onClick={async () => {
+                      const editItem = values.investor_bank.map((el, elIndex) => {
+                        if (elIndex == index) {
+                          return { ...el, is_editing: 1 };
+                        }
+                        return el;
+                      });
 
-                    setFieldValue('investor_bank', editItem);
-                  }}
-                >
-                  <Edit size={26} style={{ cursor: 'pointer' }} />
-                </IconButton>
+                      setFieldValue('investor_bank', editItem);
+                    }}
+                  >
+                    <Edit size={26} style={{ cursor: 'pointer' }} />
+                  </IconButton>
+                )}
               </Stack>
             </List>
             <Divider sx={{ mt: 2 }} />
