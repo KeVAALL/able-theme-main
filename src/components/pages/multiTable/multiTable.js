@@ -284,7 +284,10 @@ const ReactTable = ({
                   <TableCell
                     key={column}
                     cell={column}
-                    sx={{ position: 'sticky !important' }}
+                    sx={{
+                      // position: 'sticky !important',
+                      fontSize: '0.7rem'
+                    }}
                     // {...column.getHeaderProps([{ className: column.className }])}
                     {...column.getHeaderProps({ style: { minWidth: column.minWidth } })}
                   >
@@ -315,6 +318,7 @@ const ReactTable = ({
                       return (
                         <TableCell
                           key={cell}
+                          sx={{ fontSize: '0.80rem' }}
                           // {...cell.getCellProps([{ className: { minWidth: cell.column.minWidth } }])}
                           {...cell.getCellProps({ style: { minWidth: cell.column.minWidth } })}
                         >

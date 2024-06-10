@@ -107,7 +107,25 @@ const tableColumns = [
   {
     Header: 'Logo URL',
     accessor: 'logo_url',
-    customCell: ImageCell
+    customCell: ({ value }) => {
+      return (
+        <div style={{ width: '120px', height: '65px', borderRadius: '10px' }}>
+          <img
+            src={value}
+            alt="" // Add an alt attribute for accessibility
+            style={{
+              width: '100%',
+              height: '100%',
+              // border: "1px solid red",
+              borderRadius: '10px',
+              objectFit: 'contain',
+              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              padding: '4px'
+            }}
+          />
+        </div>
+      );
+    }
   },
   {
     Header: 'FD Name',

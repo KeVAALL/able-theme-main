@@ -251,7 +251,14 @@ function ReactTable({
             {headerGroups.map((headerGroup) => (
               <TableRow key={headerGroup} {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <TableCell key={column} cell={column} {...column.getHeaderProps([{ className: column.className }])}>
+                  <TableCell
+                    key={column}
+                    cell={column}
+                    sx={{
+                      fontSize: '0.7rem'
+                    }}
+                    {...column.getHeaderProps([{ className: column.className }])}
+                  >
                     <HeaderSort column={column} sort />
                   </TableCell>
                 ))}
@@ -282,7 +289,7 @@ function ReactTable({
                   <TableRow key={row} {...row.getRowProps()}>
                     {row.cells.map((cell) => {
                       return (
-                        <TableCell key={cell} {...cell.getCellProps([{ className: cell.column.className }])}>
+                        <TableCell key={cell} sx={{ fontSize: '0.80rem' }} {...cell.getCellProps([{ className: cell.column.className }])}>
                           {cell.column.customCell ? <cell.column.customCell value={cell.value} /> : cell.render('Cell')}
                         </TableCell>
                       );
@@ -378,7 +385,7 @@ const InterestRateTable = ({
   isFetching
 }) => {
   return (
-    <MainCard sx={{ borderRadius: 0 }} content={false} secondary={<CSVExport data={data} filename={'pagination-bottom-table.csv'} />}>
+    <MainCard sx={{ borderRadius: 1 }} content={false} secondary={<CSVExport data={data} filename={'pagination-bottom-table.csv'} />}>
       <ScrollX>
         <ReactTable
           columns={columns}

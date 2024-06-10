@@ -4,6 +4,7 @@ import * as yup from 'yup';
 
 // chip css
 import '../utils/custom.css';
+import { inrCurrency } from './utilConstant';
 
 // Autocomplete data
 const genderData = [
@@ -337,6 +338,65 @@ const tableColumns = [
     customCell: StatusCell
   }
 ];
+const fdInvestmentColumns = [
+  {
+    Header: 'Logo',
+    accessor: 'logo_url',
+    customCell: ({ value }) => {
+      return (
+        <div style={{ width: '80px', height: '60px', borderRadius: '10px' }}>
+          <img
+            src={value}
+            alt="" // Add an alt attribute for accessibility
+            style={{
+              width: '100%',
+              height: '100%',
+              // border: "1px solid red",
+              borderRadius: '10px',
+              objectFit: 'contain',
+              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              padding: '4px'
+            }}
+          />
+        </div>
+      );
+    }
+  },
+  {
+    Header: 'Investor ID',
+    accessor: 'investor_id'
+  },
+  {
+    Header: 'FD ID',
+    accessor: 'fd_id'
+  },
+  {
+    Header: 'FD Name',
+    accessor: 'fd_name'
+  },
+  {
+    Header: 'Tenure',
+    accessor: 'tenure'
+  },
+  {
+    Header: 'Total Earning',
+    accessor: 'total_earning',
+    customCell: ({ value }) => {
+      return <span>{inrCurrency(value)}</span>;
+    }
+  },
+  {
+    Header: 'Interest Earned',
+    accessor: 'interest_earned',
+    customCell: ({ value }) => {
+      return <span>{inrCurrency(value)}</span>;
+    }
+  },
+  {
+    Header: 'Maturity Date',
+    accessor: 'maturity_date'
+  }
+];
 
 export {
   formAllValues,
@@ -346,6 +406,7 @@ export {
   filterValidationSchema,
   StatusCell,
   tableColumns,
+  fdInvestmentColumns,
   VisibleColumn,
   genderData,
   investorType,

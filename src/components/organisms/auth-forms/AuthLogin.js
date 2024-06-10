@@ -70,6 +70,7 @@ const AuthLogin = ({ forgot }) => {
   const icons = {
     Add: Add,
     ArrangeHorizontalCircle: ArrangeHorizontalCircle,
+    Bank: Bank,
     Document: Document,
     DirectInbox: DirectInbox,
     HomeTrendUp: HomeTrendUp,

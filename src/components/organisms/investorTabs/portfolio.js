@@ -14,6 +14,10 @@ import CustomerCard from 'components/molecules/portfolio/fixDepositCard';
 import progress from '../../../assets/images/progress.png';
 import pie from '../../../assets/images/ChartPie.svg';
 
+import { fdInvestmentColumns, VisibleColumn } from 'constant/investorValidation';
+import InterestRateTable from 'components/molecules/fixedDeposit/interestRateTable';
+import { inrCurrency } from 'constant/utilConstant';
+
 function Portfolio(props) {
   // Theme
   const theme = useTheme();
@@ -80,7 +84,7 @@ function Portfolio(props) {
                         <InfoCircle color={theme.palette.background.paper} />
                       </Stack>
                       <Typography variant="h4" color="white">
-                        ₹ {props.values.port_folio.investor_total_earning.current_earning}
+                        {inrCurrency(props.values.port_folio.investor_total_earning.current_earning)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -108,7 +112,7 @@ function Portfolio(props) {
               <AnalyticEcommerce
                 title="Total Investment"
                 icon={<MoneyAdd color="#068e44" style={{ fontSize: '20px', height: '22px', width: '22px' }} />}
-                count={`₹ ${props.values.port_folio.investor_total_earning.total_investment_amount}`}
+                count={inrCurrency(props.values.port_folio.investor_total_earning.total_investment_amount)}
                 color="success"
                 extra="₹ 20,395"
               />
@@ -118,7 +122,7 @@ function Portfolio(props) {
                 title="Total Earnings"
                 icon={<Add color="#068e44" style={{ fontSize: '20px', height: '22px', width: '22px' }} />}
                 percentage={10}
-                count={`₹ ${props.values.port_folio.investor_total_earning.total_interest_amount}`}
+                count={inrCurrency(props.values.port_folio.investor_total_earning.total_interest_amount)}
                 color="success"
                 extra="₹ 10,395"
               />
@@ -133,7 +137,22 @@ function Portfolio(props) {
             </Typography>
           </Stack>
         </Grid>
-        {props.values.port_folio.fd_investments &&
+        <Grid item xs={12}>
+          <InterestRateTable
+            columns={fdInvestmentColumns}
+            data={props.values.port_folio.fd_investments}
+            // changeTableVisibility={changeTableVisibility}
+            // schemeEditing={() => {}}
+            // deleteOneItem={() => {}}
+            // // setSearchData={setSearchData}
+            // setSchemeData={() => {}}
+            // setActiveEditing={() => {}}
+            // handleIROpenDialog={() => {}}
+            VisibleColumn={VisibleColumn}
+            hideActions={true}
+          />
+        </Grid>
+        {/* {props.values.port_folio.fd_investments &&
           props.values.port_folio.fd_investments.map((fd, index) => (
             <Grid key={index} item xs={12} md={6}>
               <CustomerCard
@@ -145,10 +164,7 @@ function Portfolio(props) {
                 maturityDate={fd.maturity_date}
               />
             </Grid>
-          ))}
-        {/* <Grid item xs={12} md={6}>
-          <CustomerCard title="Bajaj Finance" />
-        </Grid> */}
+          ))} */}
       </Grid>
     </>
   );
