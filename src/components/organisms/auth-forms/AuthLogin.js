@@ -18,7 +18,9 @@ import {
   Convert,
   Tag,
   Moneys,
-  ArrangeHorizontalCircle
+  ArrangeHorizontalCircle,
+  Document,
+  DirectInbox
 } from 'iconsax-react';
 
 import { FormattedMessage } from 'react-intl';
@@ -67,17 +69,19 @@ const AuthLogin = ({ forgot }) => {
   // icons
   const icons = {
     Add: Add,
-    User: User,
-    Tag: Tag,
-    Moneys: Moneys,
+    ArrangeHorizontalCircle: ArrangeHorizontalCircle,
+    Document: Document,
+    DirectInbox: DirectInbox,
     HomeTrendUp: HomeTrendUp,
-    Profile2User: Profile2User,
-    ShoppingBag: ShoppingBag,
-    UserCirlceAdd: UserCirlceAdd,
+    Moneys: Moneys,
     MenuBoard: MenuBoard,
     MoneySend: MoneySend,
+    Profile2User: Profile2User,
+    ShoppingBag: ShoppingBag,
     StatusUp: StatusUp,
-    ArrangeHorizontalCircle: ArrangeHorizontalCircle
+    Tag: Tag,
+    User: User,
+    UserCirlceAdd: UserCirlceAdd
   };
 
   const transformData = (menu) => {
@@ -144,7 +148,6 @@ const AuthLogin = ({ forgot }) => {
             .required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          console.log(isReset);
           if (isReset) {
             try {
               const response = await login(values.email_id, values.password);
@@ -202,6 +205,7 @@ const AuthLogin = ({ forgot }) => {
                   horizontal: 'right'
                 }
               });
+
               if (scriptedRef.current) {
                 setStatus({ success: false });
                 setErrors({ submit: err.message });

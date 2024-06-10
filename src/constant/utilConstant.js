@@ -20,5 +20,6 @@ export const inrCurrency = (currencyValue) => {
     formattedValue += '.' + fractionalPart;
   }
 
+  // return '₹' + formattedValue;
   return '₹' + formattedValue;
 };

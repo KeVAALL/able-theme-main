@@ -30,6 +30,7 @@ import TableLoader from 'components/atoms/loader/TableLoader';
 const ReactTable = ({
   columns,
   data,
+  csvData,
   formValues,
   formValueFields,
   validationSchema,
@@ -237,12 +238,16 @@ const ReactTable = ({
                 }}
               >
                 <CSVExport
-                  data={rows?.map((d) => {
+                  data={rows?.map((d, i) => {
                     if (d.original.is_active === 1) {
                       return { ...d.original, is_active: 'Active' };
                     }
                     if (d.original.is_active === 0) {
                       return { ...d.original, is_active: 'In-active' };
+                    }
+                    if (csvData) {
+                      console.log(csvData);
+                      return csvData[i];
                     } else {
                       console.log(d.original);
                       return d.original;
@@ -428,7 +433,8 @@ const ReactTable = ({
 
 ReactTable.propTypes = {
   columns: PropTypes.array,
-  data: PropTypes.any
+  data: PropTypes.any,
+  csvData: PropTypes.any
 };
 
 // ==============================|| REACT TABLE - PAGINATION - FILTERING ||============================== //
@@ -436,6 +442,7 @@ ReactTable.propTypes = {
 const MultiTable = ({
   columns,
   data,
+  csvData,
   formValues,
   formValueFields,
   validationSchema,
@@ -463,6 +470,7 @@ const MultiTable = ({
         <ReactTable
           columns={columns}
           data={data ? data : []}
+          csvData={csvData}
           formValues={formValues}
           formValueFields={formValueFields}
           validationSchema={validationSchema}
@@ -492,6 +500,7 @@ const MultiTable = ({
 MultiTable.propTypes = {
   columns: PropTypes.array,
   data: PropTypes.any,
+  csvData: PropTypes.any,
   formValues: PropTypes.object,
   formValueFields: PropTypes.any,
   validationSchema: PropTypes.any,

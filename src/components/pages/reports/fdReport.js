@@ -15,12 +15,13 @@ import Loader from 'components/atoms/loader/Loader';
 
 // project-imports
 import { tableColumns, VisibleColumn } from 'constant/report/fdReportValidation';
-
+import { inrCurrency } from 'constant/utilConstant';
 import { GetFDReport } from 'hooks/report/report';
 
 function FDReport() {
   // Main data state to hold the list of products
   const [data, setData] = useState([]);
+  const [csvData, setCsvData] = useState([]);
   // Toggle Table and Form Visibility
   //   const [showTable, setShowTable] = useState(false); // State to toggle visibility of the table form
   //   // Editing States
@@ -83,7 +84,14 @@ function FDReport() {
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
     onSuccess: (data) => {
+      console.log(data);
       setData(data); // Update data with fetched data
+
+      const expData = data.map((el) => {
+        return { ...el, current_balance: inrCurrency(el.current_balance) };
+      });
+
+      setCsvData(expData);
     }
   });
 
@@ -104,6 +112,7 @@ function FDReport() {
         <MultiTable
           columns={columns}
           data={data}
+          csvData={csvData}
           //   formValues={filterFormValues}
           //   formValueFields={formValueFields}
           //   validationSchema={filterValidationSchema}

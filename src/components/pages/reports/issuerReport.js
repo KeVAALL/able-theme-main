@@ -17,10 +17,13 @@ import Loader from 'components/atoms/loader/Loader';
 import { tableColumns, VisibleColumn } from 'constant/report/issuerReportValidation';
 
 import { GetIssuerReport } from 'hooks/report/report';
+import { inrCurrency } from 'constant/utilConstant';
 
 function IssuerReport() {
   // Main data state to hold the list of products
   const [data, setData] = useState([]);
+  const [csvData, setCsvData] = useState([]);
+
   // Toggle Table and Form Visibility
   //   const [showTable, setShowTable] = useState(false); // State to toggle visibility of the table form
   //   // Editing States
@@ -83,7 +86,18 @@ function IssuerReport() {
     refetchOnWindowFocus: false, // Disable refetch on window focus
     keepPreviousData: true, // Keep previous data when refetching
     onSuccess: (data) => {
-      setData(data); // Update data with fetched data
+      setData(data); // Update data with fetched
+
+      const expData = data.map((el) => {
+        return {
+          ...el,
+          gross_value: inrCurrency(el.gross_value),
+          interest_earned: inrCurrency(el.interest_earned),
+          current_value: inrCurrency(el.current_value)
+        };
+      });
+
+      setCsvData(expData);
     }
   });
 
@@ -104,6 +118,7 @@ function IssuerReport() {
         <MultiTable
           columns={columns}
           data={data}
+          csvData={csvData}
           //   formValues={filterFormValues}
           //   formValueFields={formValueFields}
           //   validationSchema={filterValidationSchema}

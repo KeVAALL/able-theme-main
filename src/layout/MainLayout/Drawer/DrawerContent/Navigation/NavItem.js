@@ -19,7 +19,9 @@ import {
   Convert,
   Tag,
   Moneys,
-  ArrangeHorizontalCircle
+  ArrangeHorizontalCircle,
+  Document,
+  DirectInbox
 } from 'iconsax-react';
 
 // project-imports
@@ -40,18 +42,19 @@ const NavItem = ({ item, level }) => {
   const { menuOrientation } = useConfig();
   const icons = {
     Add: Add,
-    Bank: Bank,
-    User: User,
-    Tag: Tag,
-    Moneys: Moneys,
+    ArrangeHorizontalCircle: ArrangeHorizontalCircle,
+    Document: Document,
+    DirectInbox: DirectInbox,
     HomeTrendUp: HomeTrendUp,
-    Profile2User: Profile2User,
-    ShoppingBag: ShoppingBag,
-    UserCirlceAdd: UserCirlceAdd,
+    Moneys: Moneys,
     MenuBoard: MenuBoard,
     MoneySend: MoneySend,
+    Profile2User: Profile2User,
+    ShoppingBag: ShoppingBag,
     StatusUp: StatusUp,
-    ArrangeHorizontalCircle: ArrangeHorizontalCircle
+    Tag: Tag,
+    User: User,
+    UserCirlceAdd: UserCirlceAdd
   };
 
   let itemTarget = '_self';
