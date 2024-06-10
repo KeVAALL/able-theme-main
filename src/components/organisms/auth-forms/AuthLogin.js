@@ -10,6 +10,7 @@ import {
   Eye,
   EyeSlash,
   Add,
+  Bank,
   UserCirlceAdd,
   MenuBoard,
   MoneySend,
