@@ -10,7 +10,6 @@ import {
   Eye,
   EyeSlash,
   Add,
-  Bank,
   UserCirlceAdd,
   MenuBoard,
   MoneySend,
@@ -21,7 +20,8 @@ import {
   Moneys,
   ArrangeHorizontalCircle,
   Document,
-  DirectInbox
+  DirectInbox,
+  Bank
 } from 'iconsax-react';
 
 import { FormattedMessage } from 'react-intl';

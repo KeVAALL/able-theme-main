@@ -150,11 +150,11 @@ const VisibleColumn = [];
 const StatusCell = ({ value }) => {
   switch (value) {
     case 0:
-      return <Chip color="warning" label="Pending" size="medium" variant="outlined" />;
+      return <Chip sx={{ fontSize: '0.75rem' }} color="warning" label="Pending" size="medium" variant="outlined" />;
     case 1:
-      return <Chip color="info" label="In-progress" size="medium" variant="outlined" />;
+      return <Chip sx={{ fontSize: '0.75rem' }} color="info" label="In-progress" size="medium" variant="outlined" />;
     case 2:
-      return <Chip color="success" label="Active" size="medium" variant="outlined" className="active-chip" />;
+      return <Chip sx={{ fontSize: '0.75rem' }} color="success" label="Active" size="medium" variant="outlined" className="active-chip" />;
     default:
       return <Chip color="info" label="None" size="medium" variant="light" />;
   }

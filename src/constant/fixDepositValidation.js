@@ -95,9 +95,9 @@ const StatusCell = ({ value }) => {
   // return value === 0 ? 'Not Active' : 'Active';
   switch (value) {
     case 0:
-      return <Chip color="error" label="In-active" size="medium" variant="outlined" />;
+      return <Chip sx={{ fontSize: '0.75rem' }} color="error" label="In-active" size="medium" variant="outlined" />;
     case 1:
-      return <Chip color="success" label="Active" size="medium" variant="outlined" className="active-chip" />;
+      return <Chip sx={{ fontSize: '0.75rem' }} color="success" label="Active" size="medium" variant="outlined" className="active-chip" />;
     default:
       return <Chip color="info" label="None" size="medium" variant="light" />;
   }
