@@ -324,6 +324,10 @@ function FixDeposit() {
                         values={values}
                         type="number"
                         onChange={handleChange}
+                        // type="number"
+                        // regType="number"
+                        // format="indian_currency"
+                        // setFieldValue={setFieldValue}
                         onBlur={handleBlur}
                         touched={touched}
                         errors={errors}

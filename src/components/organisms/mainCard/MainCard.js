@@ -40,6 +40,7 @@ const MainCard = forwardRef(
       modal = false,
       changeTableVisibility,
       showButton,
+      noAddButton,
       setActiveAdding,
       ...others
     },
@@ -103,7 +104,7 @@ const MainCard = forwardRef(
             </Box>
           </Stack>
         )} */}
-        {showButton && title && (
+        {(showButton || title) && (
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <CardHeader
               sx={headerSX}
@@ -112,23 +113,25 @@ const MainCard = forwardRef(
               action={secondary}
               subheader={subheader}
             />
-            <Box sx={{ p: 2 }}>
-              <AnimateButton>
-                <Button
-                  variant="contained"
-                  color="success"
-                  startIcon={<AddCircle />}
-                  type="button"
-                  sx={{ borderRadius: 0.6 }}
-                  onClick={() => {
-                    setActiveAdding();
-                    changeTableVisibility();
-                  }}
-                >
-                  Add
-                </Button>
-              </AnimateButton>
-            </Box>
+            {!noAddButton && (
+              <Box sx={{ p: 2 }}>
+                <AnimateButton>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    startIcon={<AddCircle />}
+                    type="button"
+                    sx={{ borderRadius: 0.6 }}
+                    onClick={() => {
+                      setActiveAdding();
+                      changeTableVisibility();
+                    }}
+                  >
+                    Add
+                  </Button>
+                </AnimateButton>
+              </Box>
+            )}
           </Stack>
         )}
 
@@ -171,6 +174,7 @@ MainCard.propTypes = {
   title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
   changeTableVisibility: PropTypes.func,
   showButton: PropTypes.bool,
+  noAddButton: PropTypes.bool,
   modal: PropTypes.bool,
   codeHighlight: PropTypes.bool,
   codeString: PropTypes.string

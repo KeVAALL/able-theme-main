@@ -12,6 +12,8 @@ import UserList from '../userList/userList';
 import Role from '../userList/role';
 import { element } from 'prop-types';
 import Dashboard from '../dashboard/dashboard';
+import FDReport from '../reports/fdReport';
+import IssuerReport from '../reports/issuerReport';
 
 // Product
 const Product = Loadable(lazy(() => import('components/pages/productType/productType')));
@@ -107,6 +109,19 @@ const MainRoutes = {
             {
               path: 'settings',
               element: <UserTabSettings />
+            }
+          ]
+        },
+        {
+          path: 'report',
+          children: [
+            {
+              path: 'fd_report',
+              element: <FDReport />
+            },
+            {
+              path: 'issuer_report',
+              element: <IssuerReport />
             }
           ]
         }

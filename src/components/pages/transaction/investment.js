@@ -891,7 +891,7 @@ function Investment() {
             tableDataRefetch={() => {}}
             setActiveEditing={setActiveEditing}
             VisibleColumn={VisibleColumn}
-            isInvestment={true}
+            hideActions={true}
           />
         </MainCard>
       )}

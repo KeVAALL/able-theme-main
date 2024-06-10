@@ -48,7 +48,7 @@ const ReactTable = ({
   VisibleColumn,
   doNotShowHeader,
   isNomination,
-  isInvestment,
+  hideActions,
   isFetching
 }) => {
   // const filterTypes = useMemo(() => renderFilterTypes, []);
@@ -244,6 +244,7 @@ const ReactTable = ({
                     if (d.original.is_active === 0) {
                       return { ...d.original, is_active: 'In-active' };
                     } else {
+                      console.log(d.original);
                       return d.original;
                     }
                   })}
@@ -286,14 +287,16 @@ const ReactTable = ({
                     {/* {column.render('Header')} */}
                   </TableCell>
                 ))}
-                <TableCell
-                  sx={{
-                    textAlign: 'right'
-                    // minWidth: 120 // Send minWidth props from parent?
-                  }}
-                >
-                  Actions
-                </TableCell>
+                {!hideActions && (
+                  <TableCell
+                    sx={{
+                      textAlign: 'right'
+                      // minWidth: 120 // Send minWidth props from parent?
+                    }}
+                  >
+                    Actions
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableHead>
@@ -315,7 +318,7 @@ const ReactTable = ({
                         </TableCell>
                       );
                     })}
-                    {headers?.length !== 0 && !isInvestment && (
+                    {headers?.length !== 0 && !hideActions && (
                       <TableCell sx={{ textAlign: { md: 'right', xs: 'center' }, width: 130 }}>
                         <Grid container sx={{ display: 'flex', justifyContent: { md: 'flex-end', xs: 'center' } }}>
                           <Grid item md={isEditingInterestRateButton ? 4 : 6}>
@@ -373,7 +376,7 @@ const ReactTable = ({
                         </Grid>
                       </TableCell>
                     )}
-                    {isInvestment && (
+                    {/* {hideActions && (
                       <TableCell sx={{ textAlign: { md: 'right', xs: 'center' }, width: 130 }}>
                         <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center' } }}>
                           {row.original.status === 1 && (
@@ -404,7 +407,7 @@ const ReactTable = ({
                           )}
                         </Grid>
                       </TableCell>
-                    )}
+                    )} */}
                   </TableRow>
                 );
               })
@@ -451,7 +454,7 @@ const MultiTable = ({
   VisibleColumn,
   doNotShowHeader,
   isNomination,
-  isInvestment,
+  hideActions,
   isFetching
 }) => {
   return (
@@ -478,7 +481,7 @@ const MultiTable = ({
           VisibleColumn={VisibleColumn}
           doNotShowHeader={doNotShowHeader}
           isNomination={isNomination}
-          isInvestment={isInvestment}
+          hideActions={hideActions}
           isFetching={isFetching}
         />
       </ScrollX>
@@ -508,7 +511,7 @@ MultiTable.propTypes = {
   VisibleColumn: PropTypes.any,
   doNotShowHeader: PropTypes.any,
   isNomination: PropTypes.any,
-  isInvestment: PropTypes.any,
+  hideActions: PropTypes.any,
   isFetching: PropTypes.any
 };
 

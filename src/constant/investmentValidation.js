@@ -5,6 +5,7 @@ import * as yup from 'yup';
 
 // chip css
 import '../utils/custom.css';
+import { inrCurrency } from './utilConstant';
 
 // Autocomplete data
 
@@ -232,14 +233,14 @@ const tableColumns = [
     Header: 'Principal amount',
     accessor: 'investment_amount',
     customCell: ({ value }) => {
-      return <span>₹ {value}</span>;
+      return <span>{inrCurrency(value)}</span>;
     }
   },
   {
     Header: 'Interest Earned',
     accessor: 'interest_earned',
     customCell: ({ value }) => {
-      return <span>₹ {value}</span>;
+      return <span>{inrCurrency(value)}</span>;
     }
   },
   {

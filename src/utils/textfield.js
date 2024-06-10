@@ -69,6 +69,25 @@ export const CustomTextField = memo((props) => {
   const specials = /^[a-zA-Z0-9.]*$/;
   const numbers = /^\d+$/;
   const noSpace = /^\s*\S[\s\S]*$/;
+  const formatIndianCurrency = (value) => {
+    let numStr = value.toString();
+    let [integerPart, fractionalPart] = numStr.split('.');
+    let lastThree = integerPart.slice(-3);
+    let otherNumbers = integerPart.slice(0, -3);
+
+    if (otherNumbers !== '') {
+      lastThree = ',' + lastThree;
+    }
+
+    let formattedValue = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+
+    if (fractionalPart) {
+      formattedValue += '.' + fractionalPart;
+    }
+
+    return formattedValue;
+  };
+
   const regexCheck = (e) => {
     e.preventDefault();
     const { value } = e.target;
@@ -85,6 +104,14 @@ export const CustomTextField = memo((props) => {
     if (!value || regex.test(value.toString())) {
       if (props.regType === 'pan') {
         props.setFieldValue(props.name, value.toUpperCase());
+      }
+      if (props.format === 'indian_currency') {
+        // const numericValue = value.replace(/[^0-9.]/g, '');
+
+        // const formattedValue = formatIndianCurrency(numericValue);
+        const formattedValue = formatIndianCurrency(value);
+
+        props.setFieldValue(props.name, formattedValue);
       } else {
         props.setFieldValue(props.name, value);
       }
