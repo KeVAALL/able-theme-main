@@ -130,21 +130,7 @@ const investorValidationSchema = yup.object().shape({
     income_source_id: yup.number()
   })
 });
-// Search Item form fields
-const filterFormValues = {
-  search: ''
-};
-const filterValueFields = [
-  // {
-  //   fieldName: 'search',
-  //   label: 'Search',
-  //   type: 'string',
-  //   regType: 'string'
-  // }
-];
-const filterValidationSchema = yup.object({
-  search: yup.string()
-});
+
 // Table Columns
 const VisibleColumn = [];
 const StatusCell = ({ value }) => {
@@ -159,18 +145,7 @@ const StatusCell = ({ value }) => {
       return <Chip color="info" label="None" size="medium" variant="light" />;
   }
 };
-// Function to parse and modify the value
-const parseAndModifyValue = (value) => {
-  let parsedValue = value;
 
-  // Split the value by semicolon
-  const parts = value.split('.').map((part) => part.trim());
-
-  // Join the parts back with line breaks
-  parsedValue = parts.join('.\n');
-
-  return parsedValue;
-};
 const tableColumns = [
   {
     Header: 'Folio ID',
@@ -246,9 +221,6 @@ const tableColumns = [
   {
     Header: 'Payout Method',
     accessor: 'fd_payout_method'
-    // customCell: ({ value }) => {
-    //   return <span>₹ {value}</span>;
-    // }
   },
   {
     Header: 'Rate of Interest (%)',
@@ -267,10 +239,6 @@ export {
   schemeValidation,
   investorValues,
   investorValidationSchema,
-  filterFormValues,
-  filterValueFields,
-  filterValidationSchema,
-  StatusCell,
   tableColumns,
   VisibleColumn
 };

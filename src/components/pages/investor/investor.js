@@ -17,19 +17,8 @@ import Loader from 'components/atoms/loader/Loader';
 
 // assets
 import { SubmitButton } from 'components/atoms/button/button';
-import { CustomTextField, CustomAutoComplete, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
-import {
-  formAllValues,
-  validationSchema,
-  filterFormValues,
-  // formValueFields,
-  filterValueFields,
-  filterValidationSchema,
-  tableColumns,
-  VisibleColumn,
-  genderData,
-  investorType
-} from 'constant/investorValidation';
+import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
+import { formAllValues, validationSchema, tableColumns, VisibleColumn, genderData } from 'constant/investorValidation';
 import {
   GetInvestorData,
   // GetOneInvestor,
@@ -432,41 +421,6 @@ function Investor() {
                         inputProps={{ maxLength: 10 }}
                       />
                     </Grid>
-
-                    {/* <Grid item md={4} xs={6}>
-                      <FormikAutoComplete
-                        options={investorType}
-                        defaultValue={values.investor.is_senior_citizen}
-                        setFieldValue={setFieldValue}
-                        formName="investor.is_senior_citizen"
-                        optionName="investor"
-                        label="Investor Type"
-                      />
-                    </Grid> */}
-                    {/* <Grid item md={4} xs={6}>
-                      Using Normal Autocomplete because of API body
-                      <CustomAutoComplete
-                        options={genderData}
-                        defaultValue={selectedGender}
-                        setSelected={setSelectedGender}
-                        optionName="gender"
-                        label="Gender"
-                      />
-                    </Grid> */}
-                    {/* <Grid item md={4} xs={6}>
-                      <NestedCustomTextField
-                        label="Place of birth"
-                        valueName="investor.place_of_birth"
-                        placeholder="Please enter your Place of Birth"
-                        values={values.investor.place_of_birth}
-                        type="string"
-                        regType="string"
-                        setFieldValue={setFieldValue}
-                        handleBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                      />
-                    </Grid> */}
                   </Grid>
                 </CardContent>
 
@@ -616,9 +570,9 @@ function Investor() {
           <MultiTable
             columns={columns}
             data={investorData}
-            formValues={filterFormValues}
-            formValueFields={filterValueFields}
-            validationSchema={filterValidationSchema}
+            formValues={[]}
+            formValueFields={[]}
+            validationSchema={{}}
             changeTableVisibility={changeTableVisibility}
             setEditing={setEditing}
             getOneItem={() => {}}

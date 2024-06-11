@@ -72,7 +72,7 @@ const BankDetails = (props) => {
 
   return (
     <Stack spacing={2} justifyContent="center" alignItems="center">
-      <Stack spacing={2} sx={{ width: '70%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Stack spacing={5} sx={{ width: '70%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6" color="#5E718D">
           Effortlessly add, remove or manage your linked bank accounts
         </Typography>

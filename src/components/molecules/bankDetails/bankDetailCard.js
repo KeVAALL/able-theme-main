@@ -14,7 +14,8 @@ import {
   // ListItemIcon,
   ListItemText,
   Stack,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material';
 
 // project-imports
@@ -30,6 +31,8 @@ import { Edit, Edit2, Trash } from 'iconsax-react';
 // ==============================|| CUSTOMER - CARD ||============================== //
 
 const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, accountNumber, IFSC, branchName, isPrimary }) => {
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
   return (
     <>
       <MainCard
@@ -92,7 +95,7 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
             </List>
             <Divider sx={{ mt: 2 }} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item md={6} sm={6} xs={12}>
             <Stack spacing={0.5}>
               <Typography variant="h6" color="#5E718D">
                 Bank Account Number
@@ -106,7 +109,7 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
               </Grid>
             </Stack>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item md={6} sm={6} xs={12}>
             <Stack spacing={0.5}>
               <Typography variant="h6" color="#5E718D">
                 IFSC Code
@@ -120,7 +123,7 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
               </Grid>
             </Stack>
           </Grid>
-          <Grid item xs={8} sx={{ display: 'flex' }}>
+          <Grid item md={8} sm={6} xs={12} sx={{ display: 'flex' }}>
             <Stack spacing={0.5}>
               <Typography variant="h6" color="#5E718D">
                 Branch
@@ -134,7 +137,15 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
               </Grid>
             </Stack>
           </Grid>
-          <Grid item xs={4} display="flex" justifyContent="flex-end" alignItems="flex-end">
+          <Grid
+            item
+            md={4}
+            sm={6}
+            xs={12}
+            display="flex"
+            justifyContent={matchDownSM ? 'center' : 'flex-end'}
+            alignItems={matchDownSM ? 'flex-start' : 'flex-end'}
+          >
             {isPrimary ? (
               <Chip
                 label="Primary Account"

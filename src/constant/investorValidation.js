@@ -243,30 +243,7 @@ const validationSchema = yup.object().shape({
   )
 });
 // Search Item form fields
-const filterFormValues = {
-  search: ''
-};
-// const filterFormValues = {
-//   investor_id: ''
-// };
-// const formValueFields = [
-//   {
-//     fieldName: 'investor_id',
-//     label: 'Investor',
-//     type: 'number'
-//   }
-// ];
-const filterValueFields = [
-  // {
-  //   fieldName: 'search',
-  //   label: 'Search',
-  //   type: 'string',
-  //   regType: 'string'
-  // }
-];
-const filterValidationSchema = yup.object({
-  search: yup.string()
-});
+
 // Table Columns
 const VisibleColumn = [];
 const StatusCell = ({ value }) => {
@@ -401,9 +378,6 @@ const fdInvestmentColumns = [
 export {
   formAllValues,
   validationSchema,
-  filterFormValues,
-  filterValueFields,
-  filterValidationSchema,
   StatusCell,
   tableColumns,
   fdInvestmentColumns,

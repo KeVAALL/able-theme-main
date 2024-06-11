@@ -28,7 +28,7 @@ const TabSettings = () => {
   };
 
   return (
-    <MainCard title="Settings">
+    <MainCard title="Settings" noAddButton>
       <List sx={{ '& .MuiListItem-root': { p: 2 } }}>
         <ListItem divider>
           <ListItemIcon sx={{ color: 'primary.main', mr: 2, display: { xs: 'none', sm: 'block' } }}>

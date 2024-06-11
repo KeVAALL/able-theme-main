@@ -63,7 +63,7 @@ const TabPersonal = () => {
   if (UserDetailPending) return <Loader />;
 
   return (
-    <MainCard content={false} title="Personal Information" sx={{ '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}>
+    <MainCard content={false} title="Personal Information" noAddButton sx={{ '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}>
       <Formik
         enableReinitialize
         initialValues={{
@@ -193,6 +193,7 @@ const TabPersonal = () => {
                 </Grid>
               </Grid>
             </Box>
+            <Divider />
             <CardHeader title="Address" />
             <Divider />
             <Box sx={{ p: 3 }}>

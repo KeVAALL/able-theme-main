@@ -53,7 +53,7 @@ const TabPassword = () => {
   };
 
   return (
-    <MainCard content={false} title="Change Password">
+    <MainCard content={false} title="Change Password" noAddButton>
       <Formik
         initialValues={{
           existing_password: '',
@@ -103,8 +103,8 @@ const TabPassword = () => {
             }}
             sx={{ width: '100%' }}
           >
-            <CardHeader title="Password Details" />
-            <Divider />
+            {/* <CardHeader title="Password Details" /> */}
+            {/* <Divider /> */}
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} display="flex" justifyContent="center" alignItems="center">
