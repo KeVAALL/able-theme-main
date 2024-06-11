@@ -78,13 +78,10 @@ export const CustomTextField = memo((props) => {
     if (otherNumbers !== '') {
       lastThree = ',' + lastThree;
     }
-
     let formattedValue = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
-
     if (fractionalPart) {
       formattedValue += '.' + fractionalPart;
     }
-
     return formattedValue;
   };
 
@@ -104,17 +101,18 @@ export const CustomTextField = memo((props) => {
     if (!value || regex.test(value.toString())) {
       if (props.regType === 'pan') {
         props.setFieldValue(props.name, value.toUpperCase());
-      }
-      if (props.format === 'indian_currency') {
-        // const numericValue = value.replace(/[^0-9.]/g, '');
-
-        // const formattedValue = formatIndianCurrency(numericValue);
-        const formattedValue = formatIndianCurrency(value);
-
-        props.setFieldValue(props.name, formattedValue);
       } else {
         props.setFieldValue(props.name, value);
       }
+      // if (props.format === 'indian_currency') {
+      //   console.log()
+      //   // const numericValue = value.replace(/[^0-9.]/g, '');
+
+      //   // const formattedValue = formatIndianCurrency(numericValue);
+      //   const formattedValue = formatIndianCurrency(value);
+
+      //   props.setFieldValue(props.name, formattedValue);
+      // }
     }
   };
   return (
