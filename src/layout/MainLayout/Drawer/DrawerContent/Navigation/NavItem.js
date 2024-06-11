@@ -21,7 +21,10 @@ import {
   Moneys,
   ArrangeHorizontalCircle,
   Document,
-  DirectInbox
+  DirectInbox,
+  Note,
+  Note1,
+  UserOctagon
 } from 'iconsax-react';
 
 // project-imports
@@ -50,12 +53,15 @@ const NavItem = ({ item, level }) => {
     Moneys: Moneys,
     MenuBoard: MenuBoard,
     MoneySend: MoneySend,
+    Note: Note,
+    Note1: Note1,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
     StatusUp: StatusUp,
     Tag: Tag,
     User: User,
-    UserCirlceAdd: UserCirlceAdd
+    UserCirlceAdd: UserCirlceAdd,
+    UserOctagon: UserOctagon
   };
 
   let itemTarget = '_self';

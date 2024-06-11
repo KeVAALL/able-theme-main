@@ -59,7 +59,7 @@ const tableColumns = [
     accessor: 'fd_maturity_date'
   },
   {
-    Header: 'Current Balance',
+    Header: 'Investment Amount',
     accessor: 'current_balance',
     customCell: ({ value }) => {
       return <span>{inrCurrency(value)}</span>;

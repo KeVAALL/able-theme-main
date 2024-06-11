@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { Chip } from '@mui/material';
-import { minWidth } from '@mui/system';
 import * as yup from 'yup';
 
 // chip css

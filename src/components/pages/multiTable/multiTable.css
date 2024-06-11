@@ -18,6 +18,10 @@
   background-color: #e4e4e4; /* Set the background color for the scrollbar buttons */
 }
 
+.table_header::after {
+  background-color: #f8f9fa !important;
+}
+
 .icon-only-button .MuiButton-startIcon {
   margin: 0px;
   display: flex;

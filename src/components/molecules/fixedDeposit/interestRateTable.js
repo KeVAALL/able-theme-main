@@ -255,8 +255,10 @@ function ReactTable({
                     key={column}
                     cell={column}
                     sx={{
-                      fontSize: '0.7rem'
+                      fontSize: '0.7rem',
+                      border: '1px solid #dbe0e5a6'
                     }}
+                    className="table_header"
                     {...column.getHeaderProps([{ className: column.className }])}
                   >
                     <HeaderSort column={column} sort />
@@ -289,7 +291,11 @@ function ReactTable({
                   <TableRow key={row} {...row.getRowProps()}>
                     {row.cells.map((cell) => {
                       return (
-                        <TableCell key={cell} sx={{ fontSize: '0.80rem' }} {...cell.getCellProps([{ className: cell.column.className }])}>
+                        <TableCell
+                          key={cell}
+                          sx={{ fontSize: '0.80rem', border: '1px solid #dbe0e5a6' }}
+                          {...cell.getCellProps([{ className: cell.column.className }])}
+                        >
                           {cell.column.customCell ? <cell.column.customCell value={cell.value} /> : cell.render('Cell')}
                         </TableCell>
                       );

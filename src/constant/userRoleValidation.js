@@ -29,6 +29,10 @@ const StatusCell = ({ value }) => {
 };
 const tableColumns = [
   {
+    Header: 'Sr. No.',
+    accessor: 'role_id'
+  },
+  {
     Header: 'Role Name',
     accessor: 'role_name',
     minWidth: 600

@@ -19,7 +19,10 @@ import {
   Moneys,
   ArrangeHorizontalCircle,
   Document,
-  DirectInbox
+  DirectInbox,
+  Note,
+  Note1,
+  UserOctagon
 } from 'iconsax-react';
 
 // project-imports
@@ -48,12 +51,15 @@ const Navigation = () => {
     Moneys: Moneys,
     MenuBoard: MenuBoard,
     MoneySend: MoneySend,
+    Note: Note,
+    Note1: Note1,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
     StatusUp: StatusUp,
     Tag: Tag,
     User: User,
-    UserCirlceAdd: UserCirlceAdd
+    UserCirlceAdd: UserCirlceAdd,
+    UserOctagon: UserOctagon
   };
 
   const downLG = useMediaQuery(theme.breakpoints.down('lg'));

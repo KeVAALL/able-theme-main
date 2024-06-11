@@ -76,7 +76,7 @@ HeaderSort.propTypes = {
 
 export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageIndex, initialPageSize, viewOptions }) => {
   const [open, setOpen] = useState(false);
-  let options = viewOptions ? viewOptions : [5, 10];
+  let options = viewOptions ? viewOptions : [10];
 
   if (initialPageSize) {
     options = [...options, initialPageSize]
@@ -559,7 +559,7 @@ export const EmptyTable = ({ msg, colSpan, isFetching }) => {
             </g>
           </svg>
           <Typography align="center" color="secondary">
-            {isFetching ? 'Fetching...' : msg}
+            {isFetching ? 'Loading...' : msg}
           </Typography>
         </StyledGridOverlay>
         {isFetching && ( // Add Loader condition here

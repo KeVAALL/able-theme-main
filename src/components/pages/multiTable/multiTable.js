@@ -286,8 +286,10 @@ const ReactTable = ({
                     cell={column}
                     sx={{
                       // position: 'sticky !important',
-                      fontSize: '0.7rem'
+                      fontSize: '0.7rem',
+                      border: '1px solid #dbe0e5a6'
                     }}
+                    className="table_header"
                     // {...column.getHeaderProps([{ className: column.className }])}
                     {...column.getHeaderProps({ style: { minWidth: column.minWidth } })}
                   >
@@ -318,7 +320,7 @@ const ReactTable = ({
                       return (
                         <TableCell
                           key={cell}
-                          sx={{ fontSize: '0.80rem' }}
+                          sx={{ fontSize: '0.80rem', border: '1px solid #dbe0e5a6' }}
                           // {...cell.getCellProps([{ className: { minWidth: cell.column.minWidth } }])}
                           {...cell.getCellProps({ style: { minWidth: cell.column.minWidth } })}
                         >
@@ -328,7 +330,7 @@ const ReactTable = ({
                       );
                     })}
                     {headers?.length !== 0 && !hideActions && (
-                      <TableCell sx={{ textAlign: { md: 'right', xs: 'center' }, width: 130 }}>
+                      <TableCell sx={{ textAlign: { md: 'right', xs: 'center' }, width: 130, border: '1px solid #dbe0e5a6' }}>
                         <Grid container sx={{ display: 'flex', justifyContent: { md: 'flex-end', xs: 'center' } }}>
                           <Grid item md={isEditingInterestRateButton ? 4 : 6}>
                             <IconButton

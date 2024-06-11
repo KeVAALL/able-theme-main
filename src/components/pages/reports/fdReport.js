@@ -100,7 +100,7 @@ function FDReport() {
   return (
     <>
       <MainCard
-        title="FD Report"
+        title="FD Report Search"
         changeTableVisibility={() => {}}
         setActiveAdding={() => {}}
         showButton

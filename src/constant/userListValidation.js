@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { TableCell, Chip } from '@mui/material';
+import { Chip } from '@mui/material';
 import * as yup from 'yup';
 
 // chip css

@@ -81,7 +81,7 @@ function Portfolio(props) {
                         <Typography variant="body1" color="white">
                           Total Portfolio Value
                         </Typography>
-                        <InfoCircle color={theme.palette.background.paper} />
+                        <InfoCircle size={18} color={theme.palette.background.paper} />
                       </Stack>
                       <Typography variant="h4" color="white">
                         {inrCurrency(props.values.port_folio.investor_total_earning.current_earning)}

@@ -106,7 +106,7 @@ function IssuerReport() {
   return (
     <>
       <MainCard
-        title="Issuer Report"
+        title="Issuer Report Search"
         changeTableVisibility={() => {}}
         setActiveAdding={() => {}}
         showButton

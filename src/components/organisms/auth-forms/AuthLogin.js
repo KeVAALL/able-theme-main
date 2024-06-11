@@ -21,7 +21,10 @@ import {
   ArrangeHorizontalCircle,
   Document,
   DirectInbox,
-  Bank
+  Bank,
+  Note,
+  Note1,
+  UserOctagon
 } from 'iconsax-react';
 
 import { FormattedMessage } from 'react-intl';
@@ -78,12 +81,15 @@ const AuthLogin = ({ forgot }) => {
     Moneys: Moneys,
     MenuBoard: MenuBoard,
     MoneySend: MoneySend,
+    Note: Note,
+    Note1: Note1,
     Profile2User: Profile2User,
     ShoppingBag: ShoppingBag,
     StatusUp: StatusUp,
     Tag: Tag,
     User: User,
-    UserCirlceAdd: UserCirlceAdd
+    UserCirlceAdd: UserCirlceAdd,
+    UserOctagon: UserOctagon
   };
 
   const transformData = (menu) => {
