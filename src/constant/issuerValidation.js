@@ -15,16 +15,7 @@ const formAllValues = {
   app_bg_colour: '',
   start_colour: '',
   end_colour: '',
-  faqs: [
-    {
-      faq: 'When can I withdraw my funds?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sed nunc sit amet justo malesuada congue sed sit amet risus.'
-    },
-    {
-      faq: 'When can I withdraw my Money?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sed nunc sit amet justo malesuada congue sed sit amet risus.'
-    }
-  ]
+  faqs: []
 };
 const validationSchema = yup.object({
   issuer_gst_number: yup

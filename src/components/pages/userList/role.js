@@ -17,31 +17,30 @@ import {
   Stack
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useQuery } from 'react-query';
 
 // project-imports
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
-import Loader from 'components/atoms/loader/Loader';
+import { CustomTextField } from 'utils/textfield';
+import { SubmitButton } from 'components/atoms/button/button';
+import {
+  formAllValues,
+  validationSchema,
+  // filterFormValues,
+  // formValueFields,
+  // filterValidationSchema,
+  tableColumns,
+  VisibleColumn
+} from 'constant/userRoleValidation';
+import { DeleteRole, EditRole, GetMenu, GetRoles, GetSelectedMenu, SaveRole, SearchRoles } from 'hooks/user/user';
 
 // third-party
 import { Formik } from 'formik';
 import { toInteger } from 'lodash';
+import { useQuery } from 'react-query';
 
 // assets
-import { SubmitButton } from 'components/atoms/button/button';
-import { CustomTextField, CustomCheckbox, FormikAutoComplete } from 'utils/textfield';
-import {
-  formAllValues,
-  validationSchema,
-  filterFormValues,
-  formValueFields,
-  filterValidationSchema,
-  tableColumns,
-  VisibleColumn
-} from 'constant/userRoleValidation';
 import { FilterSearch } from 'iconsax-react';
-import { DeleteRole, EditRole, GetMenu, GetRoles, GetSelectedMenu, SaveRole, SearchRoles } from 'hooks/user/user';
 
 function Role() {
   // Main data state to hold the list of issuers

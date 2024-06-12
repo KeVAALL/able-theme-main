@@ -8,7 +8,6 @@ import {
   Card,
   Grid,
   CardContent,
-  TextField,
   CardHeader,
   Button,
   Stack,
@@ -47,8 +46,8 @@ import './issuer.css';
 
 // third-party
 import { Formik } from 'formik';
-import { toInteger } from 'lodash';
 import { enqueueSnackbar } from 'notistack';
+import { toInteger } from 'lodash';
 
 // assets
 import { Add, Edit, MessageQuestion, Trash } from 'iconsax-react';
@@ -590,7 +589,7 @@ function Issuer() {
                                           setFieldValue('faqs', newFAQ);
                                         }}
                                       >
-                                        Save & Continue
+                                        Save
                                       </Button>
                                     </AnimateButton>
                                   </Grid>
@@ -679,7 +678,7 @@ function Issuer() {
                       )
                     )}
 
-                    <Grid item xs={4}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <AnimateButton>
                         <Button
                           fullWidth

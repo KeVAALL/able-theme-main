@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useMemo, useEffect, memo } from 'react';
-import { useTheme } from '@mui/material/styles';
+
+// material-ui
 import {
   Divider,
   Box,
@@ -14,27 +15,28 @@ import {
   TextField,
   useMediaQuery,
   Typography,
-  FormControl,
-  ListItemText,
-  ListItemIcon,
-  ListItemButton,
-  List
+  // ListItemText,
+  ListItemIcon
+  // ListItemButton
+  // List
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
+// project-imports
 import AnimateButton from 'helpers/@extended/AnimateButton';
+import DialogForm from 'components/atoms/dialog/InterestRateDialog';
+import InterestRateTable from 'components/molecules/fixedDeposit/interestRateTable';
 import PropTypes from 'prop-types';
+import Loader from 'components/atoms/loader/Loader';
+import { formAllValues, validationSchema, tableColumns, VisibleColumn } from 'constant/interestRateValidation';
+import { DeleteOneInterestRate, GetPayoutMethod, GetSchemeSearch } from 'hooks/interestRate/interestRate';
+import { FormikAutoComplete } from 'utils/textfield';
+import Dot from 'helpers/@extended/Dot';
+// import useMemoize from './useMemoize';
+
 // third-party
 import { Formik } from 'formik';
 import { useQuery } from 'react-query';
-import { SearchNormal1 } from 'iconsax-react';
-import Loader from 'components/atoms/loader/Loader';
-// assets
-import { formAllValues, validationSchema, tableColumns, VisibleColumn } from 'constant/interestRateValidation';
-import { DeleteOneInterestRate, GetPayoutMethod, GetSchemeSearch } from 'hooks/interestRate/interestRate';
-import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
-import useMemoize from './useMemoize';
-import DialogForm from 'components/atoms/dialog/InterestRateDialog';
-import InterestRateTable from 'components/molecules/fixedDeposit/interestRateTable';
-import Dot from 'helpers/@extended/Dot';
 
 const headerSX = {
   p: 2.5,

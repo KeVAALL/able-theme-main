@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // material-ui
 import { Divider, Box, Card, Grid, CardContent, Button, TextField, useMediaQuery } from '@mui/material';
@@ -9,58 +9,30 @@ import { useQuery } from 'react-query';
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
 import Loader from 'components/atoms/loader/Loader';
+import { investorValues as investorFormValues, investorValidationSchema as investorFormValidation } from 'constant/investmentValidation';
+import { formAllValues, validationSchema, tableColumns, VisibleColumn } from 'constant/investmentValidation';
+import { GetProductData } from 'hooks/fixedDeposit/fixedDeposit';
+import { GetInvestorData, GetEditOneInvestor, GetIfa } from 'hooks/investor/investor';
+import { GetMaturityAction, CalculateFD, StartFD, GetDeclaration, GetInvestments } from 'hooks/transaction/investment';
+import { GetPayoutMethod, GetSchemeSearch } from 'hooks/interestRate/interestRate';
 
-// third-party
-import * as yup from 'yup';
-import { Formik } from 'formik';
-import { Eye, FilterSearch, Calculator, TimerStart, ArrangeHorizontal } from 'iconsax-react';
-import { DateRangePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro';
-import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
-
-// assets
 import { SubmitButton } from 'components/atoms/button/button';
 import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
-import { investorValues as investorFormValues, investorValidationSchema as investorFormValidation } from 'constant/investmentValidation';
-import {
-  formAllValues,
-  validationSchema,
-  filterFormValues,
-  // formValueFields,
-  filterValueFields,
-  filterValidationSchema,
-  tableColumns,
-  VisibleColumn
-} from 'constant/investmentValidation';
-import { GetProductData } from 'hooks/fixedDeposit/fixedDeposit';
-import {
-  GetInvestorData,
-  GetOneInvestor,
-  SaveInvestor,
-  EditInvestor,
-  DeleteOneInvestor,
-  GetEditOneInvestor,
-  GetIfa,
-  GetIFASearch
-} from 'hooks/investor/investor';
-import '../../../utils/custom.css';
-import {
-  GetInvestmentData,
-  GetStatusDropdown,
-  GetMaturityAction,
-  GetScheme,
-  CalculateFD,
-  StartFD,
-  GetDeclaration,
-  GetInvestments
-} from 'hooks/transaction/investment';
-import { GetPayoutMethod, GetSchemeSearch } from 'hooks/interestRate/interestRate';
 import InvestmentDialog from 'components/atoms/dialog/InvestmentDialog';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import InvestmentTabs from 'components/organisms/investmentTabs';
+import '../../../utils/custom.css';
+
+// third-party
+import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
+import { DateRangePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import enGB from 'date-fns/locale/en-GB';
-import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+
+// assets
+import { Eye, FilterSearch, Calculator, TimerStart, ArrangeHorizontal } from 'iconsax-react';
 
 function Investment() {
   // Main data states
@@ -95,7 +67,7 @@ function Investment() {
   const [dynamicDeclaration, setDynamicDeclaration] = useState([]);
   // Selection states
   const [fdDropdown, setFdDropdown] = useState([]);
-  const [statusDropdown, setStatusDropdown] = useState([]);
+  // const [statusDropdown, setStatusDropdown] = useState([]);
   const [dateValue, setDateValue] = useState([null, null]);
 
   // Form State
@@ -198,7 +170,6 @@ function Investment() {
   };
   // Form State
   const handleCalculate = (value) => {
-    console.log(value);
     setFormValues(value);
   };
   // Disable field

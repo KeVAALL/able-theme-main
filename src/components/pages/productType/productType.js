@@ -1,19 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // material-ui
 import { Divider, Box, Card, Grid, CardContent } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useQuery } from 'react-query';
 
 // project-imports
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
-
-// third-party
-import { Formik } from 'formik';
-import Loader from 'components/atoms/loader/Loader';
-
-// assets
 import { SubmitButton } from 'components/atoms/button/button';
 import { CustomTextField } from 'utils/textfield';
 import {
@@ -32,7 +25,10 @@ import {
   EditProductType,
   DeleteOneProductType
 } from 'hooks/productType/productType';
-import { dispatch } from '../../../redux';
+
+// third-party
+import { Formik } from 'formik';
+import { useQuery } from 'react-query';
 import { toInteger } from 'lodash';
 
 function ProductType() {

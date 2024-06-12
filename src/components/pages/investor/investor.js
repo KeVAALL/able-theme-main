@@ -3,25 +3,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 // material-ui
 import { Divider, Box, Card, Grid, CardContent, Button, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { FilterSearch } from 'iconsax-react';
-import { useQuery } from 'react-query';
 
 // project-imports
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
-
-// third-party
-import { Formik } from 'formik';
-import { toInteger } from 'lodash';
-import Loader from 'components/atoms/loader/Loader';
-
-// assets
 import { SubmitButton } from 'components/atoms/button/button';
 import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
 import { formAllValues, validationSchema, tableColumns, VisibleColumn, genderData } from 'constant/investorValidation';
 import {
   GetInvestorData,
-  // GetOneInvestor,
   SaveInvestor,
   EditInvestor,
   DeleteOneInvestor,
@@ -30,9 +20,18 @@ import {
   GetIFASearch
 } from 'hooks/investor/investor';
 import IconTabs from 'components/organisms/investorTabs';
-import { useLocation, useNavigate } from 'react-router';
+import Loader from 'components/atoms/loader/Loader';
 import axios from 'utils/axios';
+
+// third-party
 import { enqueueSnackbar } from 'notistack';
+import { Formik } from 'formik';
+import { useQuery } from 'react-query';
+import { useLocation, useNavigate } from 'react-router';
+import { toInteger } from 'lodash';
+
+// assets
+import { FilterSearch } from 'iconsax-react';
 
 function Investor() {
   // Main data states

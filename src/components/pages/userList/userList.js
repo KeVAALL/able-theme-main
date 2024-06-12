@@ -3,32 +3,23 @@ import { useMemo, useState } from 'react';
 // material-ui
 import { Divider, Box, Card, Grid, CardContent, Button, InputAdornment, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useQuery } from 'react-query';
 
 // project-imports
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
 import IconButton from 'helpers/@extended/IconButton';
-
-// third-party
-import { Eye, EyeSlash, FilterSearch } from 'iconsax-react';
-import { toInteger } from 'lodash';
-import { Formik } from 'formik';
-import Loader from 'components/atoms/loader/Loader';
-
-// assets
 import { SubmitButton } from 'components/atoms/button/button';
 import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
-import {
-  formAllValues,
-  validationSchema,
-  filterFormValues,
-  formValueFields,
-  filterValidationSchema,
-  tableColumns,
-  VisibleColumn
-} from 'constant/userListValidation';
+import { formAllValues, validationSchema, tableColumns, VisibleColumn } from 'constant/userListValidation';
 import { DeleteUser, EditUser, GetRoles, GetUsers, SaveUser, SearchUsers } from 'hooks/user/user';
+
+// third-party
+import { Formik } from 'formik';
+import { toInteger } from 'lodash';
+import { useQuery } from 'react-query';
+
+// assets
+import { Eye, EyeSlash, FilterSearch } from 'iconsax-react';
 
 function UserList() {
   const [userListData, setUserListData] = useState([]);

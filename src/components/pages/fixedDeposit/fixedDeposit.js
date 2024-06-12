@@ -1,22 +1,12 @@
 import { useMemo, useState } from 'react';
 
 // material-ui
-
 import { Divider, Box, Card, Grid, CardContent } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 // project-imports
 import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
-import Loader from 'components/atoms/loader/Loader';
-
-// third-party
-import { Formik } from 'formik';
-import { useQuery } from 'react-query';
-import Select from 'react-select';
-import { toInteger } from 'lodash';
-
-// assets
 import { SubmitButton } from 'components/atoms/button/button';
 import { CustomTextField, CustomCheckbox, FormikAutoComplete } from 'utils/textfield';
 import {
@@ -30,8 +20,15 @@ import {
 } from 'constant/fixDepositValidation';
 import { GetProductData, GetOneProduct, SaveProduct, EditProduct, DeleteOneProduct, GetFDTags } from 'hooks/fixedDeposit/fixedDeposit';
 import { GetActiveIssuerData } from 'hooks/issuer/issuer';
+
 import InterestRate from '../../organisms/fixedDeposit/interestRate';
 import '../../../utils/custom.css';
+
+// third-party
+import { Formik } from 'formik';
+import { useQuery } from 'react-query';
+import Select from 'react-select';
+import { toInteger } from 'lodash';
 
 function FixDeposit() {
   // Main data state to hold the list of products
