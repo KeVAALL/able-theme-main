@@ -395,7 +395,7 @@ function Investor() {
                         disabled={values.investor.is_ckyc_verified || values.investor.is_digilocker_verified}
                         label="Investor Name"
                         valueName="investor.investor_name"
-                        placeholder="Please enter your Investor Name"
+                        placeholder="Please enter Investor Name"
                         values={values.investor.investor_name}
                         type="text"
                         regType="string"
@@ -410,7 +410,7 @@ function Investor() {
                         disabled={values.investor.is_ckyc_verified || values.investor.is_digilocker_verified}
                         label="Mobile Number"
                         valueName="investor.mobile_no"
-                        placeholder="Please enter your Mobile Number"
+                        placeholder="Please enter Mobile Number"
                         values={values.investor.mobile_no}
                         type="string"
                         regType="number"

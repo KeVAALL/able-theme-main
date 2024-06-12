@@ -18,7 +18,7 @@ import { useSortBy } from 'react-table';
 // project-imports
 import MainCard from 'components/organisms/mainCard/MainCard';
 import ScrollX from 'components/organisms/scrollX/ScrollX';
-import DialogBox from 'components/atoms/dialog/dialog';
+import DialogBox from 'components/atoms/dialog/DeleteDialog';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import IconButton from 'helpers/@extended/IconButton';
 

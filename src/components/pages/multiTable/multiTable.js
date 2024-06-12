@@ -19,11 +19,12 @@ import ScrollX from 'components/organisms/scrollX/ScrollX';
 import { CSVExport, TablePagination, EmptyTable, HeaderSort, HidingSelect } from 'helpers/third-party/ReactTable';
 import { useGlobalFilter } from 'react-table/dist/react-table.development';
 import { useSortBy } from 'react-table';
-import DialogBox from 'components/atoms/dialog/dialog';
+import DialogBox from 'components/atoms/dialog/DeleteDialog';
 import './multiTable.css';
 import IconButton from 'helpers/@extended/IconButton';
 import Loader from 'components/atoms/loader/Loader';
 import TableLoader from 'components/atoms/loader/TableLoader';
+import DeleteDialog from 'components/atoms/dialog/DeleteDialog';
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -265,7 +266,7 @@ const ReactTable = ({
       )}
 
       {item && (
-        <DialogBox
+        <DeleteDialog
           openDialog={openDialog}
           handleOpenDialog={handleOpenDialog}
           dataRefetch={tableDataRefetch}

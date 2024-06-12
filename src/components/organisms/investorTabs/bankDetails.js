@@ -107,19 +107,7 @@ const BankDetails = (props) => {
               console.log(values);
             }}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              isValid,
-              dirty,
-              handleSubmit,
-              resetForm,
-              isSubmitting
-            }) => (
+            {({ values, errors, touched, handleChange, handleBlur, setFieldValue, isValid, dirty, handleSubmit, isSubmitting }) => (
               <Box
                 component="form"
                 onSubmit={(event) => {

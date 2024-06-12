@@ -14,7 +14,17 @@ const formAllValues = {
   logo_url: '',
   app_bg_colour: '',
   start_colour: '',
-  end_colour: ''
+  end_colour: '',
+  faqs: [
+    {
+      faq: 'When can I withdraw my funds?',
+      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sed nunc sit amet justo malesuada congue sed sit amet risus.'
+    },
+    {
+      faq: 'When can I withdraw my Money?',
+      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sed nunc sit amet justo malesuada congue sed sit amet risus.'
+    }
+  ]
 };
 const validationSchema = yup.object({
   issuer_gst_number: yup
@@ -32,7 +42,13 @@ const validationSchema = yup.object({
     .string()
     .matches(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, 'Please enter valid URL')
     // .matches(/^\s*\S[\s\S]*$/, 'Remove Spaces')
-    .required('Logo URL is required')
+    .required('Logo URL is required'),
+  faqs: yup.array().of(
+    yup.object().shape({
+      faq: yup.string().required('Question required'),
+      answer: yup.string().required('Answer required')
+    })
+  )
 });
 // Search Item form fields
 const filterFormValues = {

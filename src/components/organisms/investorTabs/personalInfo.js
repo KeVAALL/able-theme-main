@@ -25,7 +25,7 @@ const PersonalInfo = (props) => {
           <NestedCustomTextField
             label="Pan Number"
             valueName="investor.pan_no"
-            placeholder="Please enter your PAN Number"
+            placeholder="Please enter PAN Number"
             values={props.values.investor.pan_no}
             type="string"
             regType="pan"
@@ -121,7 +121,7 @@ const PersonalInfo = (props) => {
             disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
             label="Email ID"
             valueName="investor.email_id"
-            placeholder="Please enter your Email ID"
+            placeholder="Please enter Email ID"
             values={props.values.investor.email_id}
             type="email"
             onChange={props.handleChange}
@@ -198,7 +198,7 @@ const PersonalInfo = (props) => {
           <NestedCustomTextField
             label="Place of birth"
             valueName="investor.place_of_birth"
-            placeholder="Please enter your Place of Birth"
+            placeholder="Please enter Place of Birth"
             values={props.values.investor.place_of_birth}
             type="string"
             regType="string"

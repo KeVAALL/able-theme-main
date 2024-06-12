@@ -138,3 +138,25 @@ export async function DeleteOneIssuer(values) {
     });
   }
 }
+export async function DeleteOneFAQ(payload) {
+  try {
+    await axios.post('issuer/delete_faqs', payload);
+    enqueueSnackbar('FAQ Deleted', {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+  } catch (err) {
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+  }
+}

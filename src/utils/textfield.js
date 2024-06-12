@@ -27,11 +27,13 @@ export const NestedCustomTextField = memo(
     const regexCheck = (e) => {
       e.preventDefault();
       const { value } = e.target;
+      console.log(value);
       const regex = regType === 'string' ? strings : regType === 'noSpecial' ? specials : regType === 'pan' ? specials : numbers;
       if (!value || regex.test(value.toString())) {
         if (regType === 'pan') {
           setFieldValue(valueName, value.toUpperCase());
         } else {
+          console.log(value);
           setFieldValue(valueName, value);
         }
       }
