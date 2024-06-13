@@ -1,4 +1,5 @@
 import { Grid, Typography, useTheme } from '@mui/material';
+import Loader from 'components/atoms/loader/Loader';
 import { inrCurrency } from 'constant/utilConstant';
 import AnalyticEcommerce from 'helpers/cards/statistics/AnalyticEcommerce';
 import EcommerceDataCard from 'helpers/cards/statistics/EcommerceDataCard';
@@ -36,6 +37,8 @@ function Dashboard() {
       setDashboardData(data); // Update dashboard data on successful query
     }
   });
+
+  if (isFetching) return <Loader />;
 
   return (
     <Grid container spacing={4}>
