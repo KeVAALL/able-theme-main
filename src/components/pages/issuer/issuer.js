@@ -536,6 +536,7 @@ function Issuer() {
                                       touched={touched}
                                       errors={errors}
                                       multiline
+                                      inputProps={{ maxLength: 500 }}
                                     />
                                   </Grid>
 

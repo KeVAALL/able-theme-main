@@ -64,7 +64,7 @@ function ReactTable({
       data,
       initialState: {
         pageIndex: 0,
-        pageSize: 5,
+        pageSize: 10,
         sortBy: [
           {
             id: 'userName',
@@ -348,14 +348,7 @@ function ReactTable({
         </Table>
       </Box>
       <Box sx={{ p: 2, borderTop: '1px solid #dbe0e5a6' }}>
-        <TablePagination
-          gotoPage={gotoPage}
-          rows={rows}
-          setPageSize={setPageSize}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          viewOptions={[5]}
-        />
+        <TablePagination gotoPage={gotoPage} rows={rows} setPageSize={setPageSize} pageIndex={pageIndex} pageSize={pageSize} />
       </Box>
     </Stack>
   );
