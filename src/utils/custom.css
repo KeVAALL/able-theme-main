@@ -103,7 +103,112 @@ html::-webkit-scrollbar-thumb {
 }
 
 /* Chip */
+/* html::-webkit-scrollbar {
+  width: 8px;
+}
+html::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+html::-webkit-scrollbar-thumb {
+  background-color: #00a854a5;
+  border-radius: 100px;
+} */
+/* html::-webkit-scrollbar-button {
+  background-color: #00a854a5;
+  height: 13px; 
+} */
+.common-textfield .MuiFormControl-root {
+  width: 100% !important;
+}
+.common-textfield .MuiFormLabel-root {
+  line-height: 1.5em !important;
+  font-size: 0.75rem !important;
+}
+.common-textfield .MuiOutlinedInput-root {
+  border-radius: 5px;
+}
+.common-textfield .Mui-disabled {
+  -webkit-text-fill-color: #768087 !important;
+}
+
+.common-multi_select .MuiSelect-select {
+  padding: 6.6px 9px !important;
+}
+
+.common-autocomplete .MuiFormLabel-root {
+  top: -3px !important;
+}
+.common-autocomplete .MuiAutocomplete-input {
+  padding: 8.5px 4px 5.5px 5px !important;
+}
+.common-autocomplete .MuiOutlinedInput-root {
+  padding: 3px 10px !important;
+  border-radius: 5px;
+}
+.common-autocomplete .autocomplete-textfield input {
+  font-size: 0.75rem !important;
+}
+.common-autocomplete .Mui-disabled {
+  color: #768087 !important;
+}
+.common-autocomplete .MuiOutlinedInput-root .Mui-disabled {
+  -webkit-text-fill-color: #768087 !important;
+}
+/* .common-autocomplete .autocomplete-textfield label {
+  font-size: 0.75rem !important;
+} */
+.icon_button .MuiButton-startIcon {
+  margin: 0 !important;
+}
+.icon_button .MuiButton-startIcon svg {
+  width: 19px;
+  height: 19px;
+}
+#__checkbox span:first-of-type {
+  padding: 0 !important;
+}
+
+.multi_select > div:first-of-type {
+  min-height: 33px !important;
+  border-radius: 4px !important;
+}
+
+#column-hiding {
+  padding: 8px 32px 8px 12px !important;
+}
+
+/* Calendar */
+.calendar_main {
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+.calendar_main input {
+  padding: 8.2px 0px 8.2px 14px !important;
+}
+.calendar_main .MuiInputLabel-root {
+  margin-top: -3px !important;
+}
+.calendar_main .Mui-disabled {
+  color: #5b6b79 !important;
+}
+/* Color Picker */
+.color_picker_main {
+}
+.color_picker_main .MuiColorInput-Button {
+  height: 16px;
+  width: 16px;
+}
+.color_picker_main .MuiOutlinedInput-root {
+  border-radius: 5px;
+}
+.color_picker_main input {
+  padding: 8.5px 14px 8.5px 0px !important;
+}
+
+/* Chip */
 .active-chip {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+  padding-left: 7.5px !important;
+  padding-right: 7.5px !important;
 }
