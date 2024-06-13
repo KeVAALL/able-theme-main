@@ -21,5 +21,5 @@ export const inrCurrency = (currencyValue) => {
   }
 
   // return '₹' + formattedValue;
-  return '₹' + formattedValue;
+  return '₹ ' + formattedValue;
 };
