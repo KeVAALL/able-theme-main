@@ -535,9 +535,7 @@ function Issuer() {
                                       handleBlur={handleBlur}
                                       touched={touched}
                                       errors={errors}
-                                      multiline
-                                      rows={4}
-                                      inputProps={{ maxLength: 500 }}
+                                      multiline={true}
                                     />
                                   </Grid>
 

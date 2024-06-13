@@ -3,8 +3,6 @@ import axios from 'utils/axios';
 import { enqueueSnackbar } from 'notistack';
 
 // assets
-import { dispatch } from '../../redux';
-import { openSnackbar } from 'redux/reducers/snackbar';
 import { toInteger } from 'lodash';
 
 export async function GetIssuerData(payload) {

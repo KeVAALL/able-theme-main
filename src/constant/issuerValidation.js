@@ -59,13 +59,7 @@ const filterValidationSchema = yup.object({
 });
 // Table Columns
 const VisibleColumn = [];
-const ImageCell = ({ value }) => {
-  return (
-    <TableCell style={{ paddingLeft: '0px' }}>
-      <img src={value} alt="Custom" style={{ width: '90%', height: 60 }} />
-    </TableCell>
-  );
-};
+
 const StatusCell = ({ value }) => {
   switch (value) {
     case 0:
@@ -89,7 +83,6 @@ const tableColumns = [
             style={{
               width: '100%',
               height: '100%',
-              // border: "1px solid red",
               borderRadius: '10px',
               objectFit: 'contain',
               boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
@@ -121,7 +114,6 @@ export {
   filterFormValues,
   formValueFields,
   filterValidationSchema,
-  ImageCell,
   StatusCell,
   tableColumns,
   VisibleColumn
