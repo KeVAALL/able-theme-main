@@ -62,7 +62,7 @@ export async function SaveProductType(payload, productTypeTableDataRefetch, clea
     productTypeTableDataRefetch();
   } catch (err) {
     enqueueSnackbar(err.message, {
-      variant: 'error',
+      variant: 'success',
       autoHideDuration: 2000,
       anchorOrigin: {
         vertical: 'top',
@@ -88,7 +88,7 @@ export async function EditProductType(payload, productTypeTableDataRefetch, clea
     productTypeTableDataRefetch();
   } catch (err) {
     enqueueSnackbar(err.message, {
-      variant: 'error',
+      variant: 'success',
       autoHideDuration: 2000,
       anchorOrigin: {
         vertical: 'top',

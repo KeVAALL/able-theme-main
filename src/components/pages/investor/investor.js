@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // material-ui
-import { Divider, Box, Card, Grid, CardContent, Button, useMediaQuery } from '@mui/material';
+import { Divider, Box, Card, Grid, CardContent, Button, useMediaQuery, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 // project-imports
@@ -9,7 +9,14 @@ import MainCard from '../../organisms/mainCard/MainCard';
 import MultiTable from '../multiTable/multiTable';
 import { SubmitButton } from 'components/atoms/button/button';
 import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
-import { formAllValues, validationSchema, tableColumns, VisibleColumn, genderData } from 'constant/investorValidation';
+import {
+  formAllValues,
+  validationSchema,
+  // tableColumns,
+  VisibleColumn,
+  genderData,
+  StatusCell
+} from 'constant/investorValidation';
 import {
   GetInvestorData,
   SaveInvestor,
@@ -32,6 +39,7 @@ import { toInteger } from 'lodash';
 
 // assets
 import { FilterSearch } from 'iconsax-react';
+import { minWidth } from '@mui/system';
 
 function Investor() {
   // Main data states
@@ -110,6 +118,65 @@ function Investor() {
     setInvestorData(investor);
   };
 
+  const tableColumns = [
+    {
+      Header: 'Master ID',
+      accessor: 'investor_code'
+    },
+    {
+      Header: 'Folio ID',
+      accessor: 'folio_code'
+    },
+    {
+      Header: 'Investor Name',
+      accessor: 'investor_name',
+      minWidth: 250,
+      Cell: ({ value, row }) => {
+        return (
+          <Link
+            component="button"
+            variant="body2"
+            underline="always"
+            sx={{ fontSize: '0.80rem' }}
+            onClick={async () => {
+              await GetEditOneInvestor(setEditing, row.original.investor_id);
+              setActiveEditing();
+              changeTableVisibility();
+            }}
+          >
+            {value}
+          </Link>
+        );
+      }
+    },
+    {
+      Header: 'IFA',
+      accessor: 'ifa_name',
+      minWidth: 150
+    },
+    {
+      Header: 'Pan Number',
+      accessor: 'pan_no'
+    },
+    {
+      Header: 'Email',
+      accessor: 'email_id'
+    },
+    {
+      Header: 'Mobile Number',
+      accessor: 'mobile_no'
+    },
+    {
+      Header: 'Reg. date',
+      accessor: 'created_on'
+    },
+    {
+      Header: 'Status',
+      accessor: 'is_active',
+      customCell: StatusCell
+    }
+  ];
+
   // Empty Form Fields
   const clearFormValues = () => {
     setFormValues(formAllValues);
@@ -156,22 +223,6 @@ function Investor() {
       });
     } else if (value === 'ResidentOutsideIndia') {
       setSelectedDeclaration({ ...selectedDeclaration, isResidentOutsideIndia: !selectedDeclaration.isResidentOutsideIndia });
-    }
-  };
-
-  // Tabs Error
-  const handleTabError = (value) => {
-    if (value.investor_address) {
-      setErrorObject((prevValue) => {
-        return { ...prevValue, addressDetailsError: true };
-      });
-    }
-    if (value.investor) {
-      setErrorObject((prevValue) => {
-        return { ...prevValue, personalInfoError: true };
-      });
-    } else {
-      setErrorObject({ ...errorObject, addressDetailsError: false, personalInfoError: false });
     }
   };
 
@@ -668,4 +719,20 @@ export default Investor;
 //       setSelectedOccupation(el.occupation_id);
 //     }
 //   });
+// };
+
+// Tabs Error
+// const handleTabError = (value) => {
+//   if (value.investor_address) {
+//     setErrorObject((prevValue) => {
+//       return { ...prevValue, addressDetailsError: true };
+//     });
+//   }
+//   if (value.investor) {
+//     setErrorObject((prevValue) => {
+//       return { ...prevValue, personalInfoError: true };
+//     });
+//   } else {
+//     setErrorObject({ ...errorObject, addressDetailsError: false, personalInfoError: false });
+//   }
 // };

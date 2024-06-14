@@ -27,13 +27,14 @@ import '../../../utils/custom.css';
 import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
 import { DateRangePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import enGB from 'date-fns/locale/en-GB';
-import { enqueueSnackbar } from 'notistack';
 import format from 'date-fns/format';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
 // assets
 import { Eye, FilterSearch, Calculator, TimerStart, ArrangeHorizontal } from 'iconsax-react';
+import Typography from 'themes/overrides/Typography';
+import { enqueueSnackbar } from 'notistack';
 
 function Investment() {
   // Main data states

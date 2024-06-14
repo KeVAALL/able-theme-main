@@ -36,7 +36,16 @@ const EcommerceMetrix = ({ primary, secondary, content, iconPrimary, color }) =>
         }
       }}
     >
-      <Box sx={{ px: 4.5, py: 4 }}>
+      <Box
+        sx={{
+          px: 4.5,
+          py: 4,
+          '&:after': {
+            content: '""',
+            backdropFilter: 'blur(2px)'
+          }
+        }}
+      >
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <Box sx={{ color: 'common.white', opacity: 0.5 }}>{primaryIcon}</Box>
@@ -46,7 +55,7 @@ const EcommerceMetrix = ({ primary, secondary, content, iconPrimary, color }) =>
               <Typography variant="h5" color="common.white" sx={{ fontWeight: 500 }}>
                 {primary}
               </Typography>
-              <Typography variant="h3" color="common.white">
+              <Typography variant="h5" color="common.white">
                 {secondary}
               </Typography>
             </Stack>

@@ -41,7 +41,11 @@ const TabPortfolio = (props) => {
             <Avatar
               alt="Avatar 1"
               size="xl"
-              src={props.values.investor.gender === 'Male' ? avatarImage(`./avatar-1.png`) : avatarImage(`./default.png`)}
+              src={
+                props.values.investor.gender === 'Male' || props.values.investor.gender === 'male'
+                  ? avatarImage(`./avatar-1.png`)
+                  : avatarImage(`./default.png`)
+              }
             />
             <Stack spacing={0.5} alignItems="center">
               <Typography variant="h5">{props.values.investor.investor_name}</Typography>

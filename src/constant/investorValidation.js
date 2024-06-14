@@ -203,7 +203,7 @@ const validationSchema = yup.object().shape({
   }),
   investor_address: yup.object().shape({
     address_line_1: yup.string().required('Address Line is required'),
-    address_line_2: yup.string().required('Address Line 2 is required'),
+    address_line_2: yup.string(),
     pincode: yup.string().required('Pin Code is required'),
     city: yup.string().required('City is required')
   }),
@@ -340,20 +340,16 @@ const fdInvestmentColumns = [
     }
   },
   {
-    Header: 'Investor ID',
-    accessor: 'investor_id'
-  },
-  {
-    Header: 'FD ID',
-    accessor: 'fd_id'
-  },
-  {
-    Header: 'FD Name',
-    accessor: 'fd_name'
-  },
-  {
     Header: 'Tenure',
     accessor: 'tenure'
+  },
+  {
+    Header: 'Payout Type',
+    accessor: ''
+  },
+  {
+    Header: 'Principal Amount',
+    accessor: ''
   },
   {
     Header: 'Total Earning',
@@ -368,6 +364,22 @@ const fdInvestmentColumns = [
     customCell: ({ value }) => {
       return <span>{inrCurrency(value)}</span>;
     }
+  },
+  {
+    Header: 'ROI',
+    accessor: ''
+  },
+  {
+    Header: 'Maturity Amount',
+    accessor: ''
+  },
+  {
+    Header: 'Maturity Action',
+    accessor: ''
+  },
+  {
+    Header: 'Transaction Date',
+    accessor: ''
   },
   {
     Header: 'Maturity Date',
