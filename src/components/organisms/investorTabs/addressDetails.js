@@ -100,8 +100,8 @@ const AddressDetails = (props) => {
 
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12} style={{ display: 'grid', gap: '8px' }}>
-              disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
               <NestedCustomTextField
+                disabled={props.values.investor.is_ckyc_verified || props.values.investor.is_digilocker_verified}
                 label="Address Line 1"
                 valueName="correspondent_address.address_line_1"
                 placeholder="Please enter your Address Line 1"

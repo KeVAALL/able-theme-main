@@ -23,12 +23,14 @@ import enGB from 'date-fns/locale/en-GB';
 import Avatar from 'helpers/@extended/Avatar';
 import BankDetailCard from 'components/molecules/bankDetails/bankDetailCard';
 import { AddBankDetails, GetBankDetails } from 'hooks/investor/investor';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 const BankDetails = (props) => {
   // theme
   const theme = useTheme();
   // Toggle Table and Form Visibility
   const [showTable, setShowTable] = useState(true);
+  const [loading, setLoading] = useState(false);
   //   const changeTableVisibility = () => {
   //     setShowTable(!showTable);
   //   };
@@ -98,10 +100,13 @@ const BankDetails = (props) => {
       {props.values.investor_bank && props.values.investor_bank.length > 0 ? (
         <Stack spacing={2} sx={{ width: '70%' }}>
           <Formik
-            initialValues={props.values}
+            validateOnBlur={false}
+            validateOnChange={false}
+            // validate={false}
             //   props.values.investor_bank.map((el) => {
             //     return { ...el, isEditing: false };
             //   })
+            initialValues={props.values}
             validationSchema={props.validationSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               console.log(values);
@@ -150,7 +155,7 @@ const BankDetails = (props) => {
                           </Stack>
                         </Stack>
                         <Grid container spacing={3} sx={{ marginTop: '0px' }}>
-                          <Grid item xs={12} sm={6} md={4}>
+                          <Grid item xs={12} sm={6} md={bank.investor_bank_id ? 4 : 6}>
                             <NestedCustomTextField
                               label="Bank Account Number"
                               valueName={`investor_bank[${index}].account_no`}
@@ -166,19 +171,7 @@ const BankDetails = (props) => {
                             />
                           </Grid>
 
-                          <Grid item xs={12} sm={6} md={4}>
-                            {/* <NestedCustomTextField
-                              label="IFSC Code"
-                              valueName={`investor_bank[${index}].ifsc_code`}
-                              placeholder="Please enter IFSC Code"
-                              values={props.values.investor_bank[index].ifsc_code}
-                              type="text"
-                              regType="noSpecial"
-                              setFieldValue={props.setFieldValue}
-                              handleBlur={props.handleBlur}
-                              touched={props.touched}
-                              errors={props.errors}
-                            /> */}
+                          <Grid item xs={12} sm={6} md={bank.investor_bank_id ? 4 : 6}>
                             <TextField
                               fullWidth
                               className="common-textfield"
@@ -229,23 +222,58 @@ const BankDetails = (props) => {
                               inputProps={{ maxLength: 11 }}
                             />
                           </Grid>
-                          <Grid item xs={12} sm={6} md={4}>
-                            <NestedCustomTextField
-                              label="Beneficiary Name"
-                              valueName={`investor_bank[${index}].beneficiary_name`}
-                              placeholder="Please enter Beneficiary Name"
-                              values={props.values.investor_bank[index].beneficiary_name}
-                              type="text"
-                              regType="string"
-                              setFieldValue={props.setFieldValue}
-                              handleBlur={props.handleBlur}
-                              touched={props.touched}
-                              errors={props.errors}
-                            />
-                          </Grid>
+                          {bank.investor_bank_id && (
+                            <Grid item xs={12} sm={6} md={4}>
+                              <NestedCustomTextField
+                                label="Beneficiary Name"
+                                valueName={`investor_bank[${index}].beneficiary_name`}
+                                placeholder="Please enter Beneficiary Name"
+                                values={props.values.investor_bank[index].beneficiary_name}
+                                type="text"
+                                regType="string"
+                                setFieldValue={props.setFieldValue}
+                                handleBlur={props.handleBlur}
+                                touched={props.touched}
+                                errors={props.errors}
+                              />
+                            </Grid>
+                          )}
                           <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
-                            <AnimateButton>
-                              <Button
+                            <LoadingButton
+                              loading={loading}
+                              variant="contained"
+                              color="success"
+                              loadingPosition="center"
+                              startIcon={<Add />}
+                              onClick={async (e) => {
+                                //   e.preventDefault();
+                                const payload = {
+                                  investor_id: props.values.investor.investor_id,
+                                  account_number: props.values.investor_bank[index].account_no,
+                                  ifsc_code: props.values.investor_bank[index].ifsc_code
+                                };
+
+                                setLoading(true); // Set loading to true before the API call
+
+                                try {
+                                  const response = await AddBankDetails(payload);
+                                  const newBank = props.values.investor_bank.map((el, elIndex) => {
+                                    if (elIndex == index) {
+                                      return { ...el, is_editing: 0, is_new: 0 };
+                                    }
+                                    return el;
+                                  });
+                                  console.log(newBank);
+
+                                  props.setFieldValue('investor_bank', newBank);
+                                } catch (err) {
+                                  console.log(err);
+                                } finally {
+                                  setLoading(false);
+                                }
+                              }}
+                            >
+                              {/* <Button
                                 fullWidth
                                 // disabled={
                                 //   isEditing
@@ -255,32 +283,10 @@ const BankDetails = (props) => {
                                 variant="contained"
                                 color="success"
                                 // type="submit"
-                                onClick={async (e) => {
-                                  //   e.preventDefault();
-                                  const payload = {
-                                    investor_id: props.values.investor.investor_id,
-                                    account_number: props.values.investor_bank[index].account_no,
-                                    ifsc_code: props.values.investor_bank[index].ifsc_code
-                                  };
-                                  try {
-                                    const response = await AddBankDetails(payload);
-                                    const newBank = props.values.investor_bank.map((el, elIndex) => {
-                                      if (elIndex == index) {
-                                        return { ...el, is_editing: 0, is_new: 0 };
-                                      }
-                                      return el;
-                                    });
-                                    console.log(newBank);
-
-                                    props.setFieldValue('investor_bank', newBank);
-                                  } catch (err) {
-                                    console.log(err);
-                                  }
-                                }}
-                              >
-                                Save & Continue
-                              </Button>
-                            </AnimateButton>
+                              > */}
+                              Save & Continue
+                              {/* </Button> */}
+                            </LoadingButton>
                           </Grid>
                           <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
                             <AnimateButton>
@@ -361,6 +367,20 @@ export default memo(BankDetails);
 
 {
   /* <Grid container> */
+}
+{
+  /* <NestedCustomTextField
+                              label="IFSC Code"
+                              valueName={`investor_bank[${index}].ifsc_code`}
+                              placeholder="Please enter IFSC Code"
+                              values={props.values.investor_bank[index].ifsc_code}
+                              type="text"
+                              regType="noSpecial"
+                              setFieldValue={props.setFieldValue}
+                              handleBlur={props.handleBlur}
+                              touched={props.touched}
+                              errors={props.errors}
+                            /> */
 }
 {
   /* <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>

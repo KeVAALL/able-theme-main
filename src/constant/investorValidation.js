@@ -213,11 +213,12 @@ const validationSchema = yup.object().shape({
       then: () => yup.string().required('Address Line 1 is required'),
       otherwise: () => yup.string().optional()
     }),
-    address_line_2: yup.string().when('$is_permanent_address_correspondent', {
-      is: 0,
-      then: () => yup.string().required('Address Line 2 is required'),
-      otherwise: () => yup.string().optional()
-    }),
+    address_line_2: yup.string(),
+    //   .when('$is_permanent_address_correspondent', {
+    //   is: 0,
+    //   then: () => yup.string().required('Address Line 2 is required'),
+    //   otherwise: () => yup.string().optional()
+    // }),
     pincode: yup.string().when('$is_permanent_address_correspondent', {
       is: 0,
       then: () => yup.string().required('Pin Code is required'),
@@ -344,16 +345,16 @@ const fdInvestmentColumns = [
     accessor: 'tenure'
   },
   {
+    Header: 'Transaction Date',
+    accessor: 'invested_on'
+  },
+  {
     Header: 'Payout Type',
-    accessor: ''
+    accessor: 'payout_type'
   },
   {
     Header: 'Principal Amount',
-    accessor: ''
-  },
-  {
-    Header: 'Total Earning',
-    accessor: 'total_earning',
+    accessor: 'investment_amount',
     customCell: ({ value }) => {
       return <span>{inrCurrency(value)}</span>;
     }
@@ -366,20 +367,26 @@ const fdInvestmentColumns = [
     }
   },
   {
+    Header: 'Total Earning',
+    accessor: 'total_earning',
+    customCell: ({ value }) => {
+      return <span>{inrCurrency(value)}</span>;
+    }
+  },
+  {
     Header: 'ROI',
-    accessor: ''
+    accessor: 'r_o_i'
   },
   {
     Header: 'Maturity Amount',
-    accessor: ''
+    accessor: 'maturity_amount',
+    customCell: ({ value }) => {
+      return <span>{inrCurrency(value)}</span>;
+    }
   },
   {
     Header: 'Maturity Action',
-    accessor: ''
-  },
-  {
-    Header: 'Transaction Date',
-    accessor: ''
+    accessor: 'maturity_action'
   },
   {
     Header: 'Maturity Date',

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // material-ui
@@ -38,8 +39,10 @@ import { useLocation, useNavigate } from 'react-router';
 import { toInteger } from 'lodash';
 
 // assets
-import { FilterSearch } from 'iconsax-react';
+import { Add, FilterSearch } from 'iconsax-react';
 import { minWidth } from '@mui/system';
+import { Stack } from 'immutable';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 function Investor() {
   // Main data states
@@ -53,6 +56,8 @@ function Investor() {
 
   // Toggle Table and Form Visibility
   const [showTable, setShowTable] = useState(false); // State to toggle visibility of the table form
+  // Loader
+  const [loadingInvestor, setLoadingInvestor] = useState(false);
 
   // Selection states
   const [selectedGender, setSelectedGender] = useState(null);
@@ -133,19 +138,36 @@ function Investor() {
       minWidth: 250,
       Cell: ({ value, row }) => {
         return (
-          <Link
-            component="button"
-            variant="body2"
-            underline="always"
-            sx={{ fontSize: '0.80rem' }}
-            onClick={async () => {
-              await GetEditOneInvestor(setEditing, row.original.investor_id);
-              setActiveEditing();
-              changeTableVisibility();
-            }}
-          >
-            {value}
-          </Link>
+          // <Stack direction="row" spacing={1}>
+          <Box>
+            <Link
+              component="button"
+              variant="body2"
+              underline="always"
+              sx={{ fontSize: '0.80rem' }}
+              onClick={async () => {
+                setLoadingInvestor(true);
+                try {
+                  await GetEditOneInvestor(setEditing, row.original.investor_id);
+                } catch (err) {
+                  console.log(err);
+                } finally {
+                  console.log('Here');
+                  setLoadingInvestor(false);
+                }
+                setActiveEditing();
+                changeTableVisibility();
+              }}
+            >
+              {value}
+            </Link>
+            {/* {loadingInvestor && ( */}
+            <LoadingButton loading={true} color="secondary" sx={{ display: !loadingInvestor ? 'none' : 'inline' }} />
+            {/* <Add style={{ transform: 'rotate(45deg)' }} /> */}
+            {/* </LoadingButton> */}
+            {/* )} */}
+          </Box>
+          // </Stack>
         );
       }
     },
@@ -330,7 +352,7 @@ function Investor() {
     <>
       {showTable && (
         <Formik
-          // validateOnBlur={false}
+          validateOnBlur={false}
           // validateOnChange={false}
           // validate={validate}
           enableReinitialize={true}
@@ -471,6 +493,21 @@ function Investor() {
                         inputProps={{ maxLength: 10 }}
                       />
                     </Grid>
+                    {isEditing && (
+                      <Grid item md={4} xs={6}>
+                        <NestedCustomTextField
+                          disabled={true}
+                          label="Master ID"
+                          valueName="investor.investor_code"
+                          values={values.investor.investor_code}
+                          handleChange={handleChange}
+                          handleBlur={handleBlur}
+                          touched={touched}
+                          errors={errors}
+                          inputProps={{ maxLength: 10 }}
+                        />
+                      </Grid>
+                    )}
                   </Grid>
                 </CardContent>
 

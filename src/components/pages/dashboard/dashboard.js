@@ -12,9 +12,10 @@ import EcommerceDataChart from 'sections/chart/EcommerceDataChart';
 import TotalIncome from 'sections/chart/TotalIncome';
 import SwitchBalanace from 'sections/widgets/statistics/SwitchBalance';
 import WalletProfile from 'sections/widgets/statistics/WalletProfile';
+import Error500 from '../maintenance/error/500';
 
 function Dashboard() {
-  const [dashboardData, setDashboardData] = useState();
+  const [dashboardData, setDashboardData] = useState([]);
   const theme = useTheme();
 
   // Query for fetching dashboard data // Main Data
@@ -37,10 +38,15 @@ function Dashboard() {
       console.log(data);
 
       setDashboardData(data); // Update dashboard data on successful query
+    },
+    onError: (err) => {
+      console.log(err);
     }
   });
 
   if (isFetching) return <Loader />;
+
+  if (dashboardData.length === 0) return <Error500 />;
 
   return (
     <Grid container spacing={4}>
@@ -68,9 +74,9 @@ function Dashboard() {
       <Grid item xs={12} sm={6} md={3}>
         <EcommerceMetrix
           primary="Registered Users"
-          secondary="2000"
+          secondary={dashboardData.investor_details.registered_user}
           // content="20,032 Last Month"
-          color={theme.palette.primary.main}
+          color={theme.palette.info.main}
           iconPrimary={UserTick}
         />
         {/* <EcommerceDataCard
