@@ -520,6 +520,7 @@ function Investor() {
                     isEditing={isEditing}
                     errors={errors}
                     touched={touched}
+                    setEditing={setEditing}
                     setFieldValue={setFieldValue}
                     selectedGender={selectedGender}
                     setSelectedGender={setSelectedGender}

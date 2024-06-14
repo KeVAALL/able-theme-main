@@ -1,29 +1,24 @@
 /* eslint-disable react/prop-types */
 import React, { memo, useEffect, useState } from 'react';
-import { Box, Card, Grid, Button, CardContent, CardHeader, Stack, Divider, Typography, TextField } from '@mui/material';
+import { Box, Card, Grid, Button, CardContent, Stack, Typography, TextField, DialogContent, Dialog } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // project-imports
 import AnimateButton from 'helpers/@extended/AnimateButton';
 // assets
-import { relationship } from 'constant/investorValidation';
-import MultiTable from 'components/pages/multiTable/multiTable';
 import MainCard from '../mainCard/MainCard';
-import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
+import { NestedCustomTextField } from 'utils/textfield';
 
 // third-party
 import { Formik, getIn } from 'formik';
 import * as yup from 'yup';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { Add, Additem, Bank, EmptyWalletAdd } from 'iconsax-react';
-import { v4 as uuidv4 } from 'uuid';
-import enGB from 'date-fns/locale/en-GB';
+import { Add, Bank, EmptyWalletAdd, Trash } from 'iconsax-react';
 import Avatar from 'helpers/@extended/Avatar';
 import BankDetailCard from 'components/molecules/bankDetails/bankDetailCard';
-import { AddBankDetails, GetBankDetails } from 'hooks/investor/investor';
+import { AddBankDetails, DeleteBankDetails, GetBankDetails, GetEditOneInvestor } from 'hooks/investor/investor';
 import LoadingButton from 'helpers/@extended/LoadingButton';
+import { PopupTransition } from 'helpers/@extended/Transitions';
+import { setIn } from 'draft-js/lib/DefaultDraftBlockRenderMap';
 
 const BankDetails = (props) => {
   // theme
@@ -31,6 +26,12 @@ const BankDetails = (props) => {
   // Toggle Table and Form Visibility
   const [showTable, setShowTable] = useState(true);
   const [loading, setLoading] = useState(false);
+  // Dialog
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogIndex, setIndex] = useState();
+  const handleOpenDialog = () => {
+    setOpenDialog(!openDialog);
+  };
   //   const changeTableVisibility = () => {
   //     setShowTable(!showTable);
   //   };
@@ -67,6 +68,68 @@ const BankDetails = (props) => {
     });
     props.setFieldValue('nominee', deleteNominee);
   };
+  const DeleteBank = memo(({ openDialog, handleOpenDialog, values, investorID, index, setFieldValue }) => {
+    console.log(index);
+    return (
+      <Dialog
+        open={openDialog}
+        TransitionComponent={PopupTransition}
+        keepMounted
+        onClose={handleOpenDialog}
+        maxWidth="xs"
+        aria-labelledby="column-delete-title"
+        aria-describedby="column-delete-description"
+        className="dialog_backdrop"
+      >
+        <DialogContent sx={{ mt: 2, my: 1 }}>
+          <Stack alignItems="center" spacing={3.5}>
+            <Avatar className="avatar_main" sx={{ width: 72, height: 72, fontSize: '1.75rem' }}>
+              <Trash variant="Bold" />
+            </Avatar>
+            <Stack spacing={2}>
+              <Typography variant="h4" align="center">
+                Are you sure you want to delete?
+              </Typography>
+              {/* <Typography align="center">By deleting this user, all task assigned to that user will also be deleted.</Typography> */}
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ width: 1 }}>
+              <Button fullWidth onClick={handleOpenDialog} color="secondary" variant="outlined">
+                Cancel
+              </Button>
+              <Button
+                fullWidth
+                color="error"
+                variant="contained"
+                onClick={async () => {
+                  console.log(index);
+                  if (values[index]) {
+                    console.log(values[index]);
+                    const payload = {
+                      method_name: 'deleteBank',
+                      investor_bank_id: values[index].investor_bank_id,
+                      investor_id: investorID
+                    };
+                    try {
+                      await DeleteBankDetails(payload);
+                      const remove = values.filter((el, elIndex) => elIndex !== index);
+                      setFieldValue('investor_bank', remove);
+                      handleOpenDialog();
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                }}
+                autoFocus
+              >
+                Delete
+              </Button>
+            </Stack>
+          </Stack>
+        </DialogContent>
+      </Dialog>
+    );
+  });
 
   useEffect(() => {
     setFormValues(props.values.investor_bank);
@@ -97,6 +160,14 @@ const BankDetails = (props) => {
           }}
         ></Button>
       </Stack>
+      <DeleteBank
+        openDialog={openDialog}
+        handleOpenDialog={handleOpenDialog}
+        values={props.values.investor_bank}
+        investorID={props.values.investor.investor_id}
+        index={dialogIndex}
+        setFieldValue={props.setFieldValue}
+      />
       {props.values.investor_bank && props.values.investor_bank.length > 0 ? (
         <Stack spacing={2} sx={{ width: '70%' }}>
           <Formik
@@ -265,7 +336,8 @@ const BankDetails = (props) => {
                                   });
                                   console.log(newBank);
 
-                                  props.setFieldValue('investor_bank', newBank);
+                                  // props.setFieldValue('investor_bank', newBank);
+                                  await GetEditOneInvestor(props.setEditing, props.values.investor.investor_id);
                                 } catch (err) {
                                   console.log(err);
                                 } finally {
@@ -331,6 +403,8 @@ const BankDetails = (props) => {
                       IFSC={bank.ifsc_code}
                       branchName={bank.branch}
                       isPrimary={bank.is_primary_account}
+                      handleOpenDialog={handleOpenDialog}
+                      setIndex={setIndex}
                     />
                   )
                 )}

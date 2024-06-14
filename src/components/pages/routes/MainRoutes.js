@@ -124,6 +124,10 @@ const MainRoutes = {
               element: <IssuerReport />
             }
           ]
+        },
+        {
+          path: 'faq',
+          element: <></>
         }
       ]
     }

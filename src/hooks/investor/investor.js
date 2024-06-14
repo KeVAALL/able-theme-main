@@ -188,6 +188,30 @@ export async function AddBankDetails(payload) {
     throw err;
   }
 }
+export async function DeleteBankDetails(payload) {
+  try {
+    const response = await axios.post('investor/save_bank', payload);
+    enqueueSnackbar('Bank Account Deleted', {
+      variant: 'success',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    return response.data.data;
+  } catch (err) {
+    enqueueSnackbar(err.message, {
+      variant: 'error',
+      autoHideDuration: 5000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+    throw err;
+  }
+}
 export async function VerifyPAN(payload) {
   try {
     const response = await axios.post('investor/verifypan', payload);

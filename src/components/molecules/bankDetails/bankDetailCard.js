@@ -30,7 +30,20 @@ import { Edit, Edit2, Trash } from 'iconsax-react';
 
 // ==============================|| CUSTOMER - CARD ||============================== //
 
-const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, accountNumber, IFSC, branchName, isPrimary }) => {
+const BankDetailCard = ({
+  key,
+  index,
+  values,
+  setFieldValue,
+  logoURL,
+  title,
+  accountNumber,
+  IFSC,
+  branchName,
+  isPrimary,
+  handleOpenDialog,
+  setIndex
+}) => {
   const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   return (
@@ -70,7 +83,14 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
               </ListItem>
               <Stack spacing={1} direction="row">
                 {values.investor.is_bank_verified ? (
-                  <IconButton color="error" sx={{ border: '1.5px solid #FFC5C1' }} onClick={async () => {}}>
+                  <IconButton
+                    color="error"
+                    sx={{ border: '1.5px solid #FFC5C1' }}
+                    onClick={async () => {
+                      setIndex(index);
+                      handleOpenDialog();
+                    }}
+                  >
                     <Trash size={26} style={{ cursor: 'pointer' }} />
                   </IconButton>
                 ) : (
@@ -146,13 +166,13 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
             justifyContent={matchDownSM ? 'center' : 'flex-end'}
             alignItems={matchDownSM ? 'flex-start' : 'flex-end'}
           >
-            {isPrimary ? (
-              <Chip
-                label="Primary Account"
-                sx={{ backgroundColor: '#1DB4691F', color: '#11A75C', fontSize: 12, fontWeight: 500, borderRadius: '6px' }}
-              />
-            ) : (
-              <Chip
+            {/* {isPrimary ? ( */}
+            <Chip
+              label="Primary Account"
+              sx={{ backgroundColor: '#1DB4691F', color: '#11A75C', fontSize: 12, fontWeight: 500, borderRadius: '6px' }}
+            />
+            {/* ) : ( */}
+            {/* <Chip
                 label="Make Primary"
                 sx={{
                   backgroundColor: '#ffffff',
@@ -162,8 +182,8 @@ const BankDetailCard = ({ key, index, values, setFieldValue, logoURL, title, acc
                   fontWeight: 500,
                   borderRadius: '6px'
                 }}
-              />
-            )}
+              /> */}
+            {/* )} */}
           </Grid>
         </Grid>
 

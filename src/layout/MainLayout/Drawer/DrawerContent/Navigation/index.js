@@ -22,7 +22,8 @@ import {
   DirectInbox,
   Note,
   Note1,
-  UserOctagon
+  UserOctagon,
+  Messages2
 } from 'iconsax-react';
 
 // project-imports
@@ -50,6 +51,7 @@ const Navigation = () => {
     HomeTrendUp: HomeTrendUp,
     Moneys: Moneys,
     MenuBoard: MenuBoard,
+    Messages2: Messages2,
     MoneySend: MoneySend,
     Note: Note,
     Note1: Note1,

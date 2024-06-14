@@ -50,7 +50,8 @@ import {
   DirectInbox,
   Note,
   Note1,
-  UserOctagon
+  UserOctagon,
+  Messages2
 } from 'iconsax-react';
 import { HomeTrendUp, Profile2User, ShoppingBag } from 'iconsax-react';
 
@@ -89,6 +90,7 @@ const NavCollapse = ({ menu, level, parentId, setSelectedItems, selectedItems, s
     HomeTrendUp: HomeTrendUp,
     Moneys: Moneys,
     MenuBoard: MenuBoard,
+    Messages2: Messages2,
     MoneySend: MoneySend,
     Note: Note,
     Note1: Note1,

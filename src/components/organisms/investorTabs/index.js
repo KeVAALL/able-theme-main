@@ -269,6 +269,7 @@ export default function IconTabs(props) {
             validationSchema={props.validationSchema}
             handleChange={props.handleChange}
             setFieldValue={props.setFieldValue}
+            setEditing={props.setEditing}
             handleBlur={props.handleBlur}
             touched={props.touched}
             errors={props.errors}
