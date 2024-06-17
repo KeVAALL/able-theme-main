@@ -12,6 +12,8 @@ import { DropzopType } from 'config';
 import RejectionFiles from './RejectionFiles';
 import PlaceholderContent from './PlaceholderContent';
 import FilesPreview from './FilesPreview';
+import { UploadFAQ } from 'hooks/faq/faq';
+import { GetIssuerData } from 'hooks/issuer/issuer';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
   outline: 'none',
@@ -24,29 +26,45 @@ const DropzoneWrapper = styled('div')(({ theme }) => ({
 
 // ==============================|| UPLOAD - MULTIPLE FILE ||============================== //
 
-const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, sx, onUpload }) => {
+const MultiFileUpload = ({
+  error,
+  showList = false,
+  issuer_id,
+  issuerTableDataRefetch,
+  handleOpenUploadDialog,
+  handleIssuerChange,
+  files,
+  type,
+  setFieldValue,
+  sx,
+  onUpload
+}) => {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
-    multiple: true,
+    accept: {
+      'application/vnd.ms-excel': [], // .xls files
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [] // .xlsx files
+    },
+    multiple: false,
     onDrop: (acceptedFiles) => {
-      if (files) {
-        setFieldValue('files', [
-          ...files,
-          ...acceptedFiles.map((file) =>
-            Object.assign(file, {
-              preview: URL.createObjectURL(file)
-            })
-          )
-        ]);
-      } else {
-        setFieldValue(
-          'files',
-          acceptedFiles.map((file) =>
-            Object.assign(file, {
-              preview: URL.createObjectURL(file)
-            })
-          )
-        );
-      }
+      // if (files) {
+      //   setFieldValue('files', [
+      //     ...files,
+      //     ...acceptedFiles.map((file) =>
+      //       Object.assign(file, {
+      //         preview: URL.createObjectURL(file)
+      //       })
+      //     )
+      //   ]);
+      // } else {
+      setFieldValue(
+        'files',
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        )
+      );
+      // }
     }
   });
 
@@ -68,43 +86,82 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
           ...sx
         }}
       >
-        <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
-          <DropzoneWrapper
-            {...getRootProps()}
-            sx={{
-              ...(type === DropzopType.standard && {
-                p: 0,
-                m: 1,
-                width: 64,
-                height: 64
-              }),
-              ...(isDragActive && { opacity: 0.72 }),
-              ...((isDragReject || error) && {
-                color: 'error.main',
-                borderColor: 'error.light',
-                bgcolor: 'error.lighter'
-              })
-            }}
-          >
-            <input {...getInputProps()} />
-            <PlaceholderContent type={type} />
-          </DropzoneWrapper>
-          {type === DropzopType.standard && files && files.length > 1 && (
-            <Button variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
-              Remove all
-            </Button>
-          )}
-        </Stack>
+        {!(files?.length > 0) && (
+          <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
+            <DropzoneWrapper
+              {...getRootProps()}
+              sx={{
+                marginTop: '24px !important',
+                ...(type === DropzopType.standard && {
+                  p: 0,
+                  m: 1,
+                  width: 64,
+                  height: 64
+                }),
+                ...(isDragActive && { opacity: 0.72 }),
+                ...((isDragReject || error) && {
+                  color: 'error.main',
+                  borderColor: 'error.light',
+                  bgcolor: 'error.lighter'
+                })
+              }}
+            >
+              <input {...getInputProps()} />
+              <PlaceholderContent type={type} />
+            </DropzoneWrapper>
+            {type === DropzopType.standard && files && files.length > 1 && (
+              <Button variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
+                Remove all
+              </Button>
+            )}
+          </Stack>
+        )}
         {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
         {files && files.length > 0 && <FilesPreview files={files} showList={showList} onRemove={onRemove} type={type} />}
       </Box>
 
       {type !== DropzopType.standard && files && files.length > 0 && (
-        <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 1.5 }}>
+        <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 0 }}>
           <Button color="inherit" size="small" onClick={onRemoveAll}>
-            Remove all
+            Remove File
           </Button>
-          <Button size="small" variant="contained" onClick={onUpload}>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={async () => {
+              const data = new FormData();
+              data.append('file', files[0]);
+              try {
+                const payload = { issuer_id, data };
+                const response = await UploadFAQ(payload);
+
+                if (response.status === 200) {
+                  setFieldValue('files', null);
+                  const issuerPayload = {
+                    method_name: 'getall'
+                  };
+                  const issuer = await GetIssuerData(issuerPayload);
+
+                  const faqPanel = issuer.map((el) => {
+                    return {
+                      ...el,
+                      faqs:
+                        el.faqs &&
+                        el.faqs.map((fa, index) => {
+                          return { ...fa, panelName: `panel${index}` };
+                        })
+                    };
+                  });
+
+                  handleIssuerChange(faqPanel, issuer_id, setFieldValue);
+                }
+              } catch (err) {
+                console.log(err);
+              } finally {
+                handleOpenUploadDialog();
+              }
+            }}
+          >
             Upload files
           </Button>
         </Stack>

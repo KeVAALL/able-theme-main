@@ -1,0 +1,7 @@
+.dialog_backdrop .MuiModal-backdrop {
+  background-color: #00000008 !important;
+}
+.dialog_backdrop .MuiPaper-rounded {
+  box-shadow: none;
+  /* border: 1px solid black; */
+}

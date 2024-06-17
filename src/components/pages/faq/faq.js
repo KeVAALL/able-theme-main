@@ -19,7 +19,10 @@ import {
   Dialog,
   DialogContent,
   TextField,
-  Autocomplete
+  Autocomplete,
+  FormHelperText,
+  useMediaQuery,
+  FormControlLabel
 } from '@mui/material';
 import { MuiColorInput } from 'mui-color-input';
 import { useTheme } from '@mui/material/styles';
@@ -52,9 +55,13 @@ import { enqueueSnackbar } from 'notistack';
 import { toInteger } from 'lodash';
 
 // assets
-import { Add, Edit, MessageQuestion, Trash } from 'iconsax-react';
+import { Add, Additem, Category, CloseCircle, CloudAdd, Edit, MessageQuestion, TableDocument, TickCircle, Trash } from 'iconsax-react';
+import MultiFileUpload from 'helpers/third-party/dropzone/MultiFile';
+import { ManualAddFAQ } from 'hooks/faq/faq';
+import LoadingButton from 'helpers/@extended/LoadingButton';
+import './faq.css';
 
-const DeleteDialog = memo(({ openDialog, handleOpenDialog, values, index, setFieldValue }) => {
+const DeleteDialog = memo(({ openDialog, handleOpenDialog, values, index, setFieldValue, issuerTableDataRefetch }) => {
   console.log(index);
   return (
     <Dialog
@@ -96,6 +103,7 @@ const DeleteDialog = memo(({ openDialog, handleOpenDialog, values, index, setFie
                     await DeleteOneFAQ(payload);
                     const remove = values.filter((el, elIndex) => elIndex !== index);
                     setFieldValue('faqs', remove);
+                    issuerTableDataRefetch();
                     handleOpenDialog();
                   } catch (err) {
                     console.log(err);
@@ -123,6 +131,7 @@ function FAQ() {
   // Editing States
   const [isEditing, setIsEditing] = useState(false); // State to track if editing mode is active
   const [isIssuerActive, setIssuerActive] = useState(); // State to track if the issuer is active or not active
+  const [selectedIssuer, setSelectedIssuer] = useState();
   // Form Visibility
   const [showTable, setShowTable] = useState(true); // State to hold form input values
   // Form State
@@ -130,34 +139,48 @@ function FAQ() {
 
   // Theme
   const theme = useTheme();
+  // Theme
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   // Accordion
   const [expanded, setExpanded] = useState('');
-  // For Dialog
+  // Dropzone
+  const [list, setList] = useState(false);
+  // For File Upload
+  const [openUpload, setOpenUpload] = useState(false);
+  // For Delete Dialog
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogIndex, setIndex] = useState();
   const handleOpenDialog = () => {
     setOpenDialog(!openDialog);
   };
+  const handleOpenUploadDialog = () => {
+    setOpenUpload(!openUpload);
+  };
   const handleAccChange = (panel) => (event, newExpanded) => {
     console.log(panel, newExpanded);
     setExpanded(newExpanded ? panel : false);
   };
-  const handleDropdownChange = (e, optionName, formName, setFieldValue) => {
+  const handleDropdownChange = (e, issuerData, optionName, formName, setFieldValue) => {
     if (e.target.outerText === undefined) {
       setFieldValue(formName, 0);
     } else {
-      issuerData.forEach(async (el) => {
+      issuerData?.forEach(async (el) => {
         if (el.issuer_name === e.target.outerText) {
           console.log('here');
           await setFieldValue(formName, el.issuer_id);
-          handleIssuerChange(el.issuer_id, setFieldValue);
+          setSelectedIssuer(el.issuer_id);
+          handleIssuerChange(issuerData, el.issuer_id, setFieldValue);
         }
       });
     }
   };
-  const handleIssuerChange = (selectedIssuerId, setFieldValue) => {
-    const selectedIssuer = issuerData.find((issuer) => issuer.issuer_id === selectedIssuerId);
+  const handleIssuerChange = (issuerData, selectedIssuerId, setFieldValue) => {
+    console.log(selectedIssuerId, issuerData);
+    const selectedIssuer = issuerData?.find((issuer) => {
+      console.log(issuer.issuer_id === selectedIssuerId);
+      return issuer.issuer_id === selectedIssuerId;
+    });
     console.log(selectedIssuer.faqs);
     if (selectedIssuer) {
       setFieldValue('faqs', selectedIssuer.faqs);
@@ -234,7 +257,7 @@ function FAQ() {
     }
   });
 
-  if (isFetching) return <Loader />;
+  //   if (isFetching) return <Loader />;
 
   return (
     <>
@@ -243,7 +266,8 @@ function FAQ() {
           enableReinitialize
           initialValues={{
             issuer_id: 0,
-            faqs: []
+            faqs: [],
+            files: null
           }}
           validationSchema={yup.object({
             issuer_id: yup.number(),
@@ -252,38 +276,40 @@ function FAQ() {
                 faq: yup.string().required('Question required'),
                 answer: yup.string().required('Answer required')
               })
-            )
+            ),
+            files: yup.mixed().required('Avatar is a required.')
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             const userID = localStorage.getItem('userID');
-            if (isEditing === false) {
-              const formValues = {
-                ...values,
-                method_name: 'add',
+            console.log(values);
+            // if (isEditing === false) {
+            //   const formValues = {
+            //     ...values,
+            //     method_name: 'add',
 
-                user_id: toInteger(userID)
-              };
-              try {
-                await SaveIssuer(formValues, issuerTableDataRefetch, clearFormValues);
-                changeTableVisibility();
-              } catch (err) {
-                console.log(err);
-              }
-            }
-            if (isEditing === true) {
-              try {
-                const formValues = {
-                  ...values,
-                  is_active: toInteger(isIssuerActive),
-                  method_name: 'update',
-                  user_id: toInteger(userID)
-                };
-                await EditIssuer(formValues, issuerTableDataRefetch, clearFormValues, setActiveClose);
-                changeTableVisibility();
-              } catch (err) {
-                console.log(err);
-              }
-            }
+            //     user_id: toInteger(userID)
+            //   };
+            //   try {
+            //     await SaveIssuer(formValues, issuerTableDataRefetch, clearFormValues);
+            //     changeTableVisibility();
+            //   } catch (err) {
+            //     console.log(err);
+            //   }
+            // }
+            // if (isEditing === true) {
+            //   try {
+            //     const formValues = {
+            //       ...values,
+            //       is_active: toInteger(isIssuerActive),
+            //       method_name: 'update',
+            //       user_id: toInteger(userID)
+            //     };
+            //     await EditIssuer(formValues, issuerTableDataRefetch, clearFormValues, setActiveClose);
+            //     changeTableVisibility();
+            //   } catch (err) {
+            //     console.log(err);
+            //   }
+            // }
             // changeTableVisibility();
           }}
         >
@@ -318,19 +344,51 @@ function FAQ() {
                   overflow: 'visible'
                 }}
               >
-                <SubmitButton
-                  title="FAQ Entry"
-                  changeTableVisibility={() => {}}
-                  clearFormValues={clearFormValues}
-                  isEditing={isEditing}
-                  formValues={formValues}
-                  setActiveClose={setActiveClose}
-                  setIsActive={handleIsIssuerActive}
-                  isActive={isIssuerActive}
-                  isValid={isValid}
-                  dirty={dirty}
-                  showBackButton
-                />
+                <Grid container spacing={2} sx={{ alignItems: 'center !important' }}>
+                  <Grid item md={3} sm={3} xs={4}>
+                    <CardHeader
+                      sx={{
+                        p: 2,
+                        '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
+                      }}
+                      titleTypographyProps={{ variant: 'subtitle1' }}
+                      title="FAQ Entry"
+                    />
+                  </Grid>
+                  <Grid item md={7} sm={7} xs={6}></Grid>
+                  {isFetching && (
+                    <Grid item md={2} sm={2} xs={2} textAlign="right">
+                      <LoadingButton
+                        loading={isFetching}
+                        color="secondary"
+                        loadingPosition="start"
+                        startIcon={<Add style={{ transform: 'rotate(45deg)' }} />}
+                        sx={{ color: 'gray !important' }}
+                      >
+                        Loading FAQs
+                      </LoadingButton>
+                    </Grid>
+                  )}
+                  {/* <Grid item md={4} sm={4} xs={6}>
+                    <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={1} padding={2}>
+                      <Box>
+                        <AnimateButton>
+                          <Button
+                            disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
+                            className={matchDownSM ? 'icon_button' : ''}
+                            variant="contained"
+                            color="success"
+                            sx={{ borderRadius: 0.6 }}
+                            startIcon={matchDownSM ? <TickCircle variant="Bold" /> : <Additem />}
+                            type="submit"
+                          >
+                            {!matchDownSM && 'Update'}
+                          </Button>
+                        </AnimateButton>
+                      </Box>
+                    </Stack>
+                  </Grid> */}
+                </Grid>
 
                 <Divider />
 
@@ -355,13 +413,13 @@ function FAQ() {
                         fullWidth
                         disablePortal
                         value={
-                          typeof values.issuer_id === 'number' &&
-                          issuerData.find((el) => {
+                          typeof values?.issuer_id === 'number' &&
+                          issuerData?.find((el) => {
                             return el.issuer_id === values.issuer_id;
                           })
                         }
                         onChange={(e) => {
-                          handleDropdownChange(e, 'issuer_id', 'issuer_id', setFieldValue);
+                          handleDropdownChange(e, issuerData, 'issuer_id', 'issuer_id', setFieldValue);
                         }}
                         options={issuerData}
                         getOptionLabel={(option) => option.issuer_name} // Assuming 'product_type' is the label you want to display
@@ -392,227 +450,318 @@ function FAQ() {
                         )}
                       />
                     </Grid>
+                    <Grid item md={4} sm={6} xs={12}>
+                      <Button
+                        disabled={values.issuer_id === 0}
+                        className={matchDownSM ? 'icon_button' : ''}
+                        variant="contained"
+                        color="success"
+                        sx={{ borderRadius: 0.6 }}
+                        startIcon={matchDownSM ? <CloudAdd variant="Bold" /> : <CloudAdd />}
+                        onClick={() => {
+                          handleOpenUploadDialog();
+                        }}
+                      >
+                        {!matchDownSM && 'Upload'}
+                      </Button>
+                    </Grid>
 
                     <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
-                    <Grid item xs={12} sx={{ paddingTop: '0px !important' }}>
-                      <CardHeader title="FAQs" sx={{ px: 0 }} />
-                    </Grid>
-                    <Grid item xs={12} sx={{ paddingTop: '0px !important' }}>
-                      <Divider />
-                    </Grid>
+                      <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                          <Divider />
+                        </Grid>
+                        <Grid item xs={12} sx={{ paddingTop: '0px !important' }}>
+                          <CardHeader title="FAQs" sx={{ px: 0 }} />
+                        </Grid>
+                        <Grid item xs={12} sx={{ paddingTop: '0px !important' }}>
+                          <Divider />
+                        </Grid>
 
-                    {values.faqs.map((qa, index) =>
-                      qa.is_editing ? (
-                        <>
-                          <Grid item xs={12} key={index}>
-                            <Card
-                              elevation={0}
-                              key={index}
-                              sx={{
-                                position: 'relative',
-                                border: '1px solid',
-                                borderRadius: 1.5,
-                                borderColor: '#068e44',
-                                overflow: 'visible',
-                                my: 2
-                              }}
-                            >
-                              <CardContent sx={{}}>
-                                <Stack direction="row" spacing={2} alignItems="center">
-                                  <Avatar variant="rounded" type="filled" sx={{ border: '2px solid #D7DFE9', backgroundColor: '#fff' }}>
-                                    <MessageQuestion color="#068e44" style={{ fontSize: '20px', height: '22px', width: '22px' }} />
-                                  </Avatar>
-                                  <Stack spacing={0}>
-                                    <Typography variant="body1" fontWeight={600} color="black">
-                                      Add FAQ
-                                    </Typography>
-                                  </Stack>
-                                </Stack>
-                                <Grid container spacing={3} sx={{ marginTop: '0px' }}>
-                                  <Grid item xs={12} sm={6}>
-                                    <NestedCustomTextField
-                                      fullWidth
-                                      label="Question"
-                                      valueName={`faqs[${index}].faq`}
-                                      placeholder="Please enter Question"
-                                      values={values.faqs[index].faq}
-                                      type="text"
-                                      //   regType="string"
-                                      //   setFieldValue={setFieldValue}
-                                      handleChange={handleChange}
-                                      handleBlur={handleBlur}
-                                      touched={touched}
-                                      errors={errors}
-                                      multiline={true}
-                                    />
-                                  </Grid>
+                        {values?.faqs?.map((qa, index) =>
+                          qa.is_editing ? (
+                            <>
+                              <Grid item xs={12} key={index}>
+                                <Card
+                                  elevation={0}
+                                  key={index}
+                                  sx={{
+                                    position: 'relative',
+                                    border: '1px solid',
+                                    borderRadius: 1.5,
+                                    borderColor: '#068e44',
+                                    overflow: 'visible',
+                                    my: 2
+                                  }}
+                                >
+                                  <CardContent sx={{}}>
+                                    <Stack direction="row" spacing={2} alignItems="center">
+                                      <Avatar variant="rounded" type="filled" sx={{ border: '2px solid #D7DFE9', backgroundColor: '#fff' }}>
+                                        <MessageQuestion color="#068e44" style={{ fontSize: '20px', height: '22px', width: '22px' }} />
+                                      </Avatar>
+                                      <Stack spacing={0}>
+                                        <Typography variant="body1" fontWeight={600} color="black">
+                                          Add FAQ
+                                        </Typography>
+                                      </Stack>
+                                    </Stack>
+                                    <Grid container spacing={3} sx={{ marginTop: '0px' }}>
+                                      <Grid item xs={12} sm={6}>
+                                        <NestedCustomTextField
+                                          fullWidth
+                                          label="Question"
+                                          valueName={`faqs[${index}].faq`}
+                                          placeholder="Please enter Question"
+                                          values={values.faqs[index].faq}
+                                          type="text"
+                                          //   regType="string"
+                                          //   setFieldValue={setFieldValue}
+                                          handleChange={handleChange}
+                                          handleBlur={handleBlur}
+                                          touched={touched}
+                                          errors={errors}
+                                          multiline={true}
+                                          inputProps={{ maxLength: 500 }}
+                                        />
+                                      </Grid>
 
-                                  <Grid item xs={12} sm={6}>
-                                    <NestedCustomTextField
-                                      label="Answer"
-                                      valueName={`faqs[${index}].answer`}
-                                      placeholder="Please enter Answer"
-                                      values={values.faqs[index].answer}
-                                      type="text"
-                                      //   regType="string"
-                                      //   setFieldValue={setFieldValue}
-                                      handleChange={handleChange}
-                                      handleBlur={handleBlur}
-                                      touched={touched}
-                                      // errors={Boolean(getIn(touched, `faqs[${index}].answer`) && getIn(errors, `faqs[${index}].answer`))}
-                                      errors={errors}
-                                      multiline
-                                      rows={4}
-                                      inputProps={{ maxLength: 500 }}
-                                    />
-                                  </Grid>
-                                  <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
-                                    <AnimateButton>
-                                      <Button
-                                        fullWidth
-                                        variant="contained"
-                                        color="success"
-                                        onClick={async (e) => {
-                                          // e.preventDefault();
+                                      <Grid item xs={12} sm={6}>
+                                        <NestedCustomTextField
+                                          label="Answer"
+                                          valueName={`faqs[${index}].answer`}
+                                          placeholder="Please enter Answer"
+                                          values={values.faqs[index].answer}
+                                          type="text"
+                                          //   regType="string"
+                                          //   setFieldValue={setFieldValue}
+                                          handleChange={handleChange}
+                                          handleBlur={handleBlur}
+                                          touched={touched}
+                                          // errors={Boolean(getIn(touched, `faqs[${index}].answer`) && getIn(errors, `faqs[${index}].answer`))}
+                                          errors={errors}
+                                          multiline
+                                          rows={4}
+                                          inputProps={{ maxLength: 500 }}
+                                        />
+                                      </Grid>
+                                      <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
+                                        <AnimateButton>
+                                          <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color="success"
+                                            onClick={async (e) => {
+                                              // e.preventDefault();
 
-                                          if (values.faqs[index].faq.length < 1 && values.faqs[index].answer.length < 1) {
-                                            enqueueSnackbar('Please fill required fields', {
-                                              variant: 'error',
-                                              autoHideDuration: 2000,
-                                              anchorOrigin: {
-                                                vertical: 'top',
-                                                horizontal: 'right'
+                                              if (values.faqs[index].faq.length < 1 && values.faqs[index].answer.length < 1) {
+                                                enqueueSnackbar('Please fill required fields', {
+                                                  variant: 'error',
+                                                  autoHideDuration: 2000,
+                                                  anchorOrigin: {
+                                                    vertical: 'top',
+                                                    horizontal: 'right'
+                                                  }
+                                                });
+                                                return;
                                               }
-                                            });
-                                            return;
-                                          }
 
-                                          const newFAQ = values.faqs.map((el, elIndex) => {
+                                              const newFAQ = values.faqs.map((el, elIndex) => {
+                                                if (elIndex == index) {
+                                                  return { ...el, panelName: `panel${elIndex}`, is_editing: 0, is_new: 0 };
+                                                }
+                                                return el;
+                                              });
+
+                                              try {
+                                                const payload = {
+                                                  method_name: 'update',
+                                                  issuer_id: values.issuer_id,
+                                                  faqs: newFAQ
+                                                };
+
+                                                await ManualAddFAQ(payload);
+
+                                                const issuerPayload = {
+                                                  method_name: 'getall'
+                                                };
+                                                const issuer = await GetIssuerData(issuerPayload);
+
+                                                const faqPanel = issuer.map((el) => {
+                                                  return {
+                                                    ...el,
+                                                    faqs:
+                                                      el.faqs &&
+                                                      el.faqs.map((fa, index) => {
+                                                        return { ...fa, panelName: `panel${index}` };
+                                                      })
+                                                  };
+                                                });
+
+                                                handleIssuerChange(faqPanel, values.issuer_id, setFieldValue);
+                                              } catch (err) {
+                                                console.log(err);
+                                              }
+                                            }}
+                                          >
+                                            Save
+                                          </Button>
+                                        </AnimateButton>
+                                      </Grid>
+                                      <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
+                                        <AnimateButton>
+                                          <Button
+                                            fullWidth
+                                            variant="outlined"
+                                            color="secondary"
+                                            type="button"
+                                            onClick={() => {
+                                              if (qa.is_editing && qa.is_new) {
+                                                const remove = values.faqs.filter((el, elIndex) => elIndex !== index);
+                                                setFieldValue('faqs', remove);
+                                              } else {
+                                                const editItem = values.faqs.map((el, elIndex) => {
+                                                  if (elIndex == index) {
+                                                    return { ...el, is_editing: 0 };
+                                                  }
+                                                  return el;
+                                                });
+                                                setFieldValue('faqs', editItem);
+                                              }
+                                            }}
+                                          >
+                                            Back
+                                          </Button>
+                                        </AnimateButton>
+                                      </Grid>
+                                    </Grid>
+                                  </CardContent>
+                                </Card>
+                              </Grid>
+                            </>
+                          ) : (
+                            <Grid item xs={12} key={index}>
+                              <DeleteDialog
+                                openDialog={openDialog}
+                                handleOpenDialog={handleOpenDialog}
+                                values={values.faqs}
+                                index={dialogIndex}
+                                setFieldValue={setFieldValue}
+                                issuerTableDataRefetch={issuerTableDataRefetch}
+                              />
+                              <Accordion expanded={expanded === qa.panelName} onChange={handleAccChange(qa.panelName)}>
+                                <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                                  <Stack flexDirection="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+                                    <Typography>{qa.faq}</Typography>
+
+                                    <Stack spacing={1} direction="row">
+                                      <IconButton
+                                        color="error"
+                                        sx={{ border: '1.5px solid #FFC5C1' }}
+                                        onClick={async () => {
+                                          handleOpenDialog();
+                                          setIndex(index);
+                                          // const remove = values.faqs.filter((el, elIndex) => elIndex !== index);
+                                          // setFieldValue('faqs', remove);
+                                        }}
+                                      >
+                                        <Trash size={26} style={{ cursor: 'pointer' }} />
+                                      </IconButton>
+                                      <IconButton
+                                        color="secondary"
+                                        sx={{ border: '1.5px solid #D7DFE9' }}
+                                        onClick={async () => {
+                                          const editItem = values.faqs.map((el, elIndex) => {
                                             if (elIndex == index) {
-                                              return { ...el, panelName: `panel${elIndex}`, is_editing: 0, is_new: 0 };
+                                              return { ...el, is_editing: 1 };
                                             }
                                             return el;
                                           });
 
-                                          setFieldValue('faqs', newFAQ);
+                                          setFieldValue('faqs', editItem);
                                         }}
                                       >
-                                        Save
-                                      </Button>
-                                    </AnimateButton>
-                                  </Grid>
-                                  <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
-                                    <AnimateButton>
-                                      <Button
-                                        fullWidth
-                                        variant="outlined"
-                                        color="secondary"
-                                        type="button"
-                                        onClick={() => {
-                                          if (qa.is_editing && qa.is_new) {
-                                            const remove = values.faqs.filter((el, elIndex) => elIndex !== index);
-                                            setFieldValue('faqs', remove);
-                                          } else {
-                                            const editItem = values.faqs.map((el, elIndex) => {
-                                              if (elIndex == index) {
-                                                return { ...el, is_editing: 0 };
-                                              }
-                                              return el;
-                                            });
-                                            setFieldValue('faqs', editItem);
-                                          }
-                                        }}
-                                      >
-                                        Back
-                                      </Button>
-                                    </AnimateButton>
-                                  </Grid>
-                                </Grid>
-                              </CardContent>
-                            </Card>
-                          </Grid>
-                        </>
-                      ) : (
-                        <Grid item xs={12} key={index}>
-                          <DeleteDialog
-                            openDialog={openDialog}
-                            handleOpenDialog={handleOpenDialog}
-                            values={values.faqs}
-                            index={dialogIndex}
-                            setFieldValue={setFieldValue}
-                          />
-                          <Accordion expanded={expanded === qa.panelName} onChange={handleAccChange(qa.panelName)}>
-                            <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                              <Stack flexDirection="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
-                                <Typography>{qa.faq}</Typography>
+                                        <Edit size={26} style={{ cursor: 'pointer' }} />
+                                      </IconButton>
+                                    </Stack>
+                                  </Stack>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Typography>{qa.answer}</Typography>
+                                </AccordionDetails>
+                              </Accordion>
+                            </Grid>
+                          )
+                        )}
 
-                                <Stack spacing={1} direction="row">
-                                  <IconButton
-                                    color="error"
-                                    sx={{ border: '1.5px solid #FFC5C1' }}
-                                    onClick={async () => {
-                                      handleOpenDialog();
-                                      setIndex(index);
-                                      // const remove = values.faqs.filter((el, elIndex) => elIndex !== index);
-                                      // setFieldValue('faqs', remove);
-                                    }}
-                                  >
-                                    <Trash size={26} style={{ cursor: 'pointer' }} />
-                                  </IconButton>
-                                  <IconButton
-                                    color="secondary"
-                                    sx={{ border: '1.5px solid #D7DFE9' }}
-                                    onClick={async () => {
-                                      const editItem = values.faqs.map((el, elIndex) => {
-                                        if (elIndex == index) {
-                                          return { ...el, is_editing: 1 };
-                                        }
-                                        return el;
-                                      });
-
-                                      setFieldValue('faqs', editItem);
-                                    }}
-                                  >
-                                    <Edit size={26} style={{ cursor: 'pointer' }} />
-                                  </IconButton>
-                                </Stack>
-                              </Stack>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Typography>{qa.answer}</Typography>
-                            </AccordionDetails>
-                          </Accordion>
+                        <Grid item md={4} sm={6} xs={12}>
+                          <AnimateButton>
+                            <Button
+                              fullWidth
+                              variant="contained"
+                              color="success"
+                              startIcon={<Add />}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setFieldValue('faqs', [
+                                  ...values.faqs,
+                                  {
+                                    faq: '',
+                                    answer: '',
+                                    panelName: '',
+                                    is_editing: 1,
+                                    is_new: 1
+                                  }
+                                ]);
+                              }}
+                            >
+                              Add {values.faqs?.length > 1 ? 'more' : 'Questions'}
+                            </Button>
+                          </AnimateButton>
                         </Grid>
-                      )
-                    )}
-
-                    <Grid item md={4} sm={6} xs={12}>
-                      <AnimateButton>
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          color="success"
-                          startIcon={<Add />}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setFieldValue('faqs', [
-                              ...values.faqs,
-                              {
-                                faq: '',
-                                answer: '',
-                                panelName: '',
-                                is_editing: 1,
-                                is_new: 1
-                              }
-                            ]);
-                          }}
-                        >
-                          Add {values.faqs.length > 1 ? 'more' : 'Questions'}
-                        </Button>
-                      </AnimateButton>
+                      </Grid>
                     </Grid>
+                    <Dialog
+                      open={openUpload}
+                      TransitionComponent={PopupTransition}
+                      keepMounted
+                      onClose={handleOpenUploadDialog}
+                      maxWidth="xs"
+                      aria-labelledby="column-delete-title"
+                      aria-describedby="column-delete-description"
+                      className="dialog_backdrop"
+                    >
+                      <Grid item xs={12}>
+                        <MainCard title="Upload FAQ File" noAddButton>
+                          <Grid container spacing={3}>
+                            <Grid
+                              item
+                              xs={12}
+                              sx={{
+                                paddingTop: '0px !important'
+                              }}
+                            >
+                              <Stack spacing={1.5} alignItems="center">
+                                <MultiFileUpload
+                                  showList={list}
+                                  setFieldValue={setFieldValue}
+                                  files={values?.files}
+                                  issuer_id={values.issuer_id}
+                                  issuerTableDataRefetch={issuerTableDataRefetch}
+                                  handleOpenUploadDialog={handleOpenUploadDialog}
+                                  handleIssuerChange={handleIssuerChange}
+                                  error={touched.files && !!errors.files}
+                                />
+                                {touched.files && errors.files && (
+                                  <FormHelperText error id="standard-weight-helper-text-password-login">
+                                    {errors.files}
+                                  </FormHelperText>
+                                )}
+                              </Stack>
+                            </Grid>
+                          </Grid>
+                        </MainCard>
+                      </Grid>
+                    </Dialog>
                   </Grid>
                 </CardContent>
               </Card>

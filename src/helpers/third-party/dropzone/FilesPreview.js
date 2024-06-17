@@ -6,7 +6,7 @@ import { List, ListItemText, ListItem } from '@mui/material';
 
 // project-imports
 import { DropzopType } from 'config';
-import IconButton from 'components/@extended/IconButton';
+import IconButton from 'helpers/@extended/IconButton';
 
 // utils
 import getDropzoneData from 'utils/getDropzoneData';
