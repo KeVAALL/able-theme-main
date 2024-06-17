@@ -596,6 +596,7 @@ function FAQ() {
                                                       })
                                                   };
                                                 });
+                                                setIssuerData(faqPanel);
 
                                                 handleIssuerChange(faqPanel, values.issuer_id, setFieldValue);
                                               } catch (err) {
@@ -746,6 +747,7 @@ function FAQ() {
                                   setFieldValue={setFieldValue}
                                   files={values?.files}
                                   issuer_id={values.issuer_id}
+                                  setIssuerData={setIssuerData}
                                   issuerTableDataRefetch={issuerTableDataRefetch}
                                   handleOpenUploadDialog={handleOpenUploadDialog}
                                   handleIssuerChange={handleIssuerChange}

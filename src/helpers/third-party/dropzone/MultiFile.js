@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 
 // material-ui
@@ -30,6 +31,7 @@ const MultiFileUpload = ({
   error,
   showList = false,
   issuer_id,
+  setIssuerData,
   issuerTableDataRefetch,
   handleOpenUploadDialog,
   handleIssuerChange,
@@ -152,6 +154,7 @@ const MultiFileUpload = ({
                         })
                     };
                   });
+                  setIssuerData(faqPanel);
 
                   handleIssuerChange(faqPanel, issuer_id, setFieldValue);
                 }
