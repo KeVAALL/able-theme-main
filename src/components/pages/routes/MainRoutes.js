@@ -14,6 +14,7 @@ import { element } from 'prop-types';
 import Dashboard from '../dashboard/dashboard';
 import FDReport from '../reports/fdReport';
 import IssuerReport from '../reports/issuerReport';
+import FAQ from '../faq/faq';
 
 // Product
 const Product = Loadable(lazy(() => import('components/pages/productType/productType')));
@@ -127,7 +128,7 @@ const MainRoutes = {
         },
         {
           path: 'faq',
-          element: <></>
+          element: <FAQ />
         }
       ]
     }

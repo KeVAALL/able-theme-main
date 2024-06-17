@@ -145,6 +145,7 @@ const formAllValues = {
   is_permanent_address_correspondent: 0,
   nominee: [],
   investor: {
+    investor_id: 0,
     investor_name: '',
     pan_no: '',
     email_id: '',
@@ -188,6 +189,7 @@ const validationSchema = yup.object().shape({
   is_permanent_address_correspondent: yup.number(),
   nominee: yup.array().min(1, 'At least one nominee is required'),
   investor: yup.object().shape({
+    investor_id: yup.number(),
     investor_name: yup.string().required('Investor Name is required'),
     pan_no: yup
       .string()

@@ -66,7 +66,7 @@ export async function SaveProduct(payload, ProductTableDataRefetch, clearFormVal
   try {
     await axios.post('/product/saveproduct', payload);
     clearFormValues();
-    enqueueSnackbar('Product added', {
+    enqueueSnackbar('Fix Deposit added', {
       variant: 'success',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -93,7 +93,7 @@ export async function EditProduct(payload, ProductTableDataRefetch, clearFormVal
     await axios.post('/product/saveproduct', payload);
     clearFormValues();
     // setActiveClose();
-    enqueueSnackbar('Product Updated', {
+    enqueueSnackbar('Fix Deposit updated', {
       variant: 'success',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -122,7 +122,7 @@ export async function DeleteOneProduct(values) {
       user_id: toInteger(userID),
       method_name: 'delete'
     });
-    enqueueSnackbar('Product Deleted', {
+    enqueueSnackbar('Fix Deposit deleted', {
       variant: 'error',
       autoHideDuration: 2000,
       anchorOrigin: {

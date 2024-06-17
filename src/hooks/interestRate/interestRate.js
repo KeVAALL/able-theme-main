@@ -48,7 +48,7 @@ export async function SaveInterestRate(payload) {
   try {
     await axios.post('/product/savescheme', payload);
 
-    enqueueSnackbar('Product added', {
+    enqueueSnackbar('Scheme added', {
       variant: 'success',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -71,7 +71,7 @@ export async function SaveInterestRate(payload) {
 export async function EditInterestRate(payload) {
   try {
     await axios.post('/product/savescheme', payload);
-    enqueueSnackbar('Product Updated', {
+    enqueueSnackbar('Scheme Updated', {
       variant: 'success',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -96,7 +96,7 @@ export async function DeleteOneInterestRate(values, setSchemeData) {
       scheme_master_id: values.scheme_master_id,
       method_name: 'delete'
     });
-    enqueueSnackbar('Product Deleted', {
+    enqueueSnackbar('Scheme Deleted', {
       variant: 'error',
       autoHideDuration: 2000,
       anchorOrigin: {

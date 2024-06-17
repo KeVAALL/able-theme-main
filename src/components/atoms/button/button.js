@@ -25,11 +25,10 @@ export const SubmitButton = memo(
     setActiveClose,
     setIsActive,
     isActive,
-    errors,
-    handleTabError,
     handleIsInvestorEditing,
     isValid,
-    dirty
+    dirty,
+    showBackButton
   }) => {
     // Theme
     const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
@@ -100,21 +99,23 @@ export const SubmitButton = memo(
                 </AnimateButton>
               </Box>
             )}
-            <Box>
-              <AnimateButton>
-                <Button
-                  className={matchDownSM ? 'icon_button' : ''}
-                  variant={matchDownSM ? 'contained' : 'outlined'}
-                  color={matchDownSM ? 'error' : 'secondary'}
-                  sx={{ borderRadius: 0.6 }}
-                  startIcon={matchDownSM && <CloseCircle variant="Bold" />}
-                  type="button"
-                  onClick={CancelForm}
-                >
-                  {!matchDownSM && 'Back'}
-                </Button>
-              </AnimateButton>
-            </Box>
+            {!showBackButton && (
+              <Box>
+                <AnimateButton>
+                  <Button
+                    className={matchDownSM ? 'icon_button' : ''}
+                    variant={matchDownSM ? 'contained' : 'outlined'}
+                    color={matchDownSM ? 'error' : 'secondary'}
+                    sx={{ borderRadius: 0.6 }}
+                    startIcon={matchDownSM && <CloseCircle variant="Bold" />}
+                    type="button"
+                    onClick={CancelForm}
+                  >
+                    {!matchDownSM && 'Back'}
+                  </Button>
+                </AnimateButton>
+              </Box>
+            )}
           </Stack>
         </Grid>
       </Grid>
@@ -128,6 +129,7 @@ SubmitButton.PropTypes = {
   errors: PropTypes.any,
   handleTabError: PropTypes.any,
   handleIsInvestorEditing: PropTypes.any,
+  showBackButton: PropTypes.any,
   isValid: PropTypes.any,
   dirty: PropTypes.any
 };

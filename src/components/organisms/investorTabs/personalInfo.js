@@ -65,7 +65,7 @@ const PersonalInfo = (props) => {
                               pan_no: props.values.investor.pan_no
                             },
                             investor_id: props.values.investor.investor_id,
-                            redirection_url: 'https://able-theme-main.vercel.app/investor'
+                            redirection_url: 'http://localhost:3000/investor'
                           };
 
                           const response = await VerifyPAN(payload);

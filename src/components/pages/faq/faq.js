@@ -17,7 +17,9 @@ import {
   AccordionSummary,
   AccordionDetails,
   Dialog,
-  DialogContent
+  DialogContent,
+  TextField,
+  Autocomplete
 } from '@mui/material';
 import { MuiColorInput } from 'mui-color-input';
 import { useTheme } from '@mui/material/styles';
@@ -35,17 +37,17 @@ import {
   tableColumns,
   VisibleColumn
 } from 'constant/issuerValidation';
-import { GetIssuerData, GetOneIssuer, SaveIssuer, EditIssuer, DeleteOneIssuer, DeleteOneFAQ } from 'hooks/issuer/issuer';
+import { GetIssuerData, GetOneIssuer, SaveIssuer, EditIssuer, DeleteOneFAQ } from 'hooks/issuer/issuer';
 import { SubmitButton } from 'components/atoms/button/button';
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import Loader from 'components/atoms/loader/Loader';
 import IconButton from 'helpers/@extended/IconButton';
-import { CustomTextField, NestedCustomTextField } from 'utils/textfield';
+import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
 import { PopupTransition } from 'helpers/@extended/Transitions';
-import './issuer.css';
 
 // third-party
 import { Formik } from 'formik';
+import * as yup from 'yup';
 import { enqueueSnackbar } from 'notistack';
 import { toInteger } from 'lodash';
 
@@ -115,20 +117,17 @@ const DeleteDialog = memo(({ openDialog, handleOpenDialog, values, index, setFie
   );
 });
 
-function Issuer() {
+function FAQ() {
   // Main data state to hold the list of issuers
   const [issuerData, setIssuerData] = useState([]);
   // Editing States
   const [isEditing, setIsEditing] = useState(false); // State to track if editing mode is active
   const [isIssuerActive, setIssuerActive] = useState(); // State to track if the issuer is active or not active
   // Form Visibility
-  const [showTable, setShowTable] = useState(false); // State to hold form input values
+  const [showTable, setShowTable] = useState(true); // State to hold form input values
   // Form State
   const [formValues, setFormValues] = useState(formAllValues); // State to hold form input values
-  // Color picker
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
-  const [startColor, setStartColor] = useState('#ffffff');
-  const [endColor, setEndColor] = useState('#ffffff');
+
   // Theme
   const theme = useTheme();
 
@@ -144,13 +143,32 @@ function Issuer() {
     console.log(panel, newExpanded);
     setExpanded(newExpanded ? panel : false);
   };
+  const handleDropdownChange = (e, optionName, formName, setFieldValue) => {
+    if (e.target.outerText === undefined) {
+      setFieldValue(formName, 0);
+    } else {
+      issuerData.forEach(async (el) => {
+        if (el.issuer_name === e.target.outerText) {
+          console.log('here');
+          await setFieldValue(formName, el.issuer_id);
+          handleIssuerChange(el.issuer_id, setFieldValue);
+        }
+      });
+    }
+  };
+  const handleIssuerChange = (selectedIssuerId, setFieldValue) => {
+    const selectedIssuer = issuerData.find((issuer) => issuer.issuer_id === selectedIssuerId);
+    console.log(selectedIssuer.faqs);
+    if (selectedIssuer) {
+      setFieldValue('faqs', selectedIssuer.faqs);
+    } else {
+      setFieldValue('faqs', []);
+    }
+  };
 
   // Functions
   // Editing States
   const setEditing = (value) => {
-    setBackgroundColor(value.app_bg_colour);
-    setStartColor(value.start_colour);
-    setEndColor(value.end_colour);
     setFormValues(value);
   };
   // Activates editing mode
@@ -164,16 +182,7 @@ function Issuer() {
   const handleIsIssuerActive = (initialValue) => {
     setIssuerActive(initialValue);
   };
-  // Color Picker
-  const handleBGColorChange = (newValue) => {
-    setBackgroundColor(newValue);
-  };
-  const handleStartColorChange = (newValue) => {
-    setStartColor(newValue);
-  };
-  const handleEndColorChange = (newValue) => {
-    setEndColor(newValue);
-  };
+
   // Form Visibility
   const changeTableVisibility = () => {
     setExpanded('');
@@ -187,9 +196,6 @@ function Issuer() {
   // Empty Form Fields
   const clearFormValues = () => {
     setFormValues(formAllValues);
-    setBackgroundColor('#ffffff');
-    setStartColor('#ffffff');
-    setEndColor('#ffffff');
   };
   // Table Columns
   const columns = useMemo(() => tableColumns, []);
@@ -228,29 +234,33 @@ function Issuer() {
     }
   });
 
-  if (isPending) return <Loader />;
+  if (isFetching) return <Loader />;
 
   return (
     <>
       {showTable && (
         <Formik
-          initialValues={formValues}
-          validationSchema={validationSchema}
+          enableReinitialize
+          initialValues={{
+            issuer_id: 0,
+            faqs: []
+          }}
+          validationSchema={yup.object({
+            issuer_id: yup.number(),
+            faqs: yup.array().of(
+              yup.object().shape({
+                faq: yup.string().required('Question required'),
+                answer: yup.string().required('Answer required')
+              })
+            )
+          })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             const userID = localStorage.getItem('userID');
             if (isEditing === false) {
               const formValues = {
                 ...values,
                 method_name: 'add',
-                app_bg_colour: backgroundColor,
-                start_colour: startColor,
-                end_colour: endColor,
-                max_dp_fd_limit: 0,
-                max_fd_nominee_limit: 0,
-                max_pms_nominee_limit: 0,
-                renewable_lower_bound: 0,
-                renewable_upper_bound: 0,
-                is_renewable: 0,
+
                 user_id: toInteger(userID)
               };
               try {
@@ -266,10 +276,7 @@ function Issuer() {
                   ...values,
                   is_active: toInteger(isIssuerActive),
                   method_name: 'update',
-                  user_id: toInteger(userID),
-                  app_bg_colour: backgroundColor,
-                  start_colour: startColor,
-                  end_colour: endColor
+                  user_id: toInteger(userID)
                 };
                 await EditIssuer(formValues, issuerTableDataRefetch, clearFormValues, setActiveClose);
                 changeTableVisibility();
@@ -312,8 +319,8 @@ function Issuer() {
                 }}
               >
                 <SubmitButton
-                  title="Issuer Entry"
-                  changeTableVisibility={changeTableVisibility}
+                  title="FAQ Entry"
+                  changeTableVisibility={() => {}}
                   clearFormValues={clearFormValues}
                   isEditing={isEditing}
                   formValues={formValues}
@@ -322,6 +329,7 @@ function Issuer() {
                   isActive={isIssuerActive}
                   isValid={isValid}
                   dirty={dirty}
+                  showBackButton
                 />
 
                 <Divider />
@@ -329,161 +337,63 @@ function Issuer() {
                 <CardContent>
                   <Grid container spacing={3}>
                     <Grid item md={4} sm={6} xs={12}>
-                      <CustomTextField
-                        // disabled={isEditing}
-                        label="Issuer PAN"
-                        name="issuer_pan"
-                        placeholder={'Please enter Issuer PAN'}
-                        values={values}
-                        type="text"
-                        regType="pan"
+                      {/* <FormikAutoComplete
+                        options={issuerData.map((issuer) => ({
+                          label: issuer.issuer_name,
+                          id: issuer.issuer_id
+                        }))}
+                        defaultValue={values.issuer_id}
                         setFieldValue={setFieldValue}
-                        onBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
+                        formName="issuer_id"
+                        optionName="label"
+                        label="Select Issuer"
+                      /> */}
+                      <Autocomplete
+                        disabled={false}
+                        id="basic-autocomplete-label"
+                        className="common-autocomplete"
                         fullWidth
-                        FormHelperTextProps={{
-                          style: {
-                            marginLeft: 0
+                        disablePortal
+                        value={
+                          typeof values.issuer_id === 'number' &&
+                          issuerData.find((el) => {
+                            return el.issuer_id === values.issuer_id;
+                          })
+                        }
+                        onChange={(e) => {
+                          handleDropdownChange(e, 'issuer_id', 'issuer_id', setFieldValue);
+                        }}
+                        options={issuerData}
+                        getOptionLabel={(option) => option.issuer_name} // Assuming 'product_type' is the label you want to display
+                        componentsProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: 'preventOverflow',
+                                enabled: false
+                              }
+                            ]
                           }
                         }}
-                        inputProps={{ maxLength: 10 }}
-                      />
-                    </Grid>
-                    <Grid item md={4} sm={6} xs={12}>
-                      <CustomTextField
-                        // disabled={true}
-                        label="Issuer Name"
-                        name="issuer_name"
-                        placeholder={'Please enter Issuer Name'}
-                        values={values}
-                        type="text"
-                        regType="string"
-                        setFieldValue={setFieldValue}
-                        onBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                        fullWidth
-                        FormHelperTextProps={{
-                          style: {
-                            marginLeft: 0
-                          }
-                        }}
-                      />
-                    </Grid>
-                    <Grid item md={4} sm={6} xs={12}>
-                      <CustomTextField
-                        // disabled={isEditing}
-                        label="GST Number"
-                        name="issuer_gst_number"
-                        placeholder={'Please enter GST Number'}
-                        values={values}
-                        type="text"
-                        regType="noSpecial"
-                        setFieldValue={setFieldValue}
-                        onBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                        fullWidth
-                        FormHelperTextProps={{
-                          style: {
-                            marginLeft: 0
-                          }
-                        }}
-                        inputProps={{ maxLength: 15 }}
+                        renderInput={(params) => (
+                          <TextField
+                            // error={Boolean(props.errors[props.formName])}
+                            {...params}
+                            className="autocomplete-textfield"
+                            name="issuer_id"
+                            label="Select Issuer"
+                            InputProps={{
+                              ...params.InputProps,
+                              inputProps: {
+                                ...params.inputProps
+                              }
+                            }}
+                          />
+                        )}
                       />
                     </Grid>
 
-                    <Grid item md={4} sm={6} xs={12}>
-                      <CustomTextField
-                        // disabled={isEditing}
-                        label="Issuer Tollfree Number"
-                        name="issuer_tollfree_number"
-                        placeholder={'Please enter Toll-free Number'}
-                        values={values}
-                        type="text"
-                        regType="number"
-                        setFieldValue={setFieldValue}
-                        onBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                        fullWidth
-                        FormHelperTextProps={{
-                          style: {
-                            marginLeft: 0
-                          }
-                        }}
-                        inputProps={{ maxLength: 15 }}
-                      />
-                    </Grid>
-                    <Grid item md={8} sm={6} xs={12}>
-                      <CustomTextField
-                        label="Logo URL"
-                        name="logo_url"
-                        placeholder={'Please enter Logo URL'}
-                        values={values}
-                        type="text"
-                        regType="noSpace"
-                        setFieldValue={setFieldValue}
-                        // onChange={handleChange}
-                        onBlur={handleBlur}
-                        touched={touched}
-                        errors={errors}
-                        fullWidth
-                        FormHelperTextProps={{
-                          style: {
-                            marginLeft: 0
-                          }
-                        }}
-                        inputProps={{ maxLength: 150 }}
-                      />
-                    </Grid>
-                    <Grid item md={4} sm={4} xs={12}>
-                      <MuiColorInput
-                        fullWidth
-                        label="BG Color"
-                        className="color_picker_main"
-                        format="hex"
-                        // value={values.app_bg_colour}
-                        value={backgroundColor}
-                        fallbackValue="#ffffff"
-                        onChange={(e) => {
-                          handleBGColorChange(e);
-                          // setFieldValue('app_bg_colour', e);
-                        }}
-                      />
-                    </Grid>
-                    <Grid item md={4} sm={4} xs={12}>
-                      <MuiColorInput
-                        fullWidth
-                        label="Start Color"
-                        className="color_picker_main"
-                        format="hex"
-                        // value={values.start_color}
-                        value={startColor}
-                        fallbackValue="#ffffff"
-                        onChange={(e) => {
-                          handleStartColorChange(e);
-                          // setFieldValue('start_color', e);
-                        }}
-                      />
-                    </Grid>
-                    <Grid item md={4} sm={4} xs={12}>
-                      <MuiColorInput
-                        fullWidth
-                        label="End Color"
-                        className="color_picker_main"
-                        format="hex"
-                        // value={values.end_color}
-                        value={endColor}
-                        fallbackValue="#ffffff"
-                        onChange={(e) => {
-                          handleEndColorChange(e);
-                          // setFieldValue('end_color', e);
-                        }}
-                      />
-                    </Grid>
-                    {/* <Grid item xs={12}>
+                    <Grid item xs={12}>
                       <Divider />
                     </Grid>
                     <Grid item xs={12} sx={{ paddingTop: '0px !important' }}>
@@ -529,9 +439,9 @@ function Issuer() {
                                       placeholder="Please enter Question"
                                       values={values.faqs[index].faq}
                                       type="text"
-                                      regType="string"
-                                      setFieldValue={setFieldValue}
-                                      // handleChange={handleChange}
+                                      //   regType="string"
+                                      //   setFieldValue={setFieldValue}
+                                      handleChange={handleChange}
                                       handleBlur={handleBlur}
                                       touched={touched}
                                       errors={errors}
@@ -546,9 +456,9 @@ function Issuer() {
                                       placeholder="Please enter Answer"
                                       values={values.faqs[index].answer}
                                       type="text"
-                                      regType="string"
-                                      setFieldValue={setFieldValue}
-                                      // handleChange={handleChange}
+                                      //   regType="string"
+                                      //   setFieldValue={setFieldValue}
+                                      handleChange={handleChange}
                                       handleBlur={handleBlur}
                                       touched={touched}
                                       // errors={Boolean(getIn(touched, `faqs[${index}].answer`) && getIn(errors, `faqs[${index}].answer`))}
@@ -676,9 +586,9 @@ function Issuer() {
                           </Accordion>
                         </Grid>
                       )
-                    )} */}
+                    )}
 
-                    {/* <Grid item md={4} sm={6} xs={12}>
+                    <Grid item md={4} sm={6} xs={12}>
                       <AnimateButton>
                         <Button
                           fullWidth
@@ -702,124 +612,7 @@ function Issuer() {
                           Add {values.faqs.length > 1 ? 'more' : 'Questions'}
                         </Button>
                       </AnimateButton>
-                    </Grid> */}
-
-                    {/* {values.faq.map(
-                      (qa, index) => (
-                        qa.is_editing ? (
-                        <Grid item xs={12} key={index}>
-                          <Card
-                            elevation={0}
-                            key={index}
-                            sx={{
-                              position: 'relative',
-                              border: '1px solid',
-                              borderRadius: 1.5,
-                              borderColor: '#068e44',
-                              overflow: 'visible',
-                              my: 2
-                            }}
-                          >
-                            <CardContent sx={{}}>
-                              <Stack direction="row" spacing={2} alignItems="center">
-                                <Avatar variant="rounded" type="filled" sx={{ border: '2px solid #D7DFE9', backgroundColor: '#fff' }}>
-                                  <MessageQuestion color="#068e44" style={{ fontSize: '20px', height: '22px', width: '22px' }} />
-                                </Avatar>
-                                <Stack spacing={0}>
-                                  <Typography variant="body1" fontWeight={600} color="black">
-                                    Add FAQ
-                                  </Typography>
-                                </Stack>
-                              </Stack>
-                              <Grid container spacing={3} sx={{ marginTop: '0px' }}>
-                                <Grid item xs={12} sm={6}>
-                                  <NestedCustomTextField
-                                    fullWidth
-                                    label="Question"
-                                    valueName={`faq[${index}].question`}
-                                    placeholder="Please enter Question"
-                                    values={values.faq[index].question}
-                                    type="text"
-                                    regType="string"
-                                    setFieldValue={setFieldValue}
-                                    // handleChange={handleChange}
-                                    handleBlur={handleBlur}
-                                    touched={touched}
-                                    errors={errors}
-                                    multiline={true}
-                                  />
-                                </Grid>
-
-                                <Grid item xs={12} sm={6}>
-                                  <NestedCustomTextField
-                                    label="Answer"
-                                    valueName={`faq[${index}].answer`}
-                                    placeholder="Please enter Answer"
-                                    values={values.faq[index].answer}
-                                    type="text"
-                                    regType="string"
-                                    setFieldValue={setFieldValue}
-                                    handleBlur={handleBlur}
-                                    touched={touched}
-                                    errors={errors}
-                                    multiline={true}
-                                  />
-                                </Grid>
-                                <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
-                                  <AnimateButton>
-                                    <Button
-                                      fullWidth
-                                      variant="contained"
-                                      color="success"
-                                      onClick={async (e) => {
-                                        //   e.preventDefault();
-                                        // const payload = {
-                                        // };
-                                        try {
-                                          console.log(values.faq);
-
-                                          // props.setFieldValue('investor_bank', newBank);
-                                        } catch (err) {
-                                          console.log(err);
-                                        }
-                                      }}
-                                    >
-                                      Save & Continue
-                                    </Button>
-                                  </AnimateButton>
-                                </Grid>
-                                <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
-                                  <AnimateButton>
-                                    <Button
-                                      fullWidth
-                                      variant="outlined"
-                                      color="secondary"
-                                      type="button"
-                                      onClick={() => {
-                                        // if (bank.is_editing && bank.is_new) {
-                                        //   const remove = values.faq.filter((el, elIndex) => elIndex !== index);
-                                        //   setFieldValue('faq', remove);
-                                        // } else {
-                                        //   const editItem = formValues.map((el, elIndex) => {
-                                        //     if (elIndex == index) {
-                                        //       return { ...el, is_editing: 0 };
-                                        //     }
-                                        //     return el;
-                                        //   });
-                                        //   setFieldValue('faq', editItem);
-                                        // }
-                                      }}
-                                    >
-                                      Back
-                                    </Button>
-                                  </AnimateButton>
-                                </Grid>
-                              </Grid>
-                            </CardContent>
-                          </Card>
-                        </Grid>)
-                      )
-                    )} */}
+                    </Grid>
                   </Grid>
                 </CardContent>
               </Card>
@@ -827,36 +620,8 @@ function Issuer() {
           )}
         </Formik>
       )}
-      {!showTable && (
-        <MainCard
-          title="Issuer Name Search"
-          changeTableVisibility={changeTableVisibility}
-          showButton
-          setActiveAdding={setActiveClose}
-          border
-          contentSX={{ p: 2 }}
-          sx={{ height: '100%', boxShadow: 1 }}
-        >
-          <MultiTable
-            columns={columns}
-            data={issuerData}
-            formValues={filterFormValues}
-            formValueFields={formValueFields}
-            validationSchema={filterValidationSchema}
-            changeTableVisibility={changeTableVisibility}
-            setEditing={setEditing}
-            getOneItem={GetOneIssuer}
-            deleteOneItem={DeleteOneIssuer}
-            setSearchData={setSearchData}
-            tableDataRefetch={issuerTableDataRefetch}
-            setActiveEditing={setActiveEditing}
-            VisibleColumn={VisibleColumn}
-            isFetching={isFetching}
-          />
-        </MainCard>
-      )}
     </>
   );
 }
 
-export default Issuer;
+export default FAQ;

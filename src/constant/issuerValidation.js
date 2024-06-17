@@ -14,8 +14,8 @@ const formAllValues = {
   logo_url: '',
   app_bg_colour: '',
   start_colour: '',
-  end_colour: '',
-  faqs: []
+  end_colour: ''
+  // faqs: []
 };
 const validationSchema = yup.object({
   issuer_gst_number: yup
@@ -33,13 +33,13 @@ const validationSchema = yup.object({
     .string()
     .matches(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, 'Please enter valid URL')
     // .matches(/^\s*\S[\s\S]*$/, 'Remove Spaces')
-    .required('Logo URL is required'),
-  faqs: yup.array().of(
-    yup.object().shape({
-      faq: yup.string().required('Question required'),
-      answer: yup.string().required('Answer required')
-    })
-  )
+    .required('Logo URL is required')
+  // faqs: yup.array().of(
+  //   yup.object().shape({
+  //     faq: yup.string().required('Question required'),
+  //     answer: yup.string().required('Answer required')
+  //   })
+  // )
 });
 // Search Item form fields
 const filterFormValues = {
