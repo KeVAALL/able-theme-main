@@ -38,8 +38,7 @@ const EcommerceMetrix = ({ primary, secondary, content, iconPrimary, color }) =>
     >
       <Box
         sx={{
-          px: 4.5,
-          py: 4,
+          p: 2,
           '&:after': {
             content: '""',
             backdropFilter: 'blur(2px)'

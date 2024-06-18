@@ -60,7 +60,7 @@ const WalletProfile = ({ logoURL, fdName, investorCount, fdInvestment }) => {
         </Grid> */}
         <Grid item xs={12}>
           <MainCard content={false}>
-            <Box sx={{ p: 2 }}>
+            <Box sx={{ p: '10px' }}>
               <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Stack direction="row" alignItems="center" spacing={2}>
                   {/* <Avatar alt="Jone Doe" src={avatar} size="lg" /> */}

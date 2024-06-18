@@ -496,9 +496,9 @@ function FAQ() {
                                           placeholder="Please enter Question"
                                           values={values.faqs[index].faq}
                                           type="text"
-                                          //   regType="string"
-                                          //   setFieldValue={setFieldValue}
-                                          handleChange={handleChange}
+                                          regType="string"
+                                          setFieldValue={setFieldValue}
+                                          // handleChange={handleChange}
                                           handleBlur={handleBlur}
                                           touched={touched}
                                           errors={errors}
@@ -514,9 +514,9 @@ function FAQ() {
                                           placeholder="Please enter Answer"
                                           values={values.faqs[index].answer}
                                           type="text"
-                                          //   regType="string"
-                                          //   setFieldValue={setFieldValue}
-                                          handleChange={handleChange}
+                                          regType="string"
+                                          setFieldValue={setFieldValue}
+                                          // handleChange={handleChange}
                                           handleBlur={handleBlur}
                                           touched={touched}
                                           // errors={Boolean(getIn(touched, `faqs[${index}].answer`) && getIn(errors, `faqs[${index}].answer`))}

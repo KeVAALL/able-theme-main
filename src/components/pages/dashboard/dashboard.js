@@ -79,18 +79,6 @@ function Dashboard() {
           color={theme.palette.info.main}
           iconPrimary={UserTick}
         />
-        {/* <EcommerceDataCard
-          title="Total Investors"
-          count="50,000"
-          iconPrimary={<User variant="Bold" />}
-          percentage={
-            <Typography color="primary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowUp size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-            </Typography>
-          }
-        >
-          <EcommerceDataChart color={theme.palette.success.light} />
-        </EcommerceDataCard> */}
       </Grid>
       {/* <Grid item xs={12} sm={6} md={4}>
         <AnalyticEcommerce title="Total AUM" count="₹50,00,0000" percentage={27.4} extra="₹50,395" />
@@ -103,40 +91,16 @@ function Dashboard() {
           color={theme.palette.success.main}
           iconPrimary={MoneyAdd}
         />
-        {/* <EcommerceDataCard
-          title="Total AUM"
-          count="₹50,00,0000"
-          iconPrimary={<Wallet3 variant="Bold" />}
-          percentage={
-            <Typography color="primary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowUp size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-            </Typography>
-          }
-        >
-          <EcommerceDataChart color={theme.palette.success.light} />
-        </EcommerceDataCard> */}
       </Grid>
 
       <Grid item xs={12} sm={6} md={3}>
         <EcommerceMetrix
           primary="Net Volume"
-          secondary={inrCurrency(1000000)}
+          secondary={inrCurrency(dashboardData.investor_details.net_investment)}
           // content="20,032 Last Month"
           color={theme.palette.warning.main}
           iconPrimary={MoneyChange}
         />
-        {/* <EcommerceDataCard
-          title="Net Volume"
-          count="₹50,00,0000"
-          iconPrimary={<MoneyAdd variant="Bold" />}
-          percentage={
-            <Typography color="primary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowUp size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-            </Typography>
-          }
-        >
-          <EcommerceDataChart color={theme.palette.success.light} />
-        </EcommerceDataCard> */}
       </Grid>
 
       {dashboardData.fd_details.map((fd, id) => {
@@ -146,10 +110,6 @@ function Dashboard() {
           </Grid>
         );
       })}
-
-      {/* <Grid item xs={12} md={4}>
-        <SwitchBalanace/>
-      </Grid> */}
 
       {/* <Grid item xs={12} md={6}>
         <TotalIncome />

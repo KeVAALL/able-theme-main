@@ -34,7 +34,7 @@ const SwitchBalanace = ({ name, value, mainIcon }) => {
       }}
     >
       {/* position: 'inherit', zIndex: 2 */}
-      <Box sx={{ p: 2, position: 'inherit', zIndex: 2 }}>
+      <Box sx={{ p: '10px', position: 'inherit', zIndex: 2 }}>
         {/* <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}> */}
         <Stack spacing={1}>
           <Stack direction="row" alignItems="center" spacing={1.2}>
@@ -42,10 +42,12 @@ const SwitchBalanace = ({ name, value, mainIcon }) => {
               {/* <Wallet3 color="#fff" style={{ height: '16px !important', width: '16px !important' }} /> */}
               {mainIcon}
             </Avatar>
-            <Typography variant="h5">{name}</Typography>
+            <Typography variant="h6" fontWeight={700}>
+              {name}
+            </Typography>
           </Stack>
           {/* <Typography sx={{ fontSize: '13px' }}>AUM</Typography> */}
-          <Typography variant="h6">{value}</Typography>
+          <Typography variant="body1">{value}</Typography>
         </Stack>
         {/* <Avatar
             variant="rounded"
