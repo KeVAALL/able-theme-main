@@ -252,6 +252,7 @@ const AuthLogin = ({ forgot }) => {
                       marginLeft: 0
                     }
                   }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -265,6 +266,7 @@ const AuthLogin = ({ forgot }) => {
                   onBlur={handleBlur}
                   touched={touched}
                   errors={errors}
+                  InputLabelProps={{ shrink: true }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
