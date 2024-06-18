@@ -141,7 +141,7 @@ function Dashboard() {
 
       {dashboardData.fd_details.map((fd, id) => {
         return (
-          <Grid key={id} item xs={12} md={4}>
+          <Grid key={id} item xs={12} sm={6} md={4}>
             <WalletProfile logoURL={fd.logo_url} fdName={fd.fd_name} investorCount={fd.investor_count} fdInvestment={fd.investment_on_fd} />
           </Grid>
         );

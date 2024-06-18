@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 // material-ui
 import { styled } from '@mui/material/styles';
@@ -7,14 +8,16 @@ import { Box, Button, Stack } from '@mui/material';
 
 // third-party
 import { useDropzone } from 'react-dropzone';
+import { DropzopType } from 'config';
 
 // project-imports
-import { DropzopType } from 'config';
 import RejectionFiles from './RejectionFiles';
 import PlaceholderContent from './PlaceholderContent';
 import FilesPreview from './FilesPreview';
 import { UploadFAQ } from 'hooks/faq/faq';
 import { GetIssuerData } from 'hooks/issuer/issuer';
+import { CloudPlus } from 'iconsax-react';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
   outline: 'none',
@@ -35,6 +38,8 @@ const MultiFileUpload = ({
   issuerTableDataRefetch,
   handleOpenUploadDialog,
   handleIssuerChange,
+  faqUploading,
+  setFaqUploading,
   files,
   type,
   setFieldValue,
@@ -48,16 +53,6 @@ const MultiFileUpload = ({
     },
     multiple: false,
     onDrop: (acceptedFiles) => {
-      // if (files) {
-      //   setFieldValue('files', [
-      //     ...files,
-      //     ...acceptedFiles.map((file) =>
-      //       Object.assign(file, {
-      //         preview: URL.createObjectURL(file)
-      //       })
-      //     )
-      //   ]);
-      // } else {
       setFieldValue(
         'files',
         acceptedFiles.map((file) =>
@@ -66,7 +61,6 @@ const MultiFileUpload = ({
           })
         )
       );
-      // }
     }
   });
 
@@ -124,16 +118,21 @@ const MultiFileUpload = ({
 
       {type !== DropzopType.standard && files && files.length > 0 && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 0 }}>
-          <Button color="inherit" size="small" onClick={onRemoveAll}>
+          {/* <Button color="inherit" size="small" onClick={onRemoveAll}>
             Remove File
-          </Button>
-          <Button
+          </Button> */}
+          <LoadingButton
             size="small"
             variant="contained"
+            color="success"
+            loading={faqUploading}
+            loadingPosition="start"
+            startIcon={<CloudPlus />}
             onClick={async () => {
               const data = new FormData();
               data.append('file', files[0]);
               try {
+                setFaqUploading(true);
                 const payload = { issuer_id, data };
                 const response = await UploadFAQ(payload);
 
@@ -161,12 +160,13 @@ const MultiFileUpload = ({
               } catch (err) {
                 console.log(err);
               } finally {
+                setFaqUploading(false);
                 handleOpenUploadDialog();
               }
             }}
           >
             Upload files
-          </Button>
+          </LoadingButton>
         </Stack>
       )}
     </>

@@ -55,75 +55,93 @@ import { enqueueSnackbar } from 'notistack';
 import { toInteger } from 'lodash';
 
 // assets
-import { Add, Additem, Category, CloseCircle, CloudAdd, Edit, MessageQuestion, TableDocument, TickCircle, Trash } from 'iconsax-react';
+import {
+  Add,
+  AddCircle,
+  Additem,
+  Category,
+  CloseCircle,
+  CloudAdd,
+  Edit,
+  MessageQuestion,
+  TableDocument,
+  TickCircle,
+  Trash
+} from 'iconsax-react';
 import MultiFileUpload from 'helpers/third-party/dropzone/MultiFile';
 import { ManualAddFAQ } from 'hooks/faq/faq';
 import LoadingButton from 'helpers/@extended/LoadingButton';
 import './faq.css';
 
-const DeleteDialog = memo(({ openDialog, handleOpenDialog, values, index, setFieldValue, issuerTableDataRefetch }) => {
-  console.log(index);
-  return (
-    <Dialog
-      open={openDialog}
-      TransitionComponent={PopupTransition}
-      keepMounted
-      onClose={handleOpenDialog}
-      maxWidth="xs"
-      aria-labelledby="column-delete-title"
-      aria-describedby="column-delete-description"
-      className="dialog_backdrop"
-    >
-      <DialogContent sx={{ mt: 2, my: 1 }}>
-        <Stack alignItems="center" spacing={3.5}>
-          <Avatar className="avatar_main" sx={{ width: 72, height: 72, fontSize: '1.75rem' }}>
-            <Trash variant="Bold" />
-          </Avatar>
-          <Stack spacing={2}>
-            <Typography variant="h4" align="center">
-              Are you sure you want to delete?
-            </Typography>
-            {/* <Typography align="center">By deleting this user, all task assigned to that user will also be deleted.</Typography> */}
-          </Stack>
+const DeleteDialog = memo(
+  ({ openDialog, handleOpenDialog, values, index, setFieldValue, issuerTableDataRefetch, faqDeleting, setFaqDeleting }) => {
+    console.log(index);
+    return (
+      <Dialog
+        open={openDialog}
+        TransitionComponent={PopupTransition}
+        keepMounted
+        onClose={handleOpenDialog}
+        maxWidth="xs"
+        aria-labelledby="column-delete-title"
+        aria-describedby="column-delete-description"
+        className="dialog_backdrop"
+      >
+        <DialogContent sx={{ mt: 2, my: 1 }}>
+          <Stack alignItems="center" spacing={3.5}>
+            <Avatar className="avatar_main" sx={{ width: 72, height: 72, fontSize: '1.75rem' }}>
+              <Trash variant="Bold" />
+            </Avatar>
+            <Stack spacing={2}>
+              <Typography variant="h4" align="center">
+                Are you sure you want to delete?
+              </Typography>
+              {/* <Typography align="center">By deleting this user, all task assigned to that user will also be deleted.</Typography> */}
+            </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ width: 1 }}>
-            <Button fullWidth onClick={handleOpenDialog} color="secondary" variant="outlined">
-              Cancel
-            </Button>
-            <Button
-              fullWidth
-              color="error"
-              variant="contained"
-              onClick={async () => {
-                console.log(index);
-                if (values[index].issuer_faqs_id) {
-                  console.log(values[index]);
-                  const payload = { method_name: 'delete', issuer_faqs_id: values[index].issuer_faqs_id };
-                  try {
-                    await DeleteOneFAQ(payload);
+            <Stack direction="row" spacing={2} sx={{ width: 1 }}>
+              <Button fullWidth onClick={handleOpenDialog} color="secondary" variant="outlined">
+                Cancel
+              </Button>
+              <LoadingButton
+                fullWidth
+                color="error"
+                variant="contained"
+                loading={faqDeleting}
+                loadingPosition="center"
+                onClick={async () => {
+                  if (values[index].issuer_faqs_id) {
+                    console.log(values[index]);
+                    const payload = { method_name: 'delete', issuer_faqs_id: values[index].issuer_faqs_id };
+                    try {
+                      setFaqDeleting(true);
+                      await DeleteOneFAQ(payload);
+                      const remove = values.filter((el, elIndex) => elIndex !== index);
+                      setFieldValue('faqs', remove);
+                      issuerTableDataRefetch();
+                      handleOpenDialog();
+                    } catch (err) {
+                      console.log(err);
+                    } finally {
+                      setFaqDeleting(false);
+                    }
+                  } else {
                     const remove = values.filter((el, elIndex) => elIndex !== index);
                     setFieldValue('faqs', remove);
-                    issuerTableDataRefetch();
                     handleOpenDialog();
-                  } catch (err) {
-                    console.log(err);
                   }
-                } else {
-                  const remove = values.filter((el, elIndex) => elIndex !== index);
-                  setFieldValue('faqs', remove);
-                  handleOpenDialog();
-                }
-              }}
-              autoFocus
-            >
-              Delete
-            </Button>
+                }}
+                autoFocus
+              >
+                Delete
+              </LoadingButton>
+            </Stack>
           </Stack>
-        </Stack>
-      </DialogContent>
-    </Dialog>
-  );
-});
+        </DialogContent>
+      </Dialog>
+    );
+  }
+);
 
 function FAQ() {
   // Main data state to hold the list of issuers
@@ -131,16 +149,10 @@ function FAQ() {
   // Editing States
   const [isEditing, setIsEditing] = useState(false); // State to track if editing mode is active
   const [isIssuerActive, setIssuerActive] = useState(); // State to track if the issuer is active or not active
-  const [selectedIssuer, setSelectedIssuer] = useState();
   // Form Visibility
   const [showTable, setShowTable] = useState(true); // State to hold form input values
   // Form State
   const [formValues, setFormValues] = useState(formAllValues); // State to hold form input values
-
-  // Theme
-  const theme = useTheme();
-  // Theme
-  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   // Accordion
   const [expanded, setExpanded] = useState('');
@@ -151,43 +163,13 @@ function FAQ() {
   // For Delete Dialog
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogIndex, setIndex] = useState();
-  const handleOpenDialog = () => {
-    setOpenDialog(!openDialog);
-  };
-  const handleOpenUploadDialog = () => {
-    setOpenUpload(!openUpload);
-  };
-  const handleAccChange = (panel) => (event, newExpanded) => {
-    console.log(panel, newExpanded);
-    setExpanded(newExpanded ? panel : false);
-  };
-  const handleDropdownChange = (e, issuerData, optionName, formName, setFieldValue) => {
-    if (e.target.outerText === undefined) {
-      setFieldValue(formName, 0);
-    } else {
-      issuerData?.forEach(async (el) => {
-        if (el.issuer_name === e.target.outerText) {
-          console.log('here');
-          await setFieldValue(formName, el.issuer_id);
-          setSelectedIssuer(el.issuer_id);
-          handleIssuerChange(issuerData, el.issuer_id, setFieldValue);
-        }
-      });
-    }
-  };
-  const handleIssuerChange = (issuerData, selectedIssuerId, setFieldValue) => {
-    console.log(selectedIssuerId, issuerData);
-    const selectedIssuer = issuerData?.find((issuer) => {
-      console.log(issuer.issuer_id === selectedIssuerId);
-      return issuer.issuer_id === selectedIssuerId;
-    });
-    console.log(selectedIssuer.faqs);
-    if (selectedIssuer) {
-      setFieldValue('faqs', selectedIssuer.faqs);
-    } else {
-      setFieldValue('faqs', []);
-    }
-  };
+  // Theme
+  const theme = useTheme();
+  // Theme
+  const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  // Actions
+  const [faqUploading, setFaqUploading] = useState(false);
+  const [faqDeleting, setFaqDeleting] = useState(false);
 
   // Functions
   // Editing States
@@ -219,6 +201,46 @@ function FAQ() {
   // Empty Form Fields
   const clearFormValues = () => {
     setFormValues(formAllValues);
+  };
+  // For Delete Dialog
+  const handleOpenDialog = () => {
+    setOpenDialog(!openDialog);
+  };
+  // For File Upload
+  const handleOpenUploadDialog = () => {
+    setOpenUpload(!openUpload);
+  };
+  // Accordion
+  const handleAccChange = (panel) => (event, newExpanded) => {
+    console.log(panel, newExpanded);
+    setExpanded(newExpanded ? panel : false);
+  };
+  // Issuer Dropdown
+  const handleDropdownChange = (e, issuerData, optionName, formName, setFieldValue) => {
+    if (e.target.outerText === undefined) {
+      setFieldValue(formName, 0);
+    } else {
+      issuerData?.forEach(async (el) => {
+        if (el.issuer_name === e.target.outerText) {
+          console.log('here');
+          await setFieldValue(formName, el.issuer_id);
+          handleIssuerChange(issuerData, el.issuer_id, setFieldValue);
+        }
+      });
+    }
+  };
+  const handleIssuerChange = (issuerData, selectedIssuerId, setFieldValue) => {
+    console.log(selectedIssuerId, issuerData);
+    const selectedIssuer = issuerData?.find((issuer) => {
+      console.log(issuer.issuer_id === selectedIssuerId);
+      return issuer.issuer_id === selectedIssuerId;
+    });
+    console.log(selectedIssuer.faqs);
+    if (selectedIssuer) {
+      setFieldValue('faqs', selectedIssuer.faqs);
+    } else {
+      setFieldValue('faqs', []);
+    }
   };
   // Table Columns
   const columns = useMemo(() => tableColumns, []);
@@ -280,37 +302,7 @@ function FAQ() {
             files: yup.mixed().required('Avatar is a required.')
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
-            const userID = localStorage.getItem('userID');
             console.log(values);
-            // if (isEditing === false) {
-            //   const formValues = {
-            //     ...values,
-            //     method_name: 'add',
-
-            //     user_id: toInteger(userID)
-            //   };
-            //   try {
-            //     await SaveIssuer(formValues, issuerTableDataRefetch, clearFormValues);
-            //     changeTableVisibility();
-            //   } catch (err) {
-            //     console.log(err);
-            //   }
-            // }
-            // if (isEditing === true) {
-            //   try {
-            //     const formValues = {
-            //       ...values,
-            //       is_active: toInteger(isIssuerActive),
-            //       method_name: 'update',
-            //       user_id: toInteger(userID)
-            //     };
-            //     await EditIssuer(formValues, issuerTableDataRefetch, clearFormValues, setActiveClose);
-            //     changeTableVisibility();
-            //   } catch (err) {
-            //     console.log(err);
-            //   }
-            // }
-            // changeTableVisibility();
           }}
         >
           {({
@@ -395,17 +387,6 @@ function FAQ() {
                 <CardContent>
                   <Grid container spacing={3}>
                     <Grid item md={4} sm={6} xs={12}>
-                      {/* <FormikAutoComplete
-                        options={issuerData.map((issuer) => ({
-                          label: issuer.issuer_name,
-                          id: issuer.issuer_id
-                        }))}
-                        defaultValue={values.issuer_id}
-                        setFieldValue={setFieldValue}
-                        formName="issuer_id"
-                        optionName="label"
-                        label="Select Issuer"
-                      /> */}
                       <Autocomplete
                         disabled={false}
                         id="basic-autocomplete-label"
@@ -452,8 +433,9 @@ function FAQ() {
                     </Grid>
                     <Grid item md={4} sm={6} xs={12}>
                       <Button
+                        fullWidth
                         disabled={values.issuer_id === 0}
-                        className={matchDownSM ? 'icon_button' : ''}
+                        // className={matchDownSM ? 'icon_button' : ''}
                         variant="contained"
                         color="success"
                         sx={{ borderRadius: 0.6 }}
@@ -462,7 +444,7 @@ function FAQ() {
                           handleOpenUploadDialog();
                         }}
                       >
-                        {!matchDownSM && 'Upload'}
+                        Upload
                       </Button>
                     </Grid>
 
@@ -545,68 +527,72 @@ function FAQ() {
                                         />
                                       </Grid>
                                       <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
-                                        <AnimateButton>
-                                          <Button
-                                            fullWidth
-                                            variant="contained"
-                                            color="success"
-                                            onClick={async (e) => {
-                                              // e.preventDefault();
+                                        <LoadingButton
+                                          size="small"
+                                          variant="contained"
+                                          color="success"
+                                          loading={faqUploading}
+                                          loadingPosition="center"
+                                          startIcon={<AddCircle />}
+                                          onClick={async (e) => {
+                                            // e.preventDefault();
 
-                                              if (values.faqs[index].faq.length < 1 && values.faqs[index].answer.length < 1) {
-                                                enqueueSnackbar('Please fill required fields', {
-                                                  variant: 'error',
-                                                  autoHideDuration: 2000,
-                                                  anchorOrigin: {
-                                                    vertical: 'top',
-                                                    horizontal: 'right'
-                                                  }
-                                                });
-                                                return;
-                                              }
-
-                                              const newFAQ = values.faqs.map((el, elIndex) => {
-                                                if (elIndex == index) {
-                                                  return { ...el, panelName: `panel${elIndex}`, is_editing: 0, is_new: 0 };
+                                            if (values.faqs[index].faq.length < 1 && values.faqs[index].answer.length < 1) {
+                                              enqueueSnackbar('Please fill required fields', {
+                                                variant: 'error',
+                                                autoHideDuration: 2000,
+                                                anchorOrigin: {
+                                                  vertical: 'top',
+                                                  horizontal: 'right'
                                                 }
-                                                return el;
                                               });
+                                              return;
+                                            }
 
-                                              try {
-                                                const payload = {
-                                                  method_name: 'update',
-                                                  issuer_id: values.issuer_id,
-                                                  faqs: newFAQ
-                                                };
-
-                                                await ManualAddFAQ(payload);
-
-                                                const issuerPayload = {
-                                                  method_name: 'getall'
-                                                };
-                                                const issuer = await GetIssuerData(issuerPayload);
-
-                                                const faqPanel = issuer.map((el) => {
-                                                  return {
-                                                    ...el,
-                                                    faqs:
-                                                      el.faqs &&
-                                                      el.faqs.map((fa, index) => {
-                                                        return { ...fa, panelName: `panel${index}` };
-                                                      })
-                                                  };
-                                                });
-                                                setIssuerData(faqPanel);
-
-                                                handleIssuerChange(faqPanel, values.issuer_id, setFieldValue);
-                                              } catch (err) {
-                                                console.log(err);
+                                            const newFAQ = values.faqs.map((el, elIndex) => {
+                                              if (elIndex == index) {
+                                                return { ...el, panelName: `panel${elIndex}`, is_editing: 0, is_new: 0 };
                                               }
-                                            }}
-                                          >
-                                            Save
-                                          </Button>
-                                        </AnimateButton>
+                                              return el;
+                                            });
+
+                                            try {
+                                              setFaqUploading(true);
+                                              const payload = {
+                                                method_name: 'update',
+                                                issuer_id: values.issuer_id,
+                                                faqs: newFAQ
+                                              };
+
+                                              await ManualAddFAQ(payload);
+
+                                              const issuerPayload = {
+                                                method_name: 'getall'
+                                              };
+                                              const issuer = await GetIssuerData(issuerPayload);
+
+                                              const faqPanel = issuer.map((el) => {
+                                                return {
+                                                  ...el,
+                                                  faqs:
+                                                    el.faqs &&
+                                                    el.faqs.map((fa, index) => {
+                                                      return { ...fa, panelName: `panel${index}` };
+                                                    })
+                                                };
+                                              });
+                                              setIssuerData(faqPanel);
+
+                                              handleIssuerChange(faqPanel, values.issuer_id, setFieldValue);
+                                            } catch (err) {
+                                              console.log(err);
+                                            } finally {
+                                              setFaqUploading(false);
+                                            }
+                                          }}
+                                        >
+                                          Save
+                                        </LoadingButton>
                                       </Grid>
                                       <Grid item xs={6} sm={6} md={6} style={{ display: 'grid', gap: '10px' }}>
                                         <AnimateButton>
@@ -648,6 +634,8 @@ function FAQ() {
                                 index={dialogIndex}
                                 setFieldValue={setFieldValue}
                                 issuerTableDataRefetch={issuerTableDataRefetch}
+                                faqDeleting={faqDeleting}
+                                setFaqDeleting={setFaqDeleting}
                               />
                               <Accordion expanded={expanded === qa.panelName} onChange={handleAccChange(qa.panelName)}>
                                 <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
@@ -751,6 +739,8 @@ function FAQ() {
                                   issuerTableDataRefetch={issuerTableDataRefetch}
                                   handleOpenUploadDialog={handleOpenUploadDialog}
                                   handleIssuerChange={handleIssuerChange}
+                                  faqUploading={faqUploading}
+                                  setFaqUploading={setFaqUploading}
                                   error={touched.files && !!errors.files}
                                 />
                                 {touched.files && errors.files && (

@@ -19,7 +19,7 @@ const WalletProfile = ({ logoURL, fdName, investorCount, fdInvestment }) => {
   const theme = useTheme();
 
   return (
-    <MainCard>
+    <MainCard contentSX={{ padding: '16px !important' }}>
       <Grid container spacing={2}>
         {/* <Grid item xs={12}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
