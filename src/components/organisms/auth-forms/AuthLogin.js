@@ -191,12 +191,12 @@ const AuthLogin = ({ forgot }) => {
 
               console.log(transformedData);
 
-              // navigate(transformedData[0].url, {
-              //   state: {
-              //     from: ''
-              //   },
-              //   replace: true
-              // });
+              navigate(transformedData[0].url, {
+                state: {
+                  from: ''
+                },
+                replace: true
+              });
 
               dispatch(
                 setMenuItems([
