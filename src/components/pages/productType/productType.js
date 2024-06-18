@@ -44,6 +44,9 @@ function ProductType() {
 
   // Theme
   const theme = useTheme();
+  // Actions
+  const [productSubmitting, setProductSubmitting] = useState(false);
+  const [productDeleting, setProductDeleting] = useState(false);
 
   // State Setting
   // Sets form values for editing
@@ -113,19 +116,25 @@ function ProductType() {
             if (isEditing === false) {
               const payload = { ...values, user_id: toInteger(userID), method_name: 'add' };
               try {
+                setProductSubmitting(true);
                 await SaveProductType(payload, productTypeTableDataRefetch, clearFormValues);
                 changeTableVisibility();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setProductSubmitting(false);
               }
             }
             if (isEditing === true) {
               try {
+                setProductSubmitting(true);
                 const payload = { ...values, user_id: toInteger(userID), method_name: 'update' };
                 await EditProductType(payload, productTypeTableDataRefetch, clearFormValues, setIsEditing);
                 changeTableVisibility();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setProductSubmitting(false);
               }
             }
           }}
@@ -162,6 +171,7 @@ function ProductType() {
               >
                 <SubmitButton
                   title="Product Entry"
+                  loading={productSubmitting}
                   changeTableVisibility={changeTableVisibility}
                   clearFormValues={clearFormValues}
                   isEditing={isEditing}
@@ -222,6 +232,8 @@ function ProductType() {
             setEditing={setEditing}
             getOneItem={SearchProductType}
             deleteOneItem={DeleteOneProductType}
+            deletingItem={productDeleting}
+            setDeletingItem={setProductDeleting}
             setSearchData={setSearchData}
             tableDataRefetch={productTypeTableDataRefetch}
             setActiveEditing={setActiveEditing}

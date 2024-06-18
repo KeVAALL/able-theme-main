@@ -36,6 +36,8 @@ function ReactTable({
   schemeEditing,
   getOneItem,
   deleteOneItem,
+  deletingItem,
+  setDeletingItem,
   setSearchData,
   setSchemeData,
   tableDataRefetch,
@@ -241,6 +243,8 @@ function ReactTable({
           dataRefetch={() => {}}
           item={item}
           deleteOneItem={deleteOneItem}
+          deletingItem={deletingItem}
+          setDeletingItem={setDeletingItem}
           setSchemeData={setSchemeData}
         />
       )}
@@ -373,6 +377,8 @@ const InterestRateTable = ({
   schemeEditing,
   getOneItem,
   deleteOneItem,
+  deletingItem,
+  setDeletingItem,
   setSearchData,
   setSchemeData,
   tableDataRefetch,
@@ -398,6 +404,8 @@ const InterestRateTable = ({
           schemeEditing={schemeEditing}
           getOneItem={getOneItem}
           deleteOneItem={deleteOneItem}
+          deletingItem={deletingItem}
+          setDeletingItem={setDeletingItem}
           setSearchData={setSearchData}
           setSchemeData={setSchemeData}
           tableDataRefetch={tableDataRefetch}
@@ -425,6 +433,8 @@ InterestRateTable.propTypes = {
   schemeEditing: PropTypes.any,
   getOneItem: PropTypes.any,
   deleteOneItem: PropTypes.any,
+  deletingItem: PropTypes.bool,
+  setDeletingItem: PropTypes.bool,
   setSearchData: PropTypes.any,
   setSchemeData: PropTypes.any,
   tableDataRefetch: PropTypes.any,

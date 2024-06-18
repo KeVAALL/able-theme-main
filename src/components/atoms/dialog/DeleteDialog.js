@@ -6,8 +6,19 @@ import { Dialog, Stack, Avatar, Typography, DialogContent, DialogActions, Button
 import { PopupTransition } from 'helpers/@extended/Transitions';
 import { Trash } from 'iconsax-react';
 import './dialog.css';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
-const DeleteDialogBox = ({ openDialog, handleOpenDialog, dataRefetch, item, deleteOneItem, setSchemeData, isNomination }) => {
+const DeleteDialogBox = ({
+  openDialog,
+  handleOpenDialog,
+  dataRefetch,
+  item,
+  deleteOneItem,
+  deletingItem,
+  setDeletingItem,
+  setSchemeData,
+  isNomination
+}) => {
   console.log('open');
   return (
     <Dialog
@@ -35,18 +46,19 @@ const DeleteDialogBox = ({ openDialog, handleOpenDialog, dataRefetch, item, dele
             <Button fullWidth onClick={handleOpenDialog} color="secondary" variant="outlined">
               Cancel
             </Button>
-            <Button
+            <LoadingButton
               fullWidth
               color="error"
               variant="contained"
+              loading={deletingItem}
+              loadingPosition="center"
               onClick={() => {
                 console.log(item);
                 if (setSchemeData) {
-                  deleteOneItem(item, setSchemeData);
+                  deleteOneItem(item, setSchemeData, setDeletingItem, handleOpenDialog);
                 } else {
-                  deleteOneItem(item);
+                  deleteOneItem(item, setDeletingItem, handleOpenDialog);
                 }
-                handleOpenDialog();
                 if (!isNomination) {
                   setTimeout(() => {
                     dataRefetch();
@@ -56,7 +68,7 @@ const DeleteDialogBox = ({ openDialog, handleOpenDialog, dataRefetch, item, dele
               autoFocus
             >
               Delete
-            </Button>
+            </LoadingButton>
           </Stack>
         </Stack>
       </DialogContent>

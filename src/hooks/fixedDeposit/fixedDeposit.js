@@ -114,9 +114,10 @@ export async function EditProduct(payload, ProductTableDataRefetch, clearFormVal
     throw err;
   }
 }
-export async function DeleteOneProduct(values) {
+export async function DeleteOneProduct(values, setDeletingItem, handleOpenDialog) {
   const userID = localStorage.getItem('userID');
   try {
+    setDeletingItem(true);
     await axios.post('/product/saveproduct', {
       fd_id: values.fd_id,
       user_id: toInteger(userID),
@@ -132,5 +133,8 @@ export async function DeleteOneProduct(values) {
     });
   } catch (err) {
     console.log(err);
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
   }
 }

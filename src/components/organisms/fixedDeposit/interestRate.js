@@ -185,6 +185,7 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
   const [loading, setLoading] = useState(true);
   const [isEditingScheme, setIsEditingScheme] = useState(false);
   const [schemeFormValues, setSchemeFormValues] = useState();
+  const [isSchemeActive, setSchemeActive] = useState();
 
   // Dialog state
   const [openDialog, setOpenDialog] = useState(false);
@@ -198,6 +199,9 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
   // Theme
   const theme = useTheme();
   const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  // Actions
+  const [schemeSubmitting, setSchemeSubmitting] = useState(false);
+  const [schemeDeleting, setSchemeDeleting] = useState(false);
 
   // Sets form values for editing
   const setEditing = (value) => {
@@ -229,7 +233,6 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
   };
 
   // Active Button state
-  const [isSchemeActive, setSchemeActive] = useState();
   const handleIsSchemeActive = (initialValue) => {
     setSchemeActive(initialValue);
   };
@@ -339,6 +342,8 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
               selectedPayoutMethod={values.fd_payout_method_id}
               clearFormValues={clearFormValues}
               setIsActive={handleIsSchemeActive}
+              schemeSubmitting={schemeSubmitting} //Loader
+              setSchemeSubmitting={setSchemeSubmitting}
               isActive={isSchemeActive}
               isEditingScheme={isEditingScheme}
               setActiveClose={setActiveClose}
@@ -474,6 +479,8 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
                       changeTableVisibility={changeTableVisibility}
                       schemeEditing={schemeEditing}
                       deleteOneItem={DeleteOneInterestRate}
+                      deletingItem={schemeDeleting}
+                      setDeletingItem={setSchemeDeleting}
                       setSearchData={setSearchData}
                       setSchemeData={setSchemeData}
                       // tableDataRefetch={refetchPayoutData}
@@ -488,7 +495,6 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
                   <Grid item md={8} xs={12}>
                     <Stack
                       direction={matchDownSM ? 'column' : 'row'}
-                      // direction={'row'}
                       spacing={matchDownSM ? 0 : 2}
                       sx={{
                         '& .MuiListItemButton-root': { borderRadius: 0, my: 0, py: 0.2, px: 0.3 },

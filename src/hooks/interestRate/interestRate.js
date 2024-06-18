@@ -90,8 +90,9 @@ export async function EditInterestRate(payload) {
     });
   }
 }
-export async function DeleteOneInterestRate(values, setSchemeData) {
+export async function DeleteOneInterestRate(values, setSchemeData, setDeletingItem, handleOpenDialog) {
   try {
+    setDeletingItem(true);
     await axios.post('/product/savescheme', {
       scheme_master_id: values.scheme_master_id,
       method_name: 'delete'
@@ -109,5 +110,8 @@ export async function DeleteOneInterestRate(values, setSchemeData) {
     setSchemeData(schemeData);
   } catch (err) {
     console.log(err);
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
   }
 }

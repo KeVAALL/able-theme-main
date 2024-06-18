@@ -56,6 +56,9 @@ function FixDeposit() {
   const [formValues, setFormValues] = useState(formAllValues); // State to hold form input values
   // Theme
   const theme = useTheme();
+  // Actions
+  const [fixDepositSubmitting, setFixDepositSubmitting] = useState(false);
+  const [fixDepositDeleting, setFixDepositDeleting] = useState(false);
 
   // Sets form values for editing
   const setEditing = (value) => {
@@ -212,29 +215,36 @@ function FixDeposit() {
                 method_name: 'add'
               };
               try {
+                setFixDepositSubmitting(true);
                 await SaveProduct(payload, ProductTableDataRefetch, clearFormValues);
                 changeTableVisibility();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setFixDepositSubmitting(false);
               }
             }
             if (isEditing === true) {
+              const payload = {
+                ...values,
+                issuer_id: typeof selectedIssuerID === 'string' ? values.issuer_id : selectedIssuerID,
+                is_active: toInteger(isFDActive),
+                is_cumulative: toInteger(!checkedCumulative ? false : checkedCumulative),
+                is_non_cumulative: toInteger(!checkedNonCumulative ? false : checkedNonCumulative),
+                tag_id: tagIds,
+                user_id: toInteger(userID),
+                method_name: 'update'
+              };
               try {
-                const payload = {
-                  ...values,
-                  issuer_id: typeof selectedIssuerID === 'string' ? values.issuer_id : selectedIssuerID,
-                  is_active: toInteger(isFDActive),
-                  is_cumulative: toInteger(!checkedCumulative ? false : checkedCumulative),
-                  is_non_cumulative: toInteger(!checkedNonCumulative ? false : checkedNonCumulative),
-                  tag_id: tagIds,
-                  user_id: toInteger(userID),
-                  method_name: 'update'
-                };
+                setFixDepositSubmitting(true);
+
                 await EditProduct(payload, ProductTableDataRefetch, clearFormValues);
                 setActiveClose();
                 changeTableVisibility();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setFixDepositSubmitting(false);
               }
             }
           }}
@@ -271,6 +281,7 @@ function FixDeposit() {
               >
                 <SubmitButton
                   title="FD Entry"
+                  loading={fixDepositSubmitting}
                   changeTableVisibility={changeTableVisibility}
                   clearFormValues={clearFormValues}
                   isEditing={isEditing}
@@ -445,6 +456,8 @@ function FixDeposit() {
             setEditing={setEditing}
             getOneItem={GetOneProduct}
             deleteOneItem={DeleteOneProduct}
+            deletingItem={fixDepositDeleting}
+            setDeletingItem={setFixDepositDeleting}
             setSearchData={setSearchData}
             tableDataRefetch={ProductTableDataRefetch}
             setActiveEditing={setActiveEditing}

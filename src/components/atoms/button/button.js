@@ -7,6 +7,7 @@ import { Box, Button, Stack, CardHeader, FormControlLabel, Switch, useMediaQuery
 import AnimateButton from 'helpers/@extended/AnimateButton';
 import { Add, Additem, CloseCircle, TickCircle } from 'iconsax-react';
 import { useTheme } from '@mui/material/styles';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 const headerSX = {
   p: 2,
@@ -16,6 +17,7 @@ const headerSX = {
 export const SubmitButton = memo(
   ({
     title,
+    loading,
     buttonTitle,
     handleOpenDialog,
     changeTableVisibility,
@@ -84,19 +86,20 @@ export const SubmitButton = memo(
               <></>
             ) : (
               <Box>
-                <AnimateButton>
-                  <Button
-                    disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
-                    className={matchDownSM ? 'icon_button' : ''}
-                    variant="contained"
-                    color="success"
-                    sx={{ borderRadius: 0.6 }}
-                    startIcon={matchDownSM ? <TickCircle variant="Bold" /> : <Additem />}
-                    type="submit"
-                  >
-                    {!matchDownSM && 'Submit'}
-                  </Button>
-                </AnimateButton>
+                <LoadingButton
+                  fullWidth
+                  loading={loading}
+                  loadingPosition="center"
+                  disabled={isEditing ? !(isEditing && isValid) : !(isValid && dirty)}
+                  className={matchDownSM ? 'icon_button' : ''}
+                  variant="contained"
+                  color="success"
+                  sx={{ borderRadius: 0.6 }}
+                  startIcon={matchDownSM ? <TickCircle variant="Bold" /> : <Additem />}
+                  type="submit"
+                >
+                  {!matchDownSM && 'Submit'}
+                </LoadingButton>
               </Box>
             )}
             {!showBackButton && (
@@ -124,6 +127,7 @@ export const SubmitButton = memo(
 );
 
 SubmitButton.PropTypes = {
+  loading: PropTypes.bool,
   buttonTitle: PropTypes.any,
   handleOpenDialog: PropTypes.any,
   errors: PropTypes.any,

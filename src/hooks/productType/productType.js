@@ -98,8 +98,9 @@ export async function EditProductType(payload, productTypeTableDataRefetch, clea
     throw err;
   }
 }
-export async function DeleteOneProductType(values) {
+export async function DeleteOneProductType(values, setDeletingItem, handleOpenDialog) {
   try {
+    setDeletingItem(true);
     await axios.post('/product/producttype', {
       product_type_id: values.product_type_id,
       method_name: 'delete'
@@ -114,5 +115,8 @@ export async function DeleteOneProductType(values) {
     });
   } catch (err) {
     console.log(err);
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
   }
 }

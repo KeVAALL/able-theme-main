@@ -25,6 +25,7 @@ import { CustomTextField, FormikAutoComplete } from 'utils/textfield';
 import { formAllSchemeValues, validationSchema } from 'constant/interestRateSchemeValidation';
 import { SaveInterestRate, EditInterestRate, GetSchemeSearch } from 'hooks/interestRate/interestRate';
 import { toInteger } from 'lodash';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 const DialogForm = ({
   openDialog,
@@ -35,6 +36,8 @@ const DialogForm = ({
   selectedPayoutMethod,
   setIsActive,
   isActive,
+  schemeSubmitting,
+  setSchemeSubmitting,
   isEditingScheme,
   setActiveClose,
   setSchemeData,
@@ -69,8 +72,6 @@ const DialogForm = ({
       setSchemeFormValues(schemeEditFormValues);
     }
   }, [schemeEditFormValues, isEditingScheme]);
-
-  // if (isLoading) return <Loader />;
 
   return (
     <Dialog
@@ -130,6 +131,7 @@ const DialogForm = ({
                 method_name: 'update'
               };
               try {
+                setSchemeSubmitting(true);
                 await EditInterestRate(payload);
 
                 setActiveClose();
@@ -152,6 +154,8 @@ const DialogForm = ({
                 }, 100);
               } catch (err) {
                 console.log(err);
+              } finally {
+                setSchemeSubmitting(false);
               }
             } else {
               const payload = {
@@ -163,6 +167,8 @@ const DialogForm = ({
                 method_name: 'add'
               };
               try {
+                setSchemeSubmitting(true);
+
                 await SaveInterestRate(payload);
 
                 handleOpenDialog();
@@ -184,6 +190,8 @@ const DialogForm = ({
                 }, 100);
               } catch (err) {
                 console.log(err);
+              } finally {
+                setSchemeSubmitting(false);
               }
             }
           }}
@@ -340,16 +348,9 @@ const DialogForm = ({
                 >
                   Back
                 </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  type="submit"
-                  // onClick={async () => {
-
-                  // }}
-                >
+                <LoadingButton loading={schemeSubmitting} loadingPosition="center" variant="contained" color="success" type="submit">
                   Save
-                </Button>
+                </LoadingButton>
               </DialogActions>
             </Box>
           )}

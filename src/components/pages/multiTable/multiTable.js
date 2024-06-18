@@ -40,6 +40,8 @@ const ReactTable = ({
   schemeEditing,
   getOneItem,
   deleteOneItem,
+  deletingItem,
+  setDeletingItem,
   getEditData,
   getEditReqField,
   setSearchData,
@@ -272,6 +274,8 @@ const ReactTable = ({
           dataRefetch={tableDataRefetch}
           item={item}
           deleteOneItem={deleteOneItem}
+          deletingItem={deletingItem}
+          setDeletingItem={setDeletingItem}
           isNomination={isNomination}
         />
       )}
@@ -458,6 +462,8 @@ const MultiTable = ({
   schemeEditing,
   getOneItem,
   deleteOneItem,
+  deletingItem,
+  setDeletingItem,
   getEditData,
   getEditReqField,
   setSearchData,
@@ -486,6 +492,8 @@ const MultiTable = ({
           schemeEditing={schemeEditing}
           getOneItem={getOneItem}
           deleteOneItem={deleteOneItem}
+          deletingItem={deletingItem}
+          setDeletingItem={setDeletingItem}
           getEditData={getEditData}
           getEditReqField={getEditReqField}
           setSearchData={setSearchData}
@@ -516,6 +524,8 @@ MultiTable.propTypes = {
   schemeEditing: PropTypes.any,
   getOneItem: PropTypes.any,
   deleteOneItem: PropTypes.any,
+  deletingItem: PropTypes.bool,
+  setDeletingItem: PropTypes.bool,
   getEditData: PropTypes.any,
   getEditReqField: PropTypes.any,
   setSearchData: PropTypes.any,

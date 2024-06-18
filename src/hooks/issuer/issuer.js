@@ -109,9 +109,10 @@ export async function EditIssuer(values, issuerTableDataRefetch, clearFormValues
     throw err;
   }
 }
-export async function DeleteOneIssuer(values) {
+export async function DeleteOneIssuer(values, setDeletingItem, handleOpenDialog) {
   const userID = localStorage.getItem('userID');
   try {
+    setDeletingItem(true);
     await axios.post('/issuer/saveissuer', {
       issuer_id: values?.issuer_id,
       user_id: toInteger(userID),
@@ -134,6 +135,9 @@ export async function DeleteOneIssuer(values) {
         horizontal: 'right'
       }
     });
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
   }
 }
 export async function DeleteOneFAQ(payload) {
