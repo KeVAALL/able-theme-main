@@ -38,7 +38,7 @@ const Header = () => {
   // common header
   const mainHeader = (
     // <Toolbar sx={{ px: { xs: 2, sm: 4.5, lg: 8 }, display: 'flex', justifyContent: 'space-between' }}>
-    <Toolbar sx={{ pl: { xs: 2, md: 5 }, pr: { xs: 2, md: 3 }, display: 'flex', justifyContent: 'space-between' }}>
+    <Toolbar sx={{ pl: { xs: 2, sm: 3, lg: 5 }, pr: { xs: 2, md: 3 }, display: 'flex', justifyContent: 'space-between' }}>
       {!isHorizontal ? (
         <IconButton
           aria-label="open drawer"

@@ -35,6 +35,7 @@ import * as yup from 'yup';
 import { Eye, FilterSearch, Calculator, TimerStart, ArrangeHorizontal } from 'iconsax-react';
 import Typography from 'themes/overrides/Typography';
 import { enqueueSnackbar } from 'notistack';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 function Investment() {
   // Main data states
@@ -82,6 +83,9 @@ function Investment() {
   const matchUpMD = useMediaQuery((theme) => theme.breakpoints.up('md'));
   const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const matchUpSM = useMediaQuery((theme) => theme.breakpoints.up('sm'));
+
+  // Actions
+  const [investmentSearching, setInvestmentSearching] = useState(false);
 
   // Sets form values for editing
   const setEditing = (value) => {
@@ -218,9 +222,7 @@ function Investment() {
     keepPreviousData: true,
     queryFn: () => {
       const payload = {
-        method_name: 'getinvestor',
-        search: '',
-        ifa_id: 0
+        method_name: 'getinvestor'
       };
       return GetInvestorData(payload);
     },
@@ -497,47 +499,45 @@ function Investment() {
                     </Grid>
 
                     <Grid item md={3} sm={3} xs={6}>
-                      <AnimateButton>
-                        <Button
-                          fullWidth
-                          disabled={isSubmitting || !isValid}
-                          variant="contained"
-                          type="submit"
-                          color="success"
-                          startIcon={<Calculator />}
-                          onClick={async () => {
+                      <LoadingButton
+                        fullWidth
+                        loading={isSubmitting}
+                        loadingPosition="center"
+                        variant="contained"
+                        color="success"
+                        disabled={!isValid}
+                        startIcon={<Calculator />}
+                        onClick={async () => {
+                          const payload = {
+                            ...values,
+                            interest_rate: '0',
+                            aggrigated_interest: 0,
+                            maturity_amount: 0,
+                            compounding_type: 'yearly'
+                          };
+
+                          try {
                             setSubmitting(true);
-                            const payload = {
+                            const result = await CalculateFD(payload);
+
+                            const calculated = result.data;
+
+                            handleCalculate({
                               ...values,
-                              interest_rate: '0',
-                              aggrigated_interest: 0,
-                              maturity_amount: 0,
-                              compounding_type: 'yearly'
-                            };
-
-                            try {
-                              const result = await CalculateFD(payload);
-
-                              setSubmitting(false);
-
-                              const calculated = result.data;
-
-                              handleCalculate({
-                                ...values,
-                                interest_rate: calculated.interestRate,
-                                aggrigated_interest: calculated.aggrigated_interest,
-                                maturity_amount: calculated.maturity_amount
-                              });
-                            } catch (error) {
-                              setSubmitting(false);
-                              console.log(error);
-                            }
-                          }}
-                          sx={{ borderRadius: 0.6 }}
-                        >
-                          {isSubmitting ? 'Calculating' : 'Calculate'}
-                        </Button>
-                      </AnimateButton>
+                              interest_rate: calculated.interestRate,
+                              aggrigated_interest: calculated.aggrigated_interest,
+                              maturity_amount: calculated.maturity_amount
+                            });
+                          } catch (error) {
+                            console.log(error);
+                          } finally {
+                            setSubmitting(false);
+                          }
+                        }}
+                        sx={{ borderRadius: 0.6 }}
+                      >
+                        {isSubmitting ? 'Calculating' : 'Calculate'}
+                      </LoadingButton>
                     </Grid>
                     <Grid item md={3} sm={3} xs={6}>
                       <Button
@@ -568,7 +568,7 @@ function Investment() {
                       <TextField
                         fullWidth
                         disabled
-                        className="common-textfield"
+                        className="disabled-textfield"
                         size="small"
                         label="Interest Rate (%)"
                         name="interest_rate"
@@ -584,6 +584,13 @@ function Investment() {
                             marginLeft: 0
                           }
                         }}
+                        sx={{
+                          '& .MuiInputBase-root.Mui-disabled': {
+                            '& > fieldset': {
+                              border: 'none'
+                            }
+                          }
+                        }}
                         inputProps={{ maxLength: 50 }}
                       />
                     </Grid>
@@ -591,7 +598,7 @@ function Investment() {
                       <TextField
                         fullWidth
                         disabled
-                        className="common-textfield"
+                        className="disabled-textfield"
                         size="small"
                         label="Interest Amount (₹)"
                         name="aggrigated_interest"
@@ -607,6 +614,13 @@ function Investment() {
                             marginLeft: 0
                           }
                         }}
+                        sx={{
+                          '& .MuiInputBase-root.Mui-disabled': {
+                            '& > fieldset': {
+                              border: 'none'
+                            }
+                          }
+                        }}
                         inputProps={{ maxLength: 50 }}
                       />
                     </Grid>
@@ -614,7 +628,7 @@ function Investment() {
                       <TextField
                         fullWidth
                         disabled
-                        className="common-textfield"
+                        className="disabled-textfield"
                         size="small"
                         label="Maturity Amount (₹)"
                         name="maturity_amount"
@@ -628,6 +642,13 @@ function Investment() {
                         FormHelperTextProps={{
                           style: {
                             marginLeft: 0
+                          }
+                        }}
+                        sx={{
+                          '& .MuiInputBase-root.Mui-disabled': {
+                            '& > fieldset': {
+                              border: 'none'
+                            }
                           }
                         }}
                         inputProps={{ maxLength: 50 }}
@@ -750,17 +771,23 @@ function Investment() {
               ifa_id: yup.number()
             })}
             onSubmit={async (values, { resetForm }) => {
-              console.log(dateValue[0], dateValue[1]);
               const payload = {
                 method_name: 'getinvestmentsonifa',
                 from_date: format(dateValue[0], 'yyyy-MM-dd'),
                 end_date: format(dateValue[1], 'yyyy-MM-dd'),
                 ...values
               };
+              try {
+                setInvestmentSearching(true);
 
-              const investmentData = await GetInvestments(payload);
+                const investmentData = await GetInvestments(payload);
 
-              setInvestmentData(investmentData);
+                setInvestmentData(investmentData);
+              } catch (err) {
+                console.log(err);
+              } finally {
+                setInvestmentSearching(false);
+              }
             }}
           >
             {({ values, errors, touched, setFieldValue, handleChange, handleBlur, handleSubmit, resetForm, submitForm }) => (
@@ -774,7 +801,7 @@ function Investment() {
               >
                 <CardContent sx={{ paddingLeft: '16px !important', paddingRight: matchDownSM ? 0 : '24px' }}>
                   <Grid container spacing={matchDownSM ? 3 : 2}>
-                    <Grid item md={3} sm={4} xs={12} style={{ paddingLeft: matchDownSM ? 8 : 0, paddingTop: matchDownSM ? 8 : 0 }}>
+                    <Grid item md={4} sm={4} xs={12} style={{ paddingLeft: matchDownSM ? 8 : 0, paddingTop: matchDownSM ? 8 : 0 }}>
                       <LocalizationProvider
                         dateAdapter={AdapterDateFns}
                         localeText={{ start: 'Date From', end: 'Date To' }}
@@ -829,10 +856,13 @@ function Investment() {
                         justifyContent: 'flex-end'
                       }}
                     >
-                      <Button
+                      <LoadingButton
+                        fullWidth
+                        loading={investmentSearching}
+                        loadingPosition="center"
                         variant="contained"
                         color="success"
-                        // type="submit"
+                        type="submit"
                         onClick={() => {
                           if (dateValue[0] === null || dateValue[1] === null) {
                             enqueueSnackbar('Please select date.', {
@@ -854,7 +884,7 @@ function Investment() {
                         }}
                       >
                         Search
-                      </Button>
+                      </LoadingButton>
                     </Grid>
                   </Grid>
                 </CardContent>

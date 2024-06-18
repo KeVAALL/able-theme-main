@@ -14,7 +14,6 @@ import authReducer from 'redux/reducers/auth';
 // project-imports
 import Loader from 'components/atoms/loader/Loader';
 import axios from 'utils/axios';
-
 const chance = new Chance();
 
 // constant

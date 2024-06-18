@@ -191,6 +191,7 @@ function FixDeposit() {
         changeTableVisibility={changeTableVisibility}
         isNotEditingInterestRate={isNotEditingInterestRate}
         isEditingInterestRate={editingInterestRate}
+        fdTags={fdTag}
       />
     );
 

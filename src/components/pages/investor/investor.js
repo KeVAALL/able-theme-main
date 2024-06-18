@@ -57,7 +57,6 @@ function Investor() {
   // Toggle Table and Form Visibility
   const [showTable, setShowTable] = useState(false); // State to toggle visibility of the table form
   // Loader
-  const [loadingInvestor, setLoadingInvestor] = useState(false);
 
   // Selection states
   const [selectedGender, setSelectedGender] = useState(null);
@@ -91,6 +90,11 @@ function Investor() {
   const theme = useTheme();
   const mdUp = theme.breakpoints.up('md');
   const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
+  // Actions
+  const [investorSearching, setInvestorSearching] = useState(false);
+  const [investorSubmitting, setInvestorSubmitting] = useState(false);
+  const [investorDeleting, setInvestorDeleting] = useState(false);
 
   // Sets form values for editing
   const setEditing = (value) => {
@@ -137,37 +141,28 @@ function Investor() {
       accessor: 'investor_name',
       minWidth: 250,
       Cell: ({ value, row }) => {
+        // State to manage loading for each row
+        const [loadingInvestor, setLoadingInvestor] = useState(false);
+
+        const handleInvestorClick = async () => {
+          try {
+            setLoadingInvestor(true);
+            await GetEditOneInvestor(setEditing, row.original.investor_id);
+            setActiveEditing();
+            changeTableVisibility();
+          } catch (err) {
+            console.log(err);
+          } finally {
+            setLoadingInvestor(false);
+          }
+        };
         return (
-          // <Stack direction="row" spacing={1}>
-          <Box>
-            <Link
-              component="button"
-              variant="body2"
-              underline="always"
-              sx={{ fontSize: '0.80rem' }}
-              onClick={async () => {
-                setLoadingInvestor(true);
-                try {
-                  await GetEditOneInvestor(setEditing, row.original.investor_id);
-                } catch (err) {
-                  console.log(err);
-                } finally {
-                  console.log('Here');
-                  setLoadingInvestor(false);
-                }
-                setActiveEditing();
-                changeTableVisibility();
-              }}
-            >
+          <Box display="flex" justifyContent="flex-start" alignItems="center">
+            <Link component="button" variant="body2" underline="always" sx={{ fontSize: '0.80rem' }} onClick={handleInvestorClick}>
               {value}
             </Link>
-            {/* {loadingInvestor && ( */}
-            <LoadingButton loading={true} color="secondary" sx={{ display: !loadingInvestor ? 'none' : 'inline' }} />
-            {/* <Add style={{ transform: 'rotate(45deg)' }} /> */}
-            {/* </LoadingButton> */}
-            {/* )} */}
+            <LoadingButton loading={loadingInvestor} size="medium" color="secondary" loadingPosition="center" />
           </Box>
-          // </Stack>
         );
       }
     },
@@ -283,9 +278,7 @@ function Investor() {
     keepPreviousData: true,
     queryFn: () => {
       const payload = {
-        method_name: 'getinvestor',
-        search: '',
-        ifa_id: 0
+        method_name: 'getinvestor'
       };
       return GetInvestorData(payload);
     },
@@ -374,6 +367,8 @@ function Investor() {
                 }
               };
               try {
+                setInvestorSubmitting(true);
+
                 await SaveInvestor(payload);
 
                 changeTableVisibility();
@@ -381,13 +376,14 @@ function Investor() {
                 clearFormValues();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setInvestorSubmitting(false);
               }
             }
             if (isEditing === true) {
-              // console.log(values.filter((el) => el));
-              // const newData = delete values.port_folio;
               const { port_folio, investor_bank, ...newData } = values;
               try {
+                setInvestorSubmitting(true);
                 const payload = {
                   ...newData,
                   user_id: toInteger(userID),
@@ -402,6 +398,7 @@ function Investor() {
                     is_pep: toInteger(selectedDeclaration.isPoliticallyExposed)
                   }
                 };
+
                 await EditInvestor(payload);
 
                 changeTableVisibility();
@@ -410,6 +407,8 @@ function Investor() {
                 setActiveClose();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setInvestorSubmitting(false);
               }
             }
             // setErrorObject(errorObject);
@@ -447,6 +446,7 @@ function Investor() {
               >
                 <SubmitButton
                   title="Investor Entry"
+                  loading={investorSubmitting}
                   changeTableVisibility={changeTableVisibility}
                   clearFormValues={clearFormValues}
                   isEditing={isEditing}
@@ -565,13 +565,20 @@ function Investor() {
               ifa_id: 0
             }}
             onSubmit={async (values, { resetForm }) => {
-              const payload = {
-                method_name: 'getinvestor',
-                ...values
-              };
-              const searchResult = await GetIFASearch(payload);
-              if (searchResult) {
-                setSearchData(searchResult);
+              try {
+                setInvestorSearching(true);
+                const payload = {
+                  method_name: 'getinvestorsearch',
+                  ...values
+                };
+                const searchResult = await GetIFASearch(payload);
+                if (searchResult) {
+                  setSearchData(searchResult);
+                }
+              } catch (err) {
+                console.log(err);
+              } finally {
+                setInvestorSearching(false);
               }
             }}
           >
@@ -634,7 +641,10 @@ function Investor() {
                     </Grid>
 
                     <Grid item md={1.5} sm={3} xs={4} style={{ paddingTop: 0 }}>
-                      <Button
+                      <LoadingButton
+                        fullWidth
+                        loading={investorSearching}
+                        loadingPosition="center"
                         variant="contained"
                         color="success"
                         type="submit"
@@ -646,7 +656,7 @@ function Investor() {
                         }}
                       >
                         Search
-                      </Button>
+                      </LoadingButton>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -665,6 +675,8 @@ function Investor() {
             setEditing={setEditing}
             getOneItem={() => {}}
             deleteOneItem={DeleteOneInvestor}
+            deletingItem={investorDeleting}
+            setDeletingItem={setInvestorDeleting}
             getEditData={GetEditOneInvestor}
             getEditReqField={'investor_id'}
             setSearchData={setSearchData}

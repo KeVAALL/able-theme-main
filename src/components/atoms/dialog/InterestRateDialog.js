@@ -18,6 +18,7 @@ import {
   useMediaQuery
 } from '@mui/material';
 // third-party
+import Select from 'react-select';
 import { PopupTransition } from 'helpers/@extended/Transitions';
 import { Formik } from 'formik';
 // assets
@@ -40,14 +41,18 @@ const DialogForm = ({
   setSchemeSubmitting,
   isEditingScheme,
   setActiveClose,
+  setCache,
   setSchemeData,
-  setCache
+  fdTags
 }) => {
   // Theme
   const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   // Active or not Button
   const [activeButton, setActiveButton] = useState(false);
   const [liveButton, setLiveButton] = useState(false);
+  // Tags
+  const [selected, setSelected] = useState([]);
+
   // Handle Switch Change
   const handleActiveChange = () => {
     setActiveButton(!activeButton);
@@ -56,6 +61,7 @@ const DialogForm = ({
   const [schemeFormValues, setSchemeFormValues] = useState();
   const clearFormValues = () => {
     setSchemeFormValues(formAllSchemeValues);
+    setSelected([]);
     setActiveButton(false);
     setLiveButton(false);
   };
@@ -70,6 +76,7 @@ const DialogForm = ({
       setActiveButton(schemeEditFormValues.is_active);
       setLiveButton(schemeEditFormValues.is_live);
       setSchemeFormValues(schemeEditFormValues);
+      setSelected(schemeEditFormValues.fd_tags);
     }
   }, [schemeEditFormValues, isEditingScheme]);
 
@@ -82,6 +89,7 @@ const DialogForm = ({
         clearFormValues();
       }}
       aria-describedby="alert-dialog-slide-description"
+      className="dialog-overflow"
     >
       <Box>
         <DialogTitle sx={{ p: 2 }}>
@@ -122,12 +130,16 @@ const DialogForm = ({
           initialValues={schemeFormValues || formAllSchemeValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
+            const tagIds = selected.map((id) => {
+              return id.value;
+            });
             if (isEditingScheme) {
               const payload = {
                 ...values,
                 is_active: toInteger(activeButton),
                 is_live: toInteger(liveButton),
                 scheme_master_id: values.scheme_master_id,
+                fd_scheme_tags: tagIds,
                 method_name: 'update'
               };
               try {
@@ -164,6 +176,7 @@ const DialogForm = ({
                 fd_payout_method_id: selectedPayoutMethod,
                 is_live: toInteger(liveButton),
                 is_active: toInteger(activeButton),
+                fd_scheme_tags: tagIds,
                 method_name: 'add'
               };
               try {
@@ -205,7 +218,7 @@ const DialogForm = ({
               }}
               sx={{ width: '100%' }}
             >
-              <DialogContent sx={{ p: 2, overflowY: 'unset' }}>
+              <DialogContent sx={{ p: 2, overflowY: 'visible' }}>
                 <Grid container spacing={3}>
                   <Grid item md={6} xs={12}>
                     <CustomTextField
@@ -317,6 +330,19 @@ const DialogForm = ({
                           marginLeft: 0
                         }
                       }}
+                    />
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <Select
+                      className="multi_select"
+                      isMulti
+                      name="tags"
+                      options={fdTags}
+                      onChange={(e) => {
+                        console.log(e);
+                        setSelected(e);
+                      }}
+                      value={selected}
                     />
                   </Grid>
                   {/* <Grid item xs={12}>

@@ -41,6 +41,7 @@ import { useQuery } from 'react-query';
 
 // assets
 import { FilterSearch } from 'iconsax-react';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 function Role() {
   // Main data state to hold the list of issuers
@@ -59,6 +60,10 @@ function Role() {
   // Theme
   const theme = useTheme();
   const mdUp = theme.breakpoints.up('md');
+  // Actions
+  const [roleSearching, setRoleSearching] = useState(false);
+  const [roleSubmitting, setRoleSubmitting] = useState(false);
+  const [roleDeleting, setRoleDeleting] = useState(false);
 
   // Functions
   // Editing States
@@ -186,11 +191,15 @@ function Role() {
               };
 
               try {
+                setRoleSubmitting(true);
+
                 const response = await SaveRole(formValues);
                 changeTableVisibility();
                 refetchRole();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setRoleSubmitting(false);
               }
             }
             if (isEditing === true) {
@@ -203,11 +212,15 @@ function Role() {
                 menu_id: selectedMenus
               };
               try {
+                setRoleSubmitting(true);
+
                 const response = await EditRole(formValues);
                 changeTableVisibility();
                 refetchRole();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setRoleSubmitting(false);
               }
             }
             // changeTableVisibility();
@@ -245,6 +258,7 @@ function Role() {
               >
                 <SubmitButton
                   title="Role Entry"
+                  loading={roleSubmitting}
                   changeTableVisibility={changeTableVisibility}
                   clearFormValues={clearFormValues}
                   isEditing={isEditing}
@@ -374,9 +388,15 @@ function Role() {
                 method_name: 'getone',
                 ...values
               };
-              const search = await SearchRoles(payload);
-
-              setUserRoleData(search);
+              try {
+                setRoleSearching(true);
+                const search = await SearchRoles(payload);
+                setUserRoleData(search);
+              } catch (err) {
+                console.log(err);
+              } finally {
+                setRoleSearching(false);
+              }
             }}
           >
             {({ values, errors, touched, setFieldValue, handleChange, handleBlur, handleSubmit, resetForm }) => (
@@ -409,7 +429,10 @@ function Role() {
                     </Grid>
 
                     <Grid item md={2.5} sm={3} xs={5} style={{ paddingTop: 0 }}>
-                      <Button
+                      <LoadingButton
+                        fullWidth
+                        loading={roleSearching}
+                        loadingPosition="center"
                         variant="contained"
                         color="success"
                         type="submit"
@@ -421,7 +444,7 @@ function Role() {
                         }}
                       >
                         Search
-                      </Button>
+                      </LoadingButton>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -439,6 +462,8 @@ function Role() {
             setEditing={setEditing}
             getOneItem={() => {}}
             deleteOneItem={DeleteRole}
+            deletingItem={roleDeleting}
+            setDeletingItem={setRoleDeleting}
             getEditData={GetSelectedMenu}
             getEditReqField={'role_id'}
             setSearchData={setSearchData}

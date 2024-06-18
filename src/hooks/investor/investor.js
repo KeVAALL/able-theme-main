@@ -115,7 +115,7 @@ export async function GetEditOneInvestor(setEditing, investor_id) {
     setEditing(response.data.data);
     return response.data.data;
   } catch (error) {
-    enqueueSnackbar(err.message, {
+    enqueueSnackbar(error.message, {
       variant: 'error',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -126,10 +126,11 @@ export async function GetEditOneInvestor(setEditing, investor_id) {
     throw err;
   }
 }
-export async function DeleteOneInvestor(values) {
+export async function DeleteOneInvestor(values, setDeletingItem, handleOpenDialog) {
   const userID = localStorage.getItem('userID');
 
   try {
+    setDeletingItem(true);
     await axios.post('/investor/save', {
       investor_id: values?.investor_id,
       user_id: toInteger(userID),
@@ -145,6 +146,9 @@ export async function DeleteOneInvestor(values) {
     });
   } catch (err) {
     console.log(err);
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
   }
 }
 // Bank APIs

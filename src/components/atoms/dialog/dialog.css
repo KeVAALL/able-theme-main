@@ -6,3 +6,6 @@
   /* overflow: visible !important; */
   max-width: max-content !important;
 }
+.dialog-overflow .MuiDialog-paper {
+  overflow: visible;
+}

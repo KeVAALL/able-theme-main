@@ -20,6 +20,7 @@ import { useQuery } from 'react-query';
 
 // assets
 import { Eye, EyeSlash, FilterSearch } from 'iconsax-react';
+import LoadingButton from 'helpers/@extended/LoadingButton';
 
 function UserList() {
   const [userListData, setUserListData] = useState([]);
@@ -39,6 +40,10 @@ function UserList() {
   const theme = useTheme();
   const mdUp = theme.breakpoints.up('md');
   const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  // Actions
+  const [userSearching, setUserSearching] = useState(false);
+  const [userSubmitting, setUserSubmitting] = useState(false);
+  const [userDeleting, setUserDeleting] = useState(false);
 
   // Functions
   // Editing States
@@ -139,11 +144,14 @@ function UserList() {
               };
 
               try {
+                setUserSubmitting(true);
                 const response = await SaveUser(formValues);
                 changeTableVisibility();
                 userListRefetch();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setUserSubmitting(false);
               }
             }
             if (isEditing === true) {
@@ -156,11 +164,14 @@ function UserList() {
               };
 
               try {
+                setUserSubmitting(true);
                 const response = await EditUser(formValues);
                 changeTableVisibility();
                 userListRefetch();
               } catch (err) {
                 console.log(err);
+              } finally {
+                setUserSubmitting(false);
               }
             }
             // changeTableVisibility();
@@ -198,6 +209,7 @@ function UserList() {
               >
                 <SubmitButton
                   title="User List Entry"
+                  loading={userSubmitting}
                   changeTableVisibility={changeTableVisibility}
                   clearFormValues={clearFormValues}
                   isEditing={true}
@@ -338,7 +350,7 @@ function UserList() {
         >
           <Formik
             initialValues={{
-              username: '',
+              search: '',
               role_id: 0
             }}
             onSubmit={async (values, { resetForm }) => {
@@ -346,9 +358,15 @@ function UserList() {
                 method_name: 'getone',
                 ...values
               };
-              const search = await SearchUsers(payload);
-
-              setUserListData(search);
+              try {
+                setUserSearching(true);
+                const search = await SearchUsers(payload);
+                setUserListData(search);
+              } catch (err) {
+                console.log(err);
+              } finally {
+                setUserSearching(false);
+              }
             }}
           >
             {({ values, errors, touched, setFieldValue, handleChange, handleBlur, handleSubmit, resetForm }) => (
@@ -364,8 +382,8 @@ function UserList() {
                   <Grid container spacing={2}>
                     <Grid item md={2.5} sm={3} xs={4} style={{ paddingLeft: 0, paddingTop: 0 }}>
                       <CustomTextField
-                        label="User Name"
-                        name="username"
+                        label="Search"
+                        name="search"
                         values={values}
                         type="text"
                         onChange={handleChange}
@@ -393,7 +411,10 @@ function UserList() {
                     </Grid>
 
                     <Grid item md={2.5} sm={3} xs={4} style={{ paddingTop: 0 }}>
-                      <Button
+                      <LoadingButton
+                        fullWidth
+                        loading={userSearching}
+                        loadingPosition="center"
                         variant="contained"
                         color="success"
                         type="submit"
@@ -405,7 +426,7 @@ function UserList() {
                         }}
                       >
                         Search
-                      </Button>
+                      </LoadingButton>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -423,6 +444,8 @@ function UserList() {
             setEditing={setEditing}
             getOneItem={() => {}}
             deleteOneItem={DeleteUser}
+            deletingItem={userDeleting}
+            setDeletingItem={setUserDeleting}
             setSearchData={setSearchData}
             tableDataRefetch={userListRefetch}
             setActiveEditing={setActiveEditing}

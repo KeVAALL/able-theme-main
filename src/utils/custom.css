@@ -26,6 +26,28 @@ html::-webkit-scrollbar-thumb {
 .common-textfield .Mui-disabled {
   -webkit-text-fill-color: #768087 !important;
 }
+.common-textfield .Mui-disabled input {
+  background-color: #76808729;
+  border-radius: 4px;
+}
+
+.disabled-textfield .MuiFormControl-root {
+  width: 100% !important;
+}
+.disabled-textfield .MuiFormLabel-root {
+  line-height: 1.5em !important;
+  font-size: 0.75rem !important;
+}
+.disabled-textfield .MuiOutlinedInput-root {
+  border-radius: 5px;
+}
+.disabled-textfield .Mui-disabled {
+  -webkit-text-fill-color: #768087 !important;
+}
+.disabled-textfield .Mui-disabled input {
+  background-color: #76808729;
+  border-radius: 4px;
+}
 
 .common-multi_select .MuiSelect-select {
   padding: 6.6px 9px !important;

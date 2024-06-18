@@ -119,10 +119,12 @@ export async function EditRole(values) {
     return [];
   }
 }
-export async function DeleteRole(values) {
+export async function DeleteRole(values, setDeletingItem, handleOpenDialog) {
   const userID = localStorage.getItem('userID');
 
   try {
+    setDeletingItem(true);
+
     await axios.post('role/rolemenu', {
       role_id: values?.role_id,
       user_id: toInteger(userID),
@@ -138,6 +140,9 @@ export async function DeleteRole(values) {
     });
   } catch (err) {
     console.log(err);
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
   }
 }
 // User
@@ -239,10 +244,11 @@ export async function EditUser(values) {
     return [];
   }
 }
-export async function DeleteUser(values) {
+export async function DeleteUser(values, setDeletingItem, handleOpenDialog) {
   const userID = localStorage.getItem('userID');
 
   try {
+    setDeletingItem(true);
     await axios.post('user/saveuser', {
       user_id: values?.user_id,
       admin_user_id: toInteger(userID),
@@ -258,6 +264,9 @@ export async function DeleteUser(values) {
     });
   } catch (err) {
     console.log(err);
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
   }
 }
 // User Details

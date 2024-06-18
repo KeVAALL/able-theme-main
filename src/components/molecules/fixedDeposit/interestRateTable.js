@@ -105,8 +105,8 @@ function ReactTable({
   return (
     <Stack>
       {!hideActions && (
-        <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{ padding: 2 }}>
-          <Grid item md={7} sm={7} xs={12}>
+        <Grid container spacing={2} alignItems="center" sx={{ padding: 2 }}>
+          <Grid item md={6} sm={6} xs={12}>
             {formValueFields?.length >= 1 && (
               <Formik
                 initialValues={formValues}
@@ -125,7 +125,7 @@ function ReactTable({
                     }}
                     sx={{ width: '60%' }}
                   >
-                    <Grid container direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
+                    <Grid container direction="row" spacing={2} alignItems="center">
                       {formValueFields?.map((field, id) => {
                         return (
                           <Grid item md={5} sm={4} xs={7} key={id}>
@@ -162,8 +162,8 @@ function ReactTable({
           </Grid>
           <Grid
             item
-            md={5}
-            sm={5}
+            md={6}
+            sm={6}
             xs={12}
             sx={{
               display: 'flex',
@@ -173,10 +173,10 @@ function ReactTable({
               paddingTop: { lg: '16px !important', sm: '0px !important' }
             }}
           >
-            <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+            <Grid container spacing={2} sx={{ alignItems: 'center', justifyContent: 'flex-end' }}>
               <Grid
                 item
-                md={11}
+                md={10}
                 xs={10}
                 sx={{
                   display: 'flex',

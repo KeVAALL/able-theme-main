@@ -176,7 +176,7 @@ FormikAutoComplete.propTypes = {
   keyName: PropTypes.any
 };
 
-const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEditingInterestRate, isEditingInterestRate }) => {
+const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEditingInterestRate, isEditingInterestRate, fdTags }) => {
   // Main Data state
   const [schemeData, setSchemeData] = useState([]);
   const [cache, setCache] = useState({});
@@ -349,6 +349,7 @@ const InterestRate = ({ formValues, productData, changeTableVisibility, isNotEdi
               setActiveClose={setActiveClose}
               setCache={updateCache} // Pass the update function
               setSchemeData={setSchemeData}
+              fdTags={fdTags}
             />
             <Card
               sx={{

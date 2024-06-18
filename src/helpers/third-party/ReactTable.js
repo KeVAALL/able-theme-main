@@ -95,6 +95,7 @@ export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageInd
   };
 
   const handleChangePagination = (event, value) => {
+    console.log('here');
     gotoPage(value - 1);
   };
 
@@ -139,6 +140,7 @@ export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageInd
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) : 0;
               gotoPage(page - 1);
+              console.log('here');
             }}
             sx={{ '& .MuiOutlinedInput-input': { py: 0.75, px: 1.25, width: 36 } }}
           />
@@ -491,7 +493,7 @@ export const CSVExport = ({ data, filename, headers }) => {
     <Box>
       <CSVLink data={data} filename={filename} headers={headers}>
         <Tooltip title="CSV Export">
-          <DocumentDownload size={38} style={{ color: 'gray', marginTop: 5, padding: 6, border: '1px solid #BEC8D0', borderRadius: 5 }} />
+          <DocumentDownload size={38} style={{ color: 'gray', marginTop: 6, padding: 6, border: '1px solid #BEC8D0', borderRadius: 5 }} />
         </Tooltip>
       </CSVLink>
     </Box>
