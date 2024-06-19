@@ -144,14 +144,7 @@ const ReactTable = ({
                     <Grid container direction="row" spacing={1} alignItems="center">
                       {formValueFields?.map((field, id) => {
                         return (
-                          <Grid
-                            item
-                            md={5}
-                            sm={4}
-                            xs={7}
-                            key={id}
-                            // sx={{ paddingTop: '0px !important', height: '45px' }}
-                          >
+                          <Grid item md={5} sm={4} xs={7} key={id} sx={{ paddingTop: '0px !important', height: '45px' }}>
                             <CustomTextField
                               label={field.label}
                               name={field.fieldName}
@@ -215,7 +208,7 @@ const ReactTable = ({
               paddingTop: { lg: '16px !important', sm: '0px !important' }
             }}
           >
-            <Grid container spacing={2} sx={{ alignItems: 'center', justifyContent: 'flex-end', marginTop: '-32px !important' }}>
+            <Grid container spacing={3} sx={{ alignItems: 'center', justifyContent: 'flex-end', marginTop: '-32px !important' }}>
               <Grid
                 item
                 md={10}
