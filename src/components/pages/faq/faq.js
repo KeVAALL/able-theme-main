@@ -43,7 +43,6 @@ import {
 import { GetIssuerData, GetOneIssuer, SaveIssuer, EditIssuer, DeleteOneFAQ } from 'hooks/issuer/issuer';
 import { SubmitButton } from 'components/atoms/button/button';
 import AnimateButton from 'helpers/@extended/AnimateButton';
-import Loader from 'components/atoms/loader/Loader';
 import IconButton from 'helpers/@extended/IconButton';
 import { CustomTextField, FormikAutoComplete, NestedCustomTextField } from 'utils/textfield';
 import { PopupTransition } from 'helpers/@extended/Transitions';
@@ -52,7 +51,6 @@ import { PopupTransition } from 'helpers/@extended/Transitions';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { enqueueSnackbar } from 'notistack';
-import { toInteger } from 'lodash';
 
 // assets
 import {

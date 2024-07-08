@@ -15,6 +15,7 @@ import Dashboard from '../dashboard/dashboard';
 import FDReport from '../reports/fdReport';
 import IssuerReport from '../reports/issuerReport';
 import FAQ from '../faq/faq';
+import FdCategory from '../fdCategory/fdCategory';
 
 // Product
 const Product = Loadable(lazy(() => import('components/pages/productType/productType')));
@@ -77,6 +78,15 @@ const MainRoutes = {
           path: 'issuer',
           element: <Issuer />
           // element: <></>
+        },
+        {
+          path: 'master',
+          children: [
+            {
+              path: 'fd_category',
+              element: <FdCategory />
+            }
+          ]
         },
         {
           path: 'user_master',

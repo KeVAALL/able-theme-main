@@ -109,7 +109,7 @@ const ReactTable = ({
   const handleOpenDialog = () => {
     setOpenDialog(!openDialog);
   };
-  console.log(pageIndex);
+  // console.log(pageIndex);
   // For Column Hiding
   let headers = [];
   allColumns?.map((item) => {
@@ -347,6 +347,7 @@ const ReactTable = ({
                                     changeTableVisibility();
                                   }, 500);
                                 } else {
+                                  console.log(row.original);
                                   setEditing(row.original);
                                   changeTableVisibility();
                                 }

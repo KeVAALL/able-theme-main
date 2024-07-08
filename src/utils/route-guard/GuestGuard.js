@@ -19,11 +19,11 @@ const GuestGuard = ({ children }) => {
 
   useEffect(() => {
     // console.log(location?.state?.from);
-    const menu = localStorage.getItem('persist:root');
-    const firstURL = JSON.parse(JSON.parse(menu).menu).menuItem[0].children[0].url;
+    // const menu = localStorage.getItem('persist:root');
+    // const firstURL = JSON.parse(JSON.parse(menu).menu).menuItem[0].children[0].url;
     // console.log(location);
     if (isLoggedIn) {
-      navigate(location?.state?.from ? location?.state?.from : firstURL, {
+      navigate(location?.state?.from && location?.state?.from, {
         state: {
           from: ''
         },
