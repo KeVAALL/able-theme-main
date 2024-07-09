@@ -50,3 +50,26 @@ export async function AddTagForCategory(payload) {
     return [];
   }
 }
+export async function DeleteTag(values, setDeletingItem, handleOpenDialog) {
+  const userID = localStorage.getItem('userID');
+  try {
+    setDeletingItem(true);
+    await axios.post('/product/save_fd_tags', {
+      method_name: 'delete',
+      fd_tag_id: values?.fd_tag_id
+    });
+    enqueueSnackbar('Tag deleted', {
+      variant: 'error',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setDeletingItem(false);
+    handleOpenDialog();
+  }
+}

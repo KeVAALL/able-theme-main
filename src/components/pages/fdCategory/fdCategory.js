@@ -70,7 +70,7 @@ import {
   Trash
 } from 'iconsax-react';
 import LoadingButton from 'helpers/@extended/LoadingButton';
-import { GetFdCategory, GetTagForCategory } from 'hooks/fdCategory/FdCategory';
+import { DeleteTag, GetFdCategory, GetTagForCategory } from 'hooks/fdCategory/FdCategory';
 import '../faq/faq.css';
 
 const DeleteDialog = memo(
@@ -172,7 +172,7 @@ function FdCategory() {
   const matchDownSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   // Actions
   const [faqUploading, setFaqUploading] = useState(false);
-  const [faqDeleting, setFaqDeleting] = useState(false);
+  const [tagDeleting, setTagDeleting] = useState(false);
 
   // Functions
   // Editing States
@@ -405,9 +405,9 @@ function FdCategory() {
                         changeTableVisibility={handleOpenAddDialog}
                         setEditing={setEditing}
                         getOneItem={() => {}}
-                        deleteOneItem={() => {}}
-                        // deletingItem={investorDeleting}
-                        // setDeletingItem={setInvestorDeleting}
+                        deleteOneItem={DeleteTag}
+                        deletingItem={tagDeleting}
+                        setDeletingItem={setTagDeleting}
                         setSearchData={setSearchData}
                         tableDataRefetch={fdCategoryRefetch}
                         setActiveEditing={setActiveEditing}

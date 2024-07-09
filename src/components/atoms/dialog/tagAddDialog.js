@@ -128,10 +128,12 @@ const AddTagDialogForm = ({
             } else {
               console.log(isEditing);
 
+              console.log(values);
+
               const payload = {
-                method_name: 'edit',
+                method_name: 'update',
                 fd_tag_name: values?.fd_tag_name,
-                category_id: selectedCategory?.value
+                fd_tag_id: values?.fd_tag_id
               };
               try {
                 setIsSubmitting(true);
@@ -168,7 +170,7 @@ const AddTagDialogForm = ({
             >
               <DialogTitle sx={{ p: 2 }}>
                 <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <DialogTitle sx={{ p: 0 }}>{isEditing ? 'Edit' : 'Add'} Tenure</DialogTitle>
+                  <DialogTitle sx={{ p: 0 }}>{isEditing ? 'Edit' : 'Add'} Tag</DialogTitle>
                   <Stack flexDirection="row">
                     {/* <Box>
                 <FormControlLabel
